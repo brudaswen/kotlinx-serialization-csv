@@ -179,7 +179,7 @@ internal class RootCsvDecoder(
 
     private var position = 0
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
+    override fun decodeElementIndex(desc: SerialDescriptor): Int {
         return if (reader.isDone) CompositeDecoder.READ_DONE else position
     }
 
@@ -217,10 +217,10 @@ internal class RecordListCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        if (descriptor is ListLikeDescriptor) {
+    override fun decodeElementIndex(desc: SerialDescriptor): Int {
+        if (desc is ListLikeDescriptor) {
             readEmptyLines()
-            readHeaders(descriptor.elementDesc)
+            readHeaders(desc.elementDesc)
         }
 
         readEmptyLines()
@@ -260,8 +260,8 @@ internal class ClassCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.READ_DONE
+    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
+        reader.isDone || elementIndex >= desc.elementsCount -> CompositeDecoder.READ_DONE
         classHeaders != null -> classHeaders[elementIndex]
         else -> elementIndex
     }
@@ -296,14 +296,14 @@ internal class ObjectCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
         reader.isDone || elementIndex > 0 -> CompositeDecoder.READ_DONE
         else -> elementIndex
     }
 
     override fun endStructure(desc: SerialDescriptor) {
         val value = reader.readColumn()
-        require(value == desc.serialName) { "Expected '${desc.serialName}' but was '$value'." }
+        require(value == desc.name) { "Expected '${desc.name}' but was '$value'." }
         super.endStructure(desc)
     }
 
@@ -324,7 +324,7 @@ internal class ListRecordCsvDecoder(
 
     private val recordNo = reader.recordNo
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
         // TODO Check for END_OF_RECORD
         reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.READ_DONE
         else -> elementIndex
@@ -346,7 +346,7 @@ internal class SealedCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
         reader.isDone || elementIndex > 1 -> CompositeDecoder.READ_DONE
         else -> elementIndex
     }

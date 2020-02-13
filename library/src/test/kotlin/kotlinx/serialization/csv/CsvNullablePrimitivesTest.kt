@@ -1,6 +1,6 @@
 package kotlinx.serialization.csv
 
-import kotlinx.serialization.UnitSerializer
+import kotlinx.serialization.internal.UnitSerializer
 import kotlinx.serialization.internal.nullable
 import kotlinx.serialization.list
 import kotlinx.serialization.serializer
