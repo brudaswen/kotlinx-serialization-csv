@@ -1,0 +1,109 @@
+package kotlinx.serialization.csv
+
+import kotlinx.serialization.UnitSerializer
+import kotlinx.serialization.list
+import kotlinx.serialization.serializer
+import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlin.test.Test
+
+/**
+ * Test [Csv] ([CsvEncoder] and [CsvDecoder]) with simple primitive records.
+ */
+class CsvPrimitivesTest {
+
+    @Test
+    fun testByte() = assertStringFormAndRestored(
+            "-123",
+            -123,
+            Byte.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testShort() = assertStringFormAndRestored(
+            "-150",
+            -150,
+            Short.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testInt() = assertStringFormAndRestored(
+            "-150",
+            -150,
+            Int.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testLong() = assertStringFormAndRestored(
+            "-150",
+            -150,
+            Long.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testFloat() = assertStringFormAndRestored(
+            "-150.0",
+            -150f,
+            Float.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testDouble() = assertStringFormAndRestored(
+            "-150.0",
+            -150.0,
+            Double.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testBooleanTrue() = assertStringFormAndRestored(
+            "true",
+            true,
+            Boolean.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testBooleanFalse() = assertStringFormAndRestored(
+            "false",
+            false,
+            Boolean.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testChar() = assertStringFormAndRestored(
+            "a",
+            'a',
+            Char.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testString() = assertStringFormAndRestored(
+            "testing",
+            "testing",
+            String.serializer(),
+            Csv
+    )
+
+    @Test
+    fun testUnit() = assertStringFormAndRestored(
+            "kotlin.Unit",
+            Unit,
+            UnitSerializer,
+            Csv
+    )
+
+    @Test
+    fun testIntList() = assertStringFormAndRestored(
+            "-150\r\n150\r\n42",
+            listOf(-150, 150, 42),
+            Int.serializer().list,
+            Csv
+    )
+}

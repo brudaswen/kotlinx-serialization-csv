@@ -2,6 +2,7 @@ import java.time.Duration
 
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
     id("org.jetbrains.dokka") version "0.9.18"
     id("de.marcphilipp.nexus-publish") version "0.4.0"
     `maven-publish`
@@ -30,6 +31,9 @@ java {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.freeCompilerArgs = listOf(
+        "-Xuse-experimental=kotlin.Experimental"
+    )
 }
 
 tasks.named<Test>("test") {
