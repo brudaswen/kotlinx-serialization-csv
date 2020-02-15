@@ -12,13 +12,13 @@ class Csv(internal val configuration: CsvConfiguration, context: SerialModule = 
 
     override fun <T> stringify(serializer: SerializationStrategy<T>, obj: T): String {
         val result = StringBuilder()
-        RootCsvEncoder(configuration, result).encode(serializer, obj)
+        RootCsvEncoder(this, result).encode(serializer, obj)
         return result.toString()
     }
 
     override fun <T> parse(deserializer: DeserializationStrategy<T>, string: String): T {
         val reader = CsvReader(StringSource(string), configuration)
-        val input = RootCsvDecoder(configuration, reader)
+        val input = RootCsvDecoder(this, reader)
         val result = input.decode(deserializer)
         if (!reader.isDone) {
             error("Reader has not consumed the whole input: $reader")

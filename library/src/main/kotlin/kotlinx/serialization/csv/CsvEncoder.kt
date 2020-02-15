@@ -5,26 +5,32 @@
 package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
+import kotlinx.serialization.modules.SerialModule
 
 internal abstract class CsvEncoder(
-        protected val configuration: CsvConfiguration,
-        protected val writer: CsvWriter,
-        private val parent: CsvEncoder?
+    protected val csv: Csv,
+    protected val writer: CsvWriter,
+    private val parent: CsvEncoder?
 ) : ElementValueEncoder() {
+
+    override val context: SerialModule = csv.context
+
+    protected val configuration
+        get() = csv.configuration
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         return when (desc.kind) {
             StructureKind.LIST ->
-                SimpleCsvEncoder(configuration, writer, this)
+                SimpleCsvEncoder(csv, writer, this)
 
             StructureKind.CLASS ->
-                SimpleCsvEncoder(configuration, writer, this)
+                SimpleCsvEncoder(csv, writer, this)
 
             UnionKind.OBJECT ->
-                ObjectCsvEncoder(configuration, writer, this)
+                ObjectCsvEncoder(csv, writer, this)
 
             PolymorphicKind.SEALED ->
-                SealedCsvEncoder(configuration, writer, this, desc)
+                SealedCsvEncoder(csv, writer, this, desc)
 
             else ->
                 error("CSV does not support '${desc.kind}'.")
@@ -111,17 +117,17 @@ internal abstract class CsvEncoder(
 }
 
 internal class RootCsvEncoder(
-        configuration: CsvConfiguration,
-        writer: CsvWriter
-) : CsvEncoder(configuration, writer, null) {
+    csv: Csv,
+    writer: CsvWriter
+) : CsvEncoder(csv, writer, null) {
 
-    internal constructor(configuration: CsvConfiguration, output: Appendable) :
-            this(configuration, CsvWriter(output, configuration))
+    internal constructor(csv: Csv, output: Appendable) :
+            this(csv, CsvWriter(output, csv.configuration))
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         return when (desc.kind) {
             StructureKind.LIST ->
-                RecordListCsvEncoder(configuration, writer)
+                RecordListCsvEncoder(csv, writer)
 
             else -> {
                 if (configuration.hasHeaderRecord && writer.isFirstRecord) {
@@ -145,9 +151,9 @@ internal class RootCsvEncoder(
 }
 
 internal class RecordListCsvEncoder(
-        configuration: CsvConfiguration,
-        writer: CsvWriter
-) : CsvEncoder(configuration, writer, null) {
+    csv: Csv,
+    writer: CsvWriter
+) : CsvEncoder(csv, writer, null) {
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
@@ -169,16 +175,16 @@ internal class RecordListCsvEncoder(
 }
 
 internal class SimpleCsvEncoder(
-        configuration: CsvConfiguration,
-        writer: CsvWriter,
-        parent: CsvEncoder
-) : CsvEncoder(configuration, writer, parent)
+    csv: Csv,
+    writer: CsvWriter,
+    parent: CsvEncoder
+) : CsvEncoder(csv, writer, parent)
 
 internal class ObjectCsvEncoder(
-        configuration: CsvConfiguration,
-        writer: CsvWriter,
-        parent: CsvEncoder
-) : CsvEncoder(configuration, writer, parent) {
+    csv: Csv,
+    writer: CsvWriter,
+    parent: CsvEncoder
+) : CsvEncoder(csv, writer, parent) {
 
     override fun endStructure(desc: SerialDescriptor) {
         encodeString(desc.name)
@@ -187,11 +193,11 @@ internal class ObjectCsvEncoder(
 }
 
 internal class SealedCsvEncoder(
-        configuration: CsvConfiguration,
-        writer: CsvWriter,
-        parent: CsvEncoder,
-        private val sealedDesc: SerialDescriptor
-) : CsvEncoder(configuration, writer, parent) {
+    csv: Csv,
+    writer: CsvWriter,
+    parent: CsvEncoder,
+    private val sealedDesc: SerialDescriptor
+) : CsvEncoder(csv, writer, parent) {
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         val sealedChildren = sealedDesc.elementDescriptors()

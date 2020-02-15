@@ -2,25 +2,32 @@ package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
 import kotlinx.serialization.internal.ListLikeDescriptor
+import kotlinx.serialization.modules.SerialModule
 
 internal abstract class CsvDecoder(
-        protected val configuration: CsvConfiguration,
-        protected val reader: CsvReader,
-        private val parent: CsvDecoder?
+    protected val csv: Csv,
+    protected val reader: CsvReader,
+    private val parent: CsvDecoder?
 ) : ElementValueDecoder() {
+
+    override val context: SerialModule
+        get() = csv.context
+
+    protected val configuration: CsvConfiguration
+        get() = csv.configuration
 
     protected var headers: Headers? = null
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return when (desc.kind) {
             StructureKind.CLASS ->
-                ClassCsvDecoder(configuration, reader, this, headers)
+                ClassCsvDecoder(csv, reader, this, headers)
 
             UnionKind.OBJECT ->
-                ObjectCsvDecoder(configuration, reader, this)
+                ObjectCsvDecoder(csv, reader, this)
 
             PolymorphicKind.SEALED ->
-                SealedCsvDecoder(configuration, reader, this, desc)
+                SealedCsvDecoder(csv, reader, this, desc)
 
             else ->
                 error("CSV does not support '${desc.kind}'.")
@@ -157,14 +164,14 @@ internal abstract class CsvDecoder(
         private val subHeaders = mutableMapOf<Int, Headers>()
 
         operator fun get(position: Int) =
-                map.getOrElse(position) { CompositeDecoder.UNKNOWN_NAME }
+            map.getOrElse(position) { CompositeDecoder.UNKNOWN_NAME }
 
         operator fun set(key: Int, value: Int) {
             map[key] = value
         }
 
         fun getSubHeaders(position: Int) =
-                subHeaders.getOrElse(position) { null }
+            subHeaders.getOrElse(position) { null }
 
         operator fun set(key: Int, value: Headers) {
             subHeaders[key] = value
@@ -173,9 +180,9 @@ internal abstract class CsvDecoder(
 }
 
 internal class RootCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader
-) : CsvDecoder(configuration, reader, null) {
+    csv: Csv,
+    reader: CsvReader
+) : CsvDecoder(csv, reader, null) {
 
     private var position = 0
 
@@ -187,7 +194,7 @@ internal class RootCsvDecoder(
         return when (desc.kind) {
             StructureKind.LIST ->
                 // Top level list is treated as list of multiple records
-                RecordListCsvDecoder(configuration, reader)
+                RecordListCsvDecoder(csv, reader)
 
             else -> {
                 // Top level is treated as one single record
@@ -211,9 +218,9 @@ internal class RootCsvDecoder(
 }
 
 internal class RecordListCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader
-) : CsvDecoder(configuration, reader, null) {
+    csv: Csv,
+    reader: CsvReader
+) : CsvDecoder(csv, reader, null) {
 
     private var elementIndex = 0
 
@@ -230,7 +237,7 @@ internal class RecordListCsvDecoder(
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return when (desc.kind) {
             StructureKind.LIST ->
-                ListRecordCsvDecoder(configuration, reader, this)
+                ListRecordCsvDecoder(csv, reader, this)
 
             else ->
                 super.beginStructure(desc, *typeParams)
@@ -252,11 +259,11 @@ internal class RecordListCsvDecoder(
 }
 
 internal class ClassCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader,
-        parent: CsvDecoder,
-        private val classHeaders: Headers?
-) : CsvDecoder(configuration, reader, parent) {
+    csv: Csv,
+    reader: CsvReader,
+    parent: CsvDecoder,
+    private val classHeaders: Headers?
+) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
 
@@ -269,7 +276,7 @@ internal class ClassCsvDecoder(
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return when (desc.kind) {
             StructureKind.CLASS ->
-                ClassCsvDecoder(configuration, reader, this, classHeaders?.getSubHeaders(decodeElementIndex(desc)))
+                ClassCsvDecoder(csv, reader, this, classHeaders?.getSubHeaders(decodeElementIndex(desc)))
 
             else ->
                 super.beginStructure(desc, *typeParams)
@@ -289,10 +296,10 @@ internal class ClassCsvDecoder(
 }
 
 internal class ObjectCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader,
-        parent: CsvDecoder
-) : CsvDecoder(configuration, reader, parent) {
+    csv: Csv,
+    reader: CsvReader,
+    parent: CsvDecoder
+) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
 
@@ -315,10 +322,10 @@ internal class ObjectCsvDecoder(
 }
 
 internal class ListRecordCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader,
-        parent: RecordListCsvDecoder
-) : CsvDecoder(configuration, reader, parent) {
+    csv: Csv,
+    reader: CsvReader,
+    parent: RecordListCsvDecoder
+) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
 
@@ -338,11 +345,11 @@ internal class ListRecordCsvDecoder(
 }
 
 internal class SealedCsvDecoder(
-        configuration: CsvConfiguration,
-        reader: CsvReader,
-        parent: CsvDecoder,
-        private val sealedDesc: SerialDescriptor
-) : CsvDecoder(configuration, reader, parent) {
+    csv: Csv,
+    reader: CsvReader,
+    parent: CsvDecoder,
+    private val sealedDesc: SerialDescriptor
+) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
 
