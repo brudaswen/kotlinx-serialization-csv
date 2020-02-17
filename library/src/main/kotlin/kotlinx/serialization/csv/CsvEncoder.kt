@@ -32,6 +32,9 @@ internal abstract class CsvEncoder(
             PolymorphicKind.SEALED ->
                 SealedCsvEncoder(csv, writer, this, desc)
 
+            PolymorphicKind.OPEN ->
+                SimpleCsvEncoder(csv, writer, this)
+
             else ->
                 error("CSV does not support '${desc.kind}'.")
         }
@@ -99,10 +102,25 @@ internal abstract class CsvEncoder(
     }
 
     private fun printHeader(prefix: String, desc: SerialDescriptor) {
+        when (desc.kind) {
+            is StructureKind.LIST,
+            is StructureKind.MAP,
+            is PolymorphicKind.OPEN -> {
+                error("CSV headers are not supported for variable sized type '${desc.kind}'.")
+            }
+        }
+
         for (i in 0 until desc.elementsCount) {
             val name = prefix + desc.getElementName(i)
             val childDesc = desc.getElementDescriptor(i)
-            if (childDesc.elementsCount > 0) {
+
+            if (childDesc.kind is UnionKind) {
+                writer.printColumn(name)
+            } else if (childDesc.kind is PolymorphicKind.SEALED) {
+                writer.printColumn(name)
+                val headerSeparator = configuration.headerSeparator
+                printHeader("$name$headerSeparator", childDesc)
+            } else if (childDesc.elementsCount > 0) {
                 val headerSeparator = configuration.headerSeparator
                 printHeader("$name$headerSeparator", childDesc)
             } else {

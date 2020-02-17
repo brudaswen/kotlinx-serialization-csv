@@ -29,6 +29,9 @@ internal abstract class CsvDecoder(
             PolymorphicKind.SEALED ->
                 SealedCsvDecoder(csv, reader, this, desc)
 
+            PolymorphicKind.OPEN ->
+                ClassCsvDecoder(csv, reader, this, headers)
+
             else ->
                 error("CSV does not support '${desc.kind}'.")
         }
