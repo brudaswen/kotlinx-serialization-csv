@@ -18,9 +18,19 @@ internal abstract class CsvEncoder(
     protected val configuration
         get() = csv.configuration
 
+    override fun beginCollection(
+        desc: SerialDescriptor,
+        collectionSize: Int,
+        vararg typeParams: KSerializer<*>
+    ): CompositeEncoder {
+        encodeCollectionSize(collectionSize)
+        return super.beginCollection(desc, collectionSize, *typeParams)
+    }
+
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         return when (desc.kind) {
-            StructureKind.LIST ->
+            StructureKind.LIST,
+            StructureKind.MAP ->
                 SimpleCsvEncoder(csv, writer, this)
 
             StructureKind.CLASS ->
@@ -129,11 +139,18 @@ internal abstract class CsvEncoder(
         }
     }
 
+    protected open fun encodeCollectionSize(collectionSize: Int) {
+        writer.printColumn(collectionSize.toString(), isNumeric = true)
+    }
+
     protected open fun encodeColumn(value: String, isNumeric: Boolean = false, isNull: Boolean = false) {
         writer.printColumn(value, isNumeric, isNull)
     }
 }
 
+/**
+ * Initial entry point for encoding.
+ */
 internal class RootCsvEncoder(
     csv: Csv,
     writer: CsvWriter
@@ -142,36 +159,17 @@ internal class RootCsvEncoder(
     internal constructor(csv: Csv, output: Appendable) :
             this(csv, CsvWriter(output, csv.configuration))
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
-        return when (desc.kind) {
-            StructureKind.LIST ->
-                RecordListCsvEncoder(csv, writer)
-
-            else -> {
-                if (configuration.hasHeaderRecord && writer.isFirstRecord) {
-                    printHeaderRecord(desc)
-                }
-                writer.beginRecord()
-                super.beginStructure(desc, *typeParams)
-            }
+    override fun beginCollection(
+        desc: SerialDescriptor,
+        collectionSize: Int,
+        vararg typeParams: KSerializer<*>
+    ): CompositeEncoder {
+        return if (desc.kind == StructureKind.LIST) {
+            RecordListCsvEncoder(csv, writer)
+        } else {
+            super.beginCollection(desc, collectionSize, *typeParams)
         }
     }
-
-    override fun endChildStructure(desc: SerialDescriptor) {
-        writer.endRecord()
-    }
-
-    override fun encodeColumn(value: String, isNumeric: Boolean, isNull: Boolean) {
-        writer.beginRecord()
-        super.encodeColumn(value, isNumeric, isNull)
-        writer.endRecord()
-    }
-}
-
-internal class RecordListCsvEncoder(
-    csv: Csv,
-    writer: CsvWriter
-) : CsvEncoder(csv, writer, null) {
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
@@ -192,7 +190,42 @@ internal class RecordListCsvEncoder(
     }
 }
 
-internal class SimpleCsvEncoder(
+/**
+ * Encodes CSV records (lines).
+ */
+internal class RecordListCsvEncoder(
+    csv: Csv,
+    writer: CsvWriter
+) : CsvEncoder(csv, writer, null) {
+
+    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
+        // For complex records: Begin a new record and end it in [endChildStructure]
+        if (configuration.hasHeaderRecord && writer.isFirstRecord) {
+            printHeaderRecord(desc)
+        }
+        writer.beginRecord()
+        return super.beginStructure(desc, *typeParams)
+    }
+
+    override fun endChildStructure(desc: SerialDescriptor) {
+        // For complex records: End the record here
+        writer.endRecord()
+    }
+
+    override fun encodeCollectionSize(collectionSize: Int) {
+        // Collection records do not write their size.
+        // Instead the size is implicitly determined by reading until end-of-line.
+    }
+
+    override fun encodeColumn(value: String, isNumeric: Boolean, isNull: Boolean) {
+        // For simple one-column records: Begin and end record here
+        writer.beginRecord()
+        super.encodeColumn(value, isNumeric, isNull)
+        writer.endRecord()
+    }
+}
+
+internal open class SimpleCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
     parent: CsvEncoder
@@ -202,7 +235,7 @@ internal class ObjectCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
     parent: CsvEncoder
-) : CsvEncoder(csv, writer, parent) {
+) : SimpleCsvEncoder(csv, writer, parent) {
 
     override fun endStructure(desc: SerialDescriptor) {
         encodeString(desc.name)
@@ -215,7 +248,7 @@ internal class SealedCsvEncoder(
     writer: CsvWriter,
     parent: CsvEncoder,
     private val sealedDesc: SerialDescriptor
-) : CsvEncoder(csv, writer, parent) {
+) : SimpleCsvEncoder(csv, writer, parent) {
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
         val sealedChildren = sealedDesc.elementDescriptors()

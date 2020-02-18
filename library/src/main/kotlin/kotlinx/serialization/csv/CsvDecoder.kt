@@ -20,6 +20,10 @@ internal abstract class CsvDecoder(
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return when (desc.kind) {
+            StructureKind.LIST,
+            StructureKind.MAP ->
+                CollectionCsvDecoder(csv, reader, this, headers)
+
             StructureKind.CLASS ->
                 ClassCsvDecoder(csv, reader, this, headers)
 
@@ -239,8 +243,9 @@ internal class RecordListCsvDecoder(
 
     override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
         return when (desc.kind) {
-            StructureKind.LIST ->
-                ListRecordCsvDecoder(csv, reader, this)
+            StructureKind.LIST,
+            StructureKind.MAP ->
+                CollectionRecordCsvDecoder(csv, reader, this)
 
             else ->
                 super.beginStructure(desc, *typeParams)
@@ -256,6 +261,31 @@ internal class RecordListCsvDecoder(
     override fun decodeColumn(): String {
         val value = super.decodeColumn()
         readTrailingDelimiter()
+        elementIndex++
+        return value
+    }
+}
+
+internal class CollectionCsvDecoder(
+    csv: Csv,
+    reader: CsvReader,
+    parent: CsvDecoder,
+    private val classHeaders: Headers?
+) : CsvDecoder(csv, reader, parent) {
+
+    private var elementIndex = 0
+
+    override fun decodeElementIndex(desc: SerialDescriptor): Int = CompositeDecoder.READ_ALL
+
+    override fun decodeCollectionSize(desc: SerialDescriptor) = decodeInt()
+
+    override fun endChildStructure(desc: SerialDescriptor) {
+        super.endChildStructure(desc)
+        elementIndex++
+    }
+
+    override fun decodeColumn(): String {
+        val value = super.decodeColumn()
         elementIndex++
         return value
     }
@@ -324,7 +354,7 @@ internal class ObjectCsvDecoder(
     }
 }
 
-internal class ListRecordCsvDecoder(
+internal class CollectionRecordCsvDecoder(
     csv: Csv,
     reader: CsvReader,
     parent: RecordListCsvDecoder
@@ -338,6 +368,11 @@ internal class ListRecordCsvDecoder(
         // TODO Check for END_OF_RECORD
         reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.READ_DONE
         else -> elementIndex
+    }
+
+    override fun endChildStructure(desc: SerialDescriptor) {
+        super.endChildStructure(desc)
+        elementIndex++
     }
 
     override fun decodeColumn(): String {
