@@ -1,4 +1,6 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.decode
+
+import kotlinx.serialization.csv.CsvConfiguration
 
 /**
  * Reader that parses CSV input.

@@ -2,6 +2,10 @@ package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
 import kotlinx.serialization.csv.CsvConfiguration.Companion.rfc4180
+import kotlinx.serialization.csv.decode.CsvReader
+import kotlinx.serialization.csv.decode.RootCsvDecoder
+import kotlinx.serialization.csv.decode.StringSource
+import kotlinx.serialization.csv.encode.RootCsvEncoder
 import kotlinx.serialization.modules.EmptyModule
 import kotlinx.serialization.modules.SerialModule
 

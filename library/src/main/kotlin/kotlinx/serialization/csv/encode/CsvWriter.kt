@@ -1,4 +1,6 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.encode
+
+import kotlinx.serialization.csv.CsvConfiguration
 
 /**
  * Writer to generate CSV output.

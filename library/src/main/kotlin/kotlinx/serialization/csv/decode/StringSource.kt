@@ -1,4 +1,4 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.decode
 
 private const val EOF = -1
 

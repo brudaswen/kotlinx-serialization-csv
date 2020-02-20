@@ -1,4 +1,4 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.decode
 
 /**
  * Stream that allow to read [Char]s from.
