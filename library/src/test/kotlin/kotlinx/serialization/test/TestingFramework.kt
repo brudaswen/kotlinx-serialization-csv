@@ -4,16 +4,15 @@
 
 package kotlinx.serialization.test
 
-import kotlinx.serialization.*
-import kotlinx.serialization.internal.HexConverter
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.StringFormat
 import kotlin.test.assertEquals
 
 inline fun <reified T : Any?> assertStringFormAndRestored(
     expected: String,
     original: T,
     serializer: KSerializer<T>,
-    format: StringFormat = Json.plain,
+    format: StringFormat,
     printResult: Boolean = false
 ) {
     val string = format.stringify(serializer, original)
@@ -25,11 +24,11 @@ inline fun <reified T : Any?> assertStringFormAndRestored(
 }
 
 inline fun <reified T : Any> assertParse(
-        input: String,
-        expected: T,
-        serializer: KSerializer<T>,
-        format: StringFormat = Json.plain,
-        printResult: Boolean = false
+    input: String,
+    expected: T,
+    serializer: KSerializer<T>,
+    format: StringFormat,
+    printResult: Boolean = false
 ) {
     val restored = format.parse(serializer, input)
     if (printResult) println("[Restored form] $restored")

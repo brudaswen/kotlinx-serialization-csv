@@ -3,6 +3,7 @@ package kotlinx.serialization.csv
 import kotlinx.serialization.internal.nullable
 import kotlinx.serialization.list
 import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlin.test.Ignore
 import kotlin.test.Test
 
 /**
@@ -18,6 +19,7 @@ class CsvSealedKindTest {
             Csv
     )
 
+    @Ignore("For now, serialization library does not provide the required information to write multiple columns")
     @Test
     fun testSealedNullable() = assertStringFormAndRestored(
             ",,",
