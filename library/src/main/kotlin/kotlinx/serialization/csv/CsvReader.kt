@@ -1,5 +1,8 @@
 package kotlinx.serialization.csv
 
+/**
+ * Reader that parses CSV input.
+ */
 internal class CsvReader(private val source: Source, private val configuration: CsvConfiguration) {
 
     var recordNo = 0
@@ -11,11 +14,10 @@ internal class CsvReader(private val source: Source, private val configuration: 
     val isDone: Boolean
         get() = !source.canRead()
 
+    /**
+     * Read value in the next column.
+     */
     fun readColumn(): String {
-        return readSimpleColumn()
-    }
-
-    private fun readSimpleColumn(): String {
         val value = StringBuilder()
 
         val delimiter = configuration.delimiter
@@ -23,11 +25,13 @@ internal class CsvReader(private val source: Source, private val configuration: 
         val quoteChar = configuration.quoteChar
 
         while (source.canRead()) {
+            if (read(configuration.recordSeparator)) {
+                recordNo++
+                break
+            }
+
             val char = source.read()
             if (char == null) {
-                break
-            } else if (readRecordSeparator(char)) {
-                recordNo++
                 break
             } else if (char == escapeChar) {
                 value.append(readEscaped())
@@ -48,6 +52,9 @@ internal class CsvReader(private val source: Source, private val configuration: 
         return value.toString()
     }
 
+    /**
+     * Read quoted value until quoting is closed.
+     */
     private fun readQuotedColumn(): String {
         val value = StringBuilder()
 
@@ -79,52 +86,43 @@ internal class CsvReader(private val source: Source, private val configuration: 
         return value.toString()
     }
 
-    // FIXME Should only read Whitespace
+    /**
+     * Read white-space characters until non-white-space character appears or until end-of-record.
+     */
     private fun readWhitespace() {
-        val value = StringBuilder()
-
-        val delimiter = configuration.delimiter
-
         while (source.canRead()) {
-            val char = source.read()
-            if (char == null) {
-                break
-            } else if (readRecordSeparator(char)) {
+            if (read(configuration.recordSeparator)) {
                 recordNo++
                 break
-            } else if (char == delimiter) {
+            }
+
+            val char = source.read()
+            if (char == null || !char.isWhitespace()) {
                 break
             }
-
-            // Append current char
-            value.append(char.toChar())
         }
     }
 
-    private fun readRecordSeparator(char: Char): Boolean {
-        val sep0 = configuration.recordSeparator[0]
-        val sep1 = configuration.recordSeparator.getOrNull(1)
-        if (char == sep0 && (sep1 == null || source.peek() == sep1)) {
-            if (sep1 != null) {
-                source.read()
-            }
-            return true
-        }
-        return false
-    }
-
+    /**
+     * Read next char in escape mode.
+     *
+     * `t`, `r`, `n` and `b` will get converted to `\t` (tab), `\r` (carriage return),
+     * `\n` (line feed) and `\b (backspace)`.
+     */
     private fun readEscaped(): Char? =
-            when (val char = source.read()) {
-                't' -> '\t'
-                'r' -> '\r'
-                'n' -> '\n'
-                'b' -> '\b'
-                else -> char
-            }
+        when (val char = source.read()) {
+            't' -> '\t'
+            'r' -> '\r'
+            'n' -> '\n'
+            'b' -> '\b'
+            else -> char
+        }
 
+    /** Read empty lines from the stream. */
     fun readEmptyLines() {
         if (configuration.ignoreEmptyLines) {
             while (read(configuration.recordSeparator)) {
+                // Read all empty lines
             }
             if (source.peek() == null) {
                 source.read()
@@ -132,6 +130,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
         }
     }
 
+    /** Read end of CSV record (which is either the record separator or EOF). */
     fun readEndOfRecord() {
         if (source.peek() == null) {
             source.read()
@@ -140,6 +139,10 @@ internal class CsvReader(private val source: Source, private val configuration: 
         }
     }
 
+    /**
+     * Read the given [expected] value from the stream. Or do nothing if the next chars do not match.
+     * @return True if the [expected] value was read; false otherwise.
+     */
     private fun read(expected: String): Boolean {
         source.mark()
         for (i in expected.indices) {
@@ -154,18 +157,33 @@ internal class CsvReader(private val source: Source, private val configuration: 
         return true
     }
 
+    /**
+     * Mark the current position in the stream. Calling [reset] afterwards resets the stream to this marked position.
+     *
+     * Calling [mark] must be proceeded by a call to [reset] or [unmark].
+     */
     fun mark() {
         source.mark()
     }
 
+    /**
+     * Remove the last [mark] without resetting the stream to the marked position.
+     */
     fun unmark() {
         source.unmark()
     }
 
+    /**
+     * Reset the stream to the last [mark]ed position (and remove the mark).
+     */
     fun reset() {
         source.reset()
     }
 
+    /**
+     * Check is the next column value is `null`.
+     * @return True if the next column value is `null`; false otherwise.
+     */
     fun isNullToken(): Boolean {
         source.mark()
         val isNull = readColumn() == configuration.nullString
@@ -173,17 +191,5 @@ internal class CsvReader(private val source: Source, private val configuration: 
         return isNull
     }
 
-    private fun String.rangeEquals(start: Int, pattern: String): Boolean {
-        if (start < 0 || start + pattern.length >= length) return false
-        for (i in pattern.indices) {
-            if (this[start + i] != pattern[i]) {
-                return false
-            }
-        }
-        return true
-    }
-
-    override fun toString(): String {
-        return "CsvReader(line=$recordNo, source='$source')"
-    }
+    override fun toString() = "CsvReader(line=$recordNo, source='$source')"
 }

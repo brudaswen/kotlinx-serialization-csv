@@ -4,6 +4,9 @@ import kotlinx.serialization.*
 import kotlinx.serialization.internal.ListLikeDescriptor
 import kotlinx.serialization.modules.SerialModule
 
+/**
+ * Default CSV decoder.
+ */
 internal abstract class CsvDecoder(
     protected val csv: Csv,
     protected val reader: CsvReader,
@@ -22,7 +25,7 @@ internal abstract class CsvDecoder(
         return when (desc.kind) {
             StructureKind.LIST,
             StructureKind.MAP ->
-                CollectionCsvDecoder(csv, reader, this, headers)
+                CollectionCsvDecoder(csv, reader, this)
 
             StructureKind.CLASS ->
                 ClassCsvDecoder(csv, reader, this, headers)
@@ -186,6 +189,13 @@ internal abstract class CsvDecoder(
     }
 }
 
+/**
+ * Initial entry point for decoding.
+ *
+ * This root decoder handles the case that the first level is a list
+ * (which is interpreted as multiple CSV records/lines). If this is the case, encoding continues in
+ * [RecordListCsvDecoder].
+ */
 internal class RootCsvDecoder(
     csv: Csv,
     reader: CsvReader
@@ -224,6 +234,9 @@ internal class RootCsvDecoder(
     }
 }
 
+/**
+ * Decodes list of multiple CSV records/lines.
+ */
 internal class RecordListCsvDecoder(
     csv: Csv,
     reader: CsvReader
@@ -266,11 +279,15 @@ internal class RecordListCsvDecoder(
     }
 }
 
+/**
+ * Decode collections (e.g. lists, sets, maps).
+ *
+ * Expects that the first values defines the number of elements in the collection.
+ */
 internal class CollectionCsvDecoder(
     csv: Csv,
     reader: CsvReader,
-    parent: CsvDecoder,
-    private val classHeaders: Headers?
+    parent: CsvDecoder
 ) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
@@ -291,6 +308,11 @@ internal class CollectionCsvDecoder(
     }
 }
 
+/**
+ * CSV decoder for classes.
+ *
+ * Supports header line such that class properties can be in different order.
+ */
 internal class ClassCsvDecoder(
     csv: Csv,
     reader: CsvReader,
@@ -328,6 +350,11 @@ internal class ClassCsvDecoder(
     }
 }
 
+/**
+ * CSV decoder for `object`s.
+ *
+ * Expects the name of the object (either fully-qualified class name or [SerialName].
+ */
 internal class ObjectCsvDecoder(
     csv: Csv,
     reader: CsvReader,
@@ -354,6 +381,13 @@ internal class ObjectCsvDecoder(
     }
 }
 
+/**
+ * Decode collection record.
+ *
+ * If the CSV record is a collection (list, set, map) the collection elements fill the whole line.
+ * Therefore, the number of elements is determined by reading until the end of line and the size of the collection is
+ * not required and consequently not expected as the first value.
+ */
 internal class CollectionRecordCsvDecoder(
     csv: Csv,
     reader: CsvReader,
@@ -382,6 +416,12 @@ internal class CollectionRecordCsvDecoder(
     }
 }
 
+/**
+ * CSV decoder for sealed classes.
+ *
+ * Expects columns for all possible child classes. The columns for the actual type should be filled and all other
+ * columns are expected to contain `null` values.
+ */
 internal class SealedCsvDecoder(
     csv: Csv,
     reader: CsvReader,

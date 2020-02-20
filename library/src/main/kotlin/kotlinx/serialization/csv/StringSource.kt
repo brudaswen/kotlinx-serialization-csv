@@ -2,6 +2,9 @@ package kotlinx.serialization.csv
 
 private const val EOF = -1
 
+/**
+ * Character stream generated from a [String].
+ */
 internal class StringSource(private val content: String) : Source {
 
     private var position = 0
@@ -11,18 +14,18 @@ internal class StringSource(private val content: String) : Source {
     override fun canRead() = position != EOF
 
     override fun read() =
-            peek().also {
-                when (position) {
-                    in content.indices -> position++
-                    else -> position = EOF
-                }
+        peek().also {
+            when (position) {
+                in content.indices -> position++
+                else -> position = EOF
             }
+        }
 
     override fun peek() =
-            when (position) {
-                in content.indices -> content[position]
-                else -> null
-            }
+        when (position) {
+            in content.indices -> content[position]
+            else -> null
+        }
 
     override fun mark() {
         marks.add(position)

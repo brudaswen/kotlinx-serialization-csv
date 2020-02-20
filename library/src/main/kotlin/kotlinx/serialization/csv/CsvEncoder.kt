@@ -1,12 +1,11 @@
-/*
- * Copyright 2017-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
- */
-
 package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
 import kotlinx.serialization.modules.SerialModule
 
+/**
+ * Default CSV encoder.
+ */
 internal abstract class CsvEncoder(
     protected val csv: Csv,
     protected val writer: CsvWriter,
@@ -124,17 +123,23 @@ internal abstract class CsvEncoder(
             val name = prefix + desc.getElementName(i)
             val childDesc = desc.getElementDescriptor(i)
 
-            if (childDesc.kind is UnionKind) {
-                writer.printColumn(name)
-            } else if (childDesc.kind is PolymorphicKind.SEALED) {
-                writer.printColumn(name)
-                val headerSeparator = configuration.headerSeparator
-                printHeader("$name$headerSeparator", childDesc)
-            } else if (childDesc.elementsCount > 0) {
-                val headerSeparator = configuration.headerSeparator
-                printHeader("$name$headerSeparator", childDesc)
-            } else {
-                writer.printColumn(name)
+            when {
+                childDesc.kind is UnionKind ->
+                    writer.printColumn(name)
+
+                childDesc.kind is PolymorphicKind.SEALED -> {
+                    writer.printColumn(name)
+                    val headerSeparator = configuration.headerSeparator
+                    printHeader("$name$headerSeparator", childDesc)
+                }
+
+                childDesc.elementsCount > 0 -> {
+                    val headerSeparator = configuration.headerSeparator
+                    printHeader("$name$headerSeparator", childDesc)
+                }
+
+                else ->
+                    writer.printColumn(name)
             }
         }
     }
@@ -150,6 +155,10 @@ internal abstract class CsvEncoder(
 
 /**
  * Initial entry point for encoding.
+ *
+ * This root encoder handles the case that the first level is a list
+ * (which is interpreted as multiple CSV records/lines). If this is the case, encoding continues in
+ * [RecordListCsvEncoder].
  */
 internal class RootCsvEncoder(
     csv: Csv,
@@ -191,7 +200,7 @@ internal class RootCsvEncoder(
 }
 
 /**
- * Encodes CSV records (lines).
+ * Encodes list of multiple CSV records/lines.
  */
 internal class RecordListCsvEncoder(
     csv: Csv,
@@ -225,12 +234,20 @@ internal class RecordListCsvEncoder(
     }
 }
 
+/**
+ * Default CSV encoder that writes each value into the next column.
+ */
 internal open class SimpleCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
     parent: CsvEncoder
 ) : CsvEncoder(csv, writer, parent)
 
+/**
+ * CSV encoder for `object`s.
+ *
+ * Writes the name of the object (either fully-qualified class name or [SerialName].
+ */
 internal class ObjectCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
@@ -243,6 +260,12 @@ internal class ObjectCsvEncoder(
     }
 }
 
+/**
+ * CSV encoder for sealed classes.
+ *
+ * Writes columns for all possible child classes. The columns for the actual type get filled and all other columns
+ * are filled with `null` values.
+ */
 internal class SealedCsvEncoder(
     csv: Csv,
     writer: CsvWriter,

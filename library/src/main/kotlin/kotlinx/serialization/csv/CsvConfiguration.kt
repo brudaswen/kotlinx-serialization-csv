@@ -1,17 +1,32 @@
 package kotlinx.serialization.csv
 
+/**
+ * CSV serialization/parsing settings.
+ *
+ * @param delimiter The delimiter character between columns (default: `,`).
+ * @param recordSeparator The record separator (default: `\r\n`).
+ * @param quoteChar The quote character used to quote column values (default: `"`).
+ * @param quoteMode The quote mode used to decide if a column value should get quoted (default: `MINIMAL`).
+ * @param escapeChar The escape character used to escape reserved characters in a column value.
+ * @param nullString The value to identify `null` values (default: empty string).
+ * @param unitString The value to identify [Unit] values (default: `Unit`).
+ * @param ignoreEmptyLines Ignore empty lines during parsing (default: `true`).
+ * @param hasHeaderRecord First line is header record (default: `false`).
+ * @param headerSeparator Character that is used to separate hierarchical header names (default: `.`).
+ * @param hasTrailingDelimiter If records end with a trailing [delimiter] (default: `false`).
+ */
 data class CsvConfiguration(
-        val delimiter: Char = ',',
-        val recordSeparator: String = "\r\n",
-        val quoteChar: Char = '"',
-        val quoteMode: QuoteMode = QuoteMode.MINIMAL,
-        val escapeChar: Char? = if (quoteMode == QuoteMode.NONE) '\\' else null,
-        val nullString: String = "",
-        val unitString: String = Unit.toString(),
-        val ignoreEmptyLines: Boolean = true,
-        val hasHeaderRecord: Boolean = false,
-        val headerSeparator: Char = '.',
-        val hasTrailingDelimiter: Boolean = false
+    val delimiter: Char = ',',
+    val recordSeparator: String = "\r\n",
+    val quoteChar: Char = '"',
+    val quoteMode: QuoteMode = QuoteMode.MINIMAL,
+    val escapeChar: Char? = if (quoteMode == QuoteMode.NONE) '\\' else null,
+    val nullString: String = "",
+    val unitString: String = Unit.toString(),
+    val ignoreEmptyLines: Boolean = true,
+    val hasHeaderRecord: Boolean = false,
+    val headerSeparator: Char = '.',
+    val hasTrailingDelimiter: Boolean = false
 ) {
 
     init {
