@@ -1,4 +1,4 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.records
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -47,30 +47,30 @@ data class IntStringRecord(val a: Int, val b: String)
 
 @Serializable
 data class ComplexRecord(
-        val a: Int,
-        val b: Byte,
-        val c: Short,
-        val d: Long,
-        val e: Float,
-        val f: Double,
-        val g: Boolean,
-        val h: String,
-        val i: String?,
-        val j: Unit,
-        val k: Enum
+    val a: Int,
+    val b: Byte,
+    val c: Short,
+    val d: Long,
+    val e: Float,
+    val f: Double,
+    val g: Boolean,
+    val h: String,
+    val i: String?,
+    val j: Unit,
+    val k: Enum
 )
 
 @Serializable
 data class SerialNameRecord(
-        val first: Int,
-        @SerialName("second") val b: Int
+    val first: Int,
+    @SerialName("second") val b: Int
 )
 
 @Serializable
 data class NestedRecord(
-        val time: Int,
-        val name: String,
-        val data: Data
+    val time: Int,
+    val name: String,
+    val data: Data
 )
 
 @Serializable

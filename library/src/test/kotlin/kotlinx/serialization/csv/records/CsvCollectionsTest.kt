@@ -1,12 +1,14 @@
-package kotlinx.serialization.csv
+package kotlinx.serialization.csv.records
 
 import kotlinx.serialization.*
+import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.internal.nullable
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
 /**
- * Test [Csv] ([CsvEncoder] and [CsvDecoder]) with [List]s, [Set]s and [Map]s.
+ * Test [Csv] with [List]s, [Set]s and [Map]s.
  */
 class CsvCollectionsTest {
 
@@ -43,7 +45,11 @@ class CsvCollectionsTest {
             listOf(5, null, 7)
         ),
         Int.serializer().nullable.list.nullable.list,
-        Csv(CsvConfiguration(ignoreEmptyLines = false))
+        Csv(
+            CsvConfiguration(
+                ignoreEmptyLines = false
+            )
+        )
     )
 
     @Test
