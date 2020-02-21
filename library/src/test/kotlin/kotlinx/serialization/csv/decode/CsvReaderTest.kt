@@ -73,6 +73,18 @@ class CsvReaderTest {
     }
 
     @Test
+    fun testReadEscaped() {
+        val csv = """
+            |1,a\,b,2
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration(escapeChar = '\\'))
+
+        assertEquals("1", reader.readColumn())
+        assertEquals("a,b", reader.readColumn())
+        assertEquals("2", reader.readColumn())
+    }
+
+    @Test
     fun testReadQuoted() {
         val csv = """
             |"1","a"
@@ -137,6 +149,16 @@ class CsvReaderTest {
     }
 
     @Test
+    fun testReadQuotedWithQuotes() {
+        val csv = """
+            |"a""b"
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration(escapeChar = '\\'))
+
+        assertEquals("a\"b", reader.readColumn())
+    }
+
+    @Test
     fun testReadWithWhiteSpace() {
         val csv = """
             |  "1"  ,  "a"  
@@ -148,5 +170,98 @@ class CsvReaderTest {
         assertEquals("a", reader.readColumn())
         assertEquals("2", reader.readColumn())
         assertEquals("b", reader.readColumn())
+    }
+
+    @Test
+    fun testReadEmptyLines() {
+        val csv = """
+            |1
+            |
+            |
+            |2
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.readEmptyLines()
+        assertEquals("2", reader.readColumn())
+    }
+
+    @Test
+    fun testReadEmptyLinesAtEof() {
+        val csv = """
+            |1
+            |
+            |
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.readEmptyLines()
+        assertTrue(reader.isDone)
+    }
+
+    @Test
+    fun testEndOfRecord() {
+        val csv = """
+            |1,
+            |2,
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.readEndOfRecord()
+        assertEquals("2", reader.readColumn())
+        reader.readEndOfRecord()
+        assertTrue(reader.isDone)
+    }
+
+    @Test
+    fun testMarkUnmark() {
+        val csv = """
+            |1,2,3
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.mark()
+        assertEquals("2", reader.readColumn())
+        reader.unmark()
+        assertEquals("3", reader.readColumn())
+    }
+
+    @Test
+    fun testMarkMarkUnmarkReset() {
+        val csv = """
+            |1,2,3,4,5
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.mark()
+        assertEquals("2", reader.readColumn())
+        reader.mark()
+        assertEquals("3", reader.readColumn())
+        reader.unmark()
+        assertEquals("4", reader.readColumn())
+        reader.reset()
+        assertEquals("2", reader.readColumn())
+    }
+
+    @Test
+    fun testIsNullToken() {
+        val csv = """
+            |1,null,3
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration(nullString = "null"))
+
+        assertFalse(reader.isNullToken())
+        assertEquals("1", reader.readColumn())
+
+        assertTrue(reader.isNullToken())
+        assertEquals("null", reader.readColumn())
+
+        assertFalse(reader.isNullToken())
+        assertEquals("3", reader.readColumn())
     }
 }
