@@ -145,7 +145,7 @@ internal abstract class CsvDecoder(
                     if (childDesc.kind is StructureKind.CLASS) {
                         reader.reset()
                         headers[position] = nameIndex
-                        headers[position] = readHeaders(childDesc, "$prefix$name.")
+                        headers[nameIndex] = readHeaders(childDesc, "$prefix$name.")
                     } else {
                         reader.unmark()
                     }
