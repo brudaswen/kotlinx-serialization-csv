@@ -1,10 +1,12 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.internal.nullable
 import kotlinx.serialization.list
 import kotlinx.serialization.test.assertStringFormAndRestored
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
 /**
@@ -43,4 +45,12 @@ class CsvObjectTest {
             )
         )
     )
+
+    @Test
+    @UnstableDefault
+    fun testInvalidObject() {
+        assertThrows<IllegalArgumentException> {
+            Csv.parse(ObjectRecord.serializer(), "kotlinx.serialization.csv.records.InvalidName")
+        }
+    }
 }
