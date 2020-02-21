@@ -68,9 +68,9 @@ class CsvNestedRecordTest {
         ),
         NestedRecord.serializer(),
         Csv(
-            (CsvConfiguration(
+            CsvConfiguration(
                 hasHeaderRecord = true
-            ))
+            )
         )
     )
 
@@ -101,9 +101,9 @@ class CsvNestedRecordTest {
         ),
         NestedRecord.serializer().list,
         Csv(
-            (CsvConfiguration(
+            CsvConfiguration(
                 hasHeaderRecord = true
-            ))
+            )
         )
     )
 }

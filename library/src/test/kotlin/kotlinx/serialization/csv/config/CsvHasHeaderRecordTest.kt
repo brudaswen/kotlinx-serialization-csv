@@ -126,7 +126,7 @@ class CsvHasHeaderRecordTest {
 
     @Test
     fun testNestedRecordWithHeaderReordered() = assertParse(
-        "time,name,data.location.lon,data.location.lat,data.speed,data.info\r\n0,Alice,1.0,0.0,100,info",
+        "time,data.location.lon,data.location.lat,data.info,data.speed,name\r\n0,1.0,0.0,info,100,Alice",
         NestedRecord(
             0,
             "Alice",
@@ -139,9 +139,9 @@ class CsvHasHeaderRecordTest {
         ),
         NestedRecord.serializer(),
         Csv(
-            (CsvConfiguration(
+            CsvConfiguration(
                 hasHeaderRecord = true
-            ))
+            )
         )
     )
 
@@ -172,9 +172,9 @@ class CsvHasHeaderRecordTest {
         ),
         NestedRecord.serializer().list,
         Csv(
-            (CsvConfiguration(
+            CsvConfiguration(
                 hasHeaderRecord = true
-            ))
+            )
         )
     )
 }

@@ -231,6 +231,51 @@ class CsvReaderTest {
     }
 
     @Test
+    fun testMarkReset() {
+        val csv = """
+            |1,2,3
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        assertEquals("1", reader.readColumn())
+        reader.mark()
+        assertEquals("2", reader.readColumn())
+        reader.reset()
+        assertEquals("2", reader.readColumn())
+    }
+
+    @Test
+    fun testReset() {
+        val csv = """
+            |1
+            |2
+            |3
+        """.trimMargin().replace("\n", "\r\n")
+        val reader = CsvReader(StringSource(csv), CsvConfiguration.default)
+
+        reader.mark()
+        assertEquals(0, reader.recordNo)
+        assertTrue(reader.isFirstRecord)
+        assertFalse(reader.isDone)
+
+        assertEquals("1", reader.readColumn())
+        assertEquals("2", reader.readColumn())
+        assertEquals("3", reader.readColumn())
+        assertTrue(reader.isDone)
+
+        // Read again after reset()
+        reader.reset()
+        assertEquals(0, reader.recordNo)
+        assertTrue(reader.isFirstRecord)
+        assertFalse(reader.isDone)
+
+        assertEquals("1", reader.readColumn())
+        assertEquals("2", reader.readColumn())
+        assertEquals("3", reader.readColumn())
+        assertTrue(reader.isDone)
+    }
+
+    @Test
     fun testMarkMarkUnmarkReset() {
         val csv = """
             |1,2,3,4,5

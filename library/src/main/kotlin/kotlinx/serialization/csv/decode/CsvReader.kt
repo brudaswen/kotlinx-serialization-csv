@@ -16,6 +16,8 @@ internal class CsvReader(private val source: Source, private val configuration: 
     val isDone: Boolean
         get() = !source.canRead()
 
+    private var marks = arrayListOf<Int>()
+
     /**
      * Read value in the next column.
      */
@@ -166,6 +168,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
      */
     fun mark() {
         source.mark()
+        marks.add(recordNo)
     }
 
     /**
@@ -173,6 +176,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
      */
     fun unmark() {
         source.unmark()
+        marks.removeAt(marks.size - 1)
     }
 
     /**
@@ -180,6 +184,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
      */
     fun reset() {
         source.reset()
+        recordNo = marks.removeAt(marks.size - 1)
     }
 
     /**
