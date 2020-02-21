@@ -8,6 +8,10 @@
 
 Library to easily use *Kotlin Serialization* to serialize/parse CSV.
 
+All types of record classes are supported (primitives, classes, enums, nested classes, ...).
+However, CSV serialization works best if the column number if fixed. So, collections (lists, sets, maps) and 
+open classes should be avoided.
+
 ## Gradle Dependencies
 ```kotlin
 // Kotlin Serialization CSV
@@ -59,6 +63,32 @@ fun main() {
     // ]
 }
 ```
+
+### Pre-defined CSV formats
+The library comes with multiple pre-defined formats that can be used out of the box.
+
+| Config                 | Description |
+|---                     |---          |
+| `default`              | Standard Comma Separated Value format, as for `rfc4180` but allowing empty lines. *Format is unstable and may change in upcoming versions.* |
+| `rfc4180`              | Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180). |
+| `excel`                | Excel file format (using a comma as the value delimiter). |
+
+### Configuration
+CSV serialization and parsing options can be changed by providing a custom `CsvConfiguration`.
+
+| Option                 | Default Value  | Description |
+|---                     |---             | ---         |
+| `delimiter`            | `,`            | The delimiter character between columns. |
+| `recordSeparator`      | `\r\n`         | The record separator. |
+| `quoteChar`            | `"`            | The quote character used to quote column values. |
+| `quoteMode`            | `MINIMAL`      | The quote mode used to decide if a column value should get quoted.<ul><li>`ALL`: Quotes *all* fields.</li><li>`ALL_NON_NULL`: Quotes all *non-null fields* and *fields which contain special characters*.</li><li>`ALL_NON_NUMERIC`: Quotes all *non-numeric fields* and *fields which contain special characters*.</li><li>`MINIMAL`: Quotes *fields which contain special characters*.</li><li>`NONE`: *Never* quotes fields (requires `CsvConfiguration.escapeChar` to be set).</li></ul> |
+| `escapeChar`           | `null` (`\\` for `QuoteMode.NONE`) | The escape character used to escape reserved characters in a column value. |
+| `nullString`           | *empty string* | The value to identify `null` values. |
+| `unitString`           | `Unit`         | The value to identify `Unit` values. |
+| `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing. |
+| `hasHeaderRecord`      | `false`        | First line is header record. |
+| `headerSeparator`      | `.`            | Character that is used to separate hierarchical header names. |
+| `hasTrailingDelimiter` | `false`        | If records end with a trailing `delimiter`. |
 
 ## Requirements
 
