@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
 }
 
 val implementation by configurations

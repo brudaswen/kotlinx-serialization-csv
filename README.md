@@ -6,7 +6,7 @@
 [![Codecov](https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&url=https%3A%2F%2Fimg.shields.io%2Fcodecov%2Fc%2Fgithub%2Fbrudaswen%2Fkotlinx-serialization-csv%3Fstyle%3Dflat-square)](https://codecov.io/gh/brudaswen/kotlinx-serialization-csv)
 [![License](https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&url=https%3A%2F%2Fimg.shields.io%2Fgithub%2Flicense%2Fbrudaswen%2Fkotlinx-serialization-csv%3Fstyle%3Dflat-square)](https://www.apache.org/licenses/LICENSE-2.0)
 
-Library to easily use Kotlin Serialization to serialize to/from CSV.
+Library to easily use *Kotlin Serialization* to serialize/parse CSV.
 
 ## Gradle Dependencies
 ```kotlin
@@ -18,15 +18,53 @@ implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
 ```
 
 ## Usage
-```kotlin
+First configure your project according to the 
+[documentation](https://github.com/Kotlin/kotlinx.serialization#setup)
+of the *Kotlin Serialization* library.
 
+### CSV Example
+```kotlin
+@Serializable
+data class Person(val nickname: String, val name: String?, val appearance: Appearance)
+
+@Serializable
+data class Appearance(val gender: Gender?, val age: Int?, val height: Double?)
+
+@Serializable
+enum class Gender { MALE, FEMALE }
+
+fun main() {
+    val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
+
+    val records = listOf(
+        Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
+        Person("Trinity", null, Appearance(Gender.FEMALE, null, 1.74))
+    )
+    val serialized = csv.stringify(Person.serializer().list, records)
+    println(serialized)
+    // nickname,name,appearance.gender,appearance.age,appearance.height
+    // Neo,Thomas A. Anderson,MALE,37,1.86
+    // Trinity,,FEMALE,,1.74
+
+    val input = """
+        nickname,appearance.gender,appearance.height,appearance.age,name
+        Neo,MALE,1.86,37,Thomas A. Anderson
+        Trinity,FEMALE,1.74,,
+    """.trimIndent().replace("\n", "\r\n")
+    val parsed = csv.parse(Person.serializer().list, input)
+    println(parsed)
+    // [
+    //   Person(nickname=Neo, name=Thomas A. Anderson, appearance=Appearance(gender=MALE, age=37, height=1.86)),
+    //   Person(nickname=Trinity, name=null, appearance=Appearance(gender=FEMALE, age=null, height=1.74))
+    // ]
+}
 ```
 
 ## Requirements
 
-| Dependency             | Versions          |
-|---                     |---                |
-| *Kotlin Serialization* | XXX     |
+| Dependency             | Versions |
+|---                     |---       |
+| *Kotlin Serialization* | 0.14.0   |
 
 ## License
 
