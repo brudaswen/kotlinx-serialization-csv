@@ -15,10 +15,10 @@ open classes should be avoided.
 ## Gradle Dependencies
 ```kotlin
 // Kotlin Serialization CSV
-implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:0.1.0")
+implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:0.2.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 ```
 
 ## Usage
@@ -84,7 +84,6 @@ CSV serialization and parsing options can be changed by providing a custom `CsvC
 | `quoteMode`            | `MINIMAL`      | The quote mode used to decide if a column value should get quoted.<ul><li>`ALL`: Quotes *all* fields.</li><li>`ALL_NON_NULL`: Quotes all *non-null fields* and *fields which contain special characters*.</li><li>`ALL_NON_NUMERIC`: Quotes all *non-numeric fields* and *fields which contain special characters*.</li><li>`MINIMAL`: Quotes *fields which contain special characters*.</li><li>`NONE`: *Never* quotes fields (requires `CsvConfiguration.escapeChar` to be set).</li></ul> |
 | `escapeChar`           | `null` (`\\` for `QuoteMode.NONE`) | The escape character used to escape reserved characters in a column value. |
 | `nullString`           | *empty string* | The value to identify `null` values. |
-| `unitString`           | `Unit`         | The value to identify `Unit` values. |
 | `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing. |
 | `hasHeaderRecord`      | `false`        | First line is header record. |
 | `headerSeparator`      | `.`            | Character that is used to separate hierarchical header names. |
@@ -94,7 +93,7 @@ CSV serialization and parsing options can be changed by providing a custom `CsvC
 
 | Dependency             | Versions |
 |---                     |---       |
-| *Kotlin Serialization* | 0.14.0   |
+| *Kotlin Serialization* | 0.20.0   |
 
 ## License
 

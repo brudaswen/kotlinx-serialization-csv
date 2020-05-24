@@ -1,10 +1,10 @@
 package kotlinx.serialization.csv.records
 
 import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.internal.nullable
-import kotlinx.serialization.list
 import kotlinx.serialization.test.assertStringFormAndRestored
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test

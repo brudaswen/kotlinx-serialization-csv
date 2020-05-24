@@ -1,17 +1,16 @@
 package kotlinx.serialization.csv.example
 
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.SerialClassDescImpl
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Serializer(forClass = UUID::class)
 object UUIDSerializer : KSerializer<UUID> {
-    override val descriptor: SerialDescriptor = SerialClassDescImpl("UUID")
+    override val descriptor: SerialDescriptor = SerialDescriptor("UUID")
 
-    override fun serialize(encoder: Encoder, obj: UUID) =
-        encoder.encodeString(obj.toString())
+    override fun serialize(encoder: Encoder, value: UUID) =
+        encoder.encodeString(value.toString())
 
     override fun deserialize(decoder: Decoder): UUID =
         UUID.fromString(decoder.decodeString())
@@ -21,10 +20,10 @@ object UUIDSerializer : KSerializer<UUID> {
 object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
     private val format = DateTimeFormatter.ISO_DATE_TIME
 
-    override val descriptor: SerialDescriptor = SerialClassDescImpl("LocalDateTime")
+    override val descriptor: SerialDescriptor = SerialDescriptor("LocalDateTime")
 
-    override fun serialize(encoder: Encoder, obj: LocalDateTime) =
-        encoder.encodeString(format.format(obj))
+    override fun serialize(encoder: Encoder, value: LocalDateTime) =
+        encoder.encodeString(format.format(value))
 
     override fun deserialize(decoder: Decoder): LocalDateTime =
         format.parse(decoder.decodeString(), LocalDateTime::from)

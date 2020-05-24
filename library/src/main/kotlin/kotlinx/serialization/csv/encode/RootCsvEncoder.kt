@@ -22,23 +22,26 @@ internal class RootCsvEncoder(
             this(csv, CsvWriter(output, csv.configuration))
 
     override fun beginCollection(
-        desc: SerialDescriptor,
+        descriptor: SerialDescriptor,
         collectionSize: Int,
-        vararg typeParams: KSerializer<*>
+        vararg typeSerializers: KSerializer<*>
     ): CompositeEncoder {
-        return if (desc.kind == StructureKind.LIST) {
+        return if (descriptor.kind == StructureKind.LIST) {
             RecordListCsvEncoder(csv, writer)
         } else {
-            super.beginCollection(desc, collectionSize, *typeParams)
+            super.beginCollection(descriptor, collectionSize, *typeSerializers)
         }
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
+    override fun beginStructure(
+        descriptor: SerialDescriptor,
+        vararg typeSerializers: KSerializer<*>
+    ): CompositeEncoder {
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
-            printHeaderRecord(desc)
+            printHeaderRecord(descriptor)
         }
         writer.beginRecord()
-        return super.beginStructure(desc, *typeParams)
+        return super.beginStructure(descriptor, *typeSerializers)
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {

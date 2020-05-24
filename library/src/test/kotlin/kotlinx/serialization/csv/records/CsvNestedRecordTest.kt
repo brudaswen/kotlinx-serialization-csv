@@ -1,7 +1,8 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.csv.*
-import kotlinx.serialization.list
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 

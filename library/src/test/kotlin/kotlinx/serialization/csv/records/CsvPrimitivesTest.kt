@@ -1,9 +1,9 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.builtins.UnitSerializer
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.internal.UnitSerializer
-import kotlinx.serialization.list
-import kotlinx.serialization.serializer
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
@@ -96,7 +96,7 @@ class CsvPrimitivesTest {
     fun testUnit() = assertStringFormAndRestored(
         "kotlin.Unit",
         Unit,
-        UnitSerializer,
+        UnitSerializer(),
         Csv
     )
 

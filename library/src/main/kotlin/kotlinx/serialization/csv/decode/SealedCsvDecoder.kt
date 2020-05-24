@@ -1,10 +1,8 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
+import kotlinx.serialization.*
+import kotlinx.serialization.CompositeDecoder.Companion.READ_DONE
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.elementDescriptors
 
 /**
  * CSV decoder for sealed classes.
@@ -21,23 +19,29 @@ internal class SealedCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex > 1 -> CompositeDecoder.READ_DONE
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+        reader.isDone || elementIndex > 1 -> READ_DONE
         else -> elementIndex
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
-        val sealedChildren = sealedDesc.elementDescriptors()
-        val index = sealedChildren.indexOf(desc)
+    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
+        val index = sealedChildren.indexOf(descriptor)
         for (innerDesc in sealedChildren.subList(0, index)) {
             readEmptyColumns(innerDesc)
         }
-        return super.beginStructure(desc, *typeParams)
+
+        return when (descriptor.kind) {
+            is StructureKind.OBJECT ->
+                SealedObjectDecoder(csv, reader, this)
+            else ->
+                super.beginStructure(descriptor, *typeParams)
+        }
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
-        val sealedChildren = sealedDesc.elementDescriptors()
-        val index = sealedChildren.indexOf(desc)
+    override fun endChildStructure(descriptor: SerialDescriptor) {
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
+        val index = sealedChildren.indexOf(descriptor)
         for (innerDesc in sealedChildren.subList(index + 1, sealedChildren.size)) {
             readEmptyColumns(innerDesc)
         }
@@ -54,5 +58,17 @@ internal class SealedCsvDecoder(
         for (innerDesc in desc.elementDescriptors()) {
             decodeNull()
         }
+    }
+
+    /**
+     * Object decoder that does not read any columns since the object
+     * is already encoded in the first column of the sealed class itself.
+     */
+    private class SealedObjectDecoder(
+        csv: Csv,
+        reader: CsvReader,
+        parent: CsvDecoder
+    ) : CsvDecoder(csv, reader, parent) {
+        override fun decodeElementIndex(descriptor: SerialDescriptor): Int = READ_DONE
     }
 }

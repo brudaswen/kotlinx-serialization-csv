@@ -15,8 +15,8 @@ internal class ObjectCsvEncoder(
     parent: CsvEncoder
 ) : SimpleCsvEncoder(csv, writer, parent) {
 
-    override fun endStructure(desc: SerialDescriptor) {
-        encodeString(desc.name)
-        super.endStructure(desc)
+    override fun endStructure(descriptor: SerialDescriptor) {
+        encodeString(descriptor.serialName)
+        super.endStructure(descriptor)
     }
 }

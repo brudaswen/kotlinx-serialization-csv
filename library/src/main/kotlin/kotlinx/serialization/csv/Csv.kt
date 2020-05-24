@@ -23,18 +23,18 @@ import kotlinx.serialization.modules.SerialModule
  */
 class Csv(
     internal val configuration: CsvConfiguration,
-    context: SerialModule = EmptyModule
-) : AbstractSerialFormat(context), StringFormat {
+    override val context: SerialModule = EmptyModule
+) : SerialFormat, StringFormat {
 
     /**
-     * Serialize [obj] into CSV record(s).
+     * Serialize [value] into CSV record(s).
      *
      * @param serializer The serializer used to serialize the given object.
-     * @param obj The [Serializable] object.
+     * @param value The [Serializable] object.
      */
-    override fun <T> stringify(serializer: SerializationStrategy<T>, obj: T): String {
+    override fun <T> stringify(serializer: SerializationStrategy<T>, value: T): String {
         val result = StringBuilder()
-        RootCsvEncoder(this, result).encode(serializer, obj)
+        RootCsvEncoder(this, result).encode(serializer, value)
         return result.toString()
     }
 
@@ -78,19 +78,18 @@ class Csv(
          */
         val rfc4180 = Csv(CsvConfiguration.rfc4180)
 
-        @UseExperimental(UnstableDefault::class)
         override val context: SerialModule
             get() = default.context
 
         /**
-         * Serialize [obj] into CSV record(s) using [CsvConfiguration.default].
+         * Serialize [value] into CSV record(s) using [CsvConfiguration.default].
          *
          * @param serializer The serializer used to serialize the given object.
-         * @param obj The [Serializable] object.
+         * @param value The [Serializable] object.
          */
         @UnstableDefault
-        override fun <T> stringify(serializer: SerializationStrategy<T>, obj: T): String =
-            default.stringify(serializer, obj)
+        override fun <T> stringify(serializer: SerializationStrategy<T>, value: T): String =
+            default.stringify(serializer, value)
 
         /**
          * Parse CSV [string] into [Serializable] object using [CsvConfiguration.default].

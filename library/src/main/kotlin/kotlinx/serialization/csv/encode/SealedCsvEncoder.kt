@@ -1,10 +1,7 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.CompositeEncoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
+import kotlinx.serialization.*
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.elementDescriptors
 
 /**
  * CSV encoder for sealed classes.
@@ -19,17 +16,26 @@ internal class SealedCsvEncoder(
     private val sealedDesc: SerialDescriptor
 ) : SimpleCsvEncoder(csv, writer, parent) {
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
-        val sealedChildren = sealedDesc.elementDescriptors()
-        val index = sealedChildren.indexOf(desc)
+    override fun beginStructure(
+        descriptor: SerialDescriptor,
+        vararg typeSerializers: KSerializer<*>
+    ): CompositeEncoder {
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
+        val index = sealedChildren.indexOf(descriptor)
         for (innerDesc in sealedChildren.subList(0, index)) {
             printEmptyColumns(innerDesc)
         }
-        return super.beginStructure(desc, *typeParams)
+
+        return when (descriptor.kind) {
+            is StructureKind.OBJECT ->
+                SealedObjectEncoder(csv, writer, this)
+            else ->
+                super.beginStructure(descriptor, *typeSerializers)
+        }
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {
-        val sealedChildren = sealedDesc.elementDescriptors()
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
         val index = sealedChildren.indexOf(desc)
         for (innerDesc in sealedChildren.subList(index + 1, sealedChildren.size)) {
             printEmptyColumns(innerDesc)
@@ -41,4 +47,14 @@ internal class SealedCsvEncoder(
             encodeNull()
         }
     }
+
+    /**
+     * Object encoder that does not print any columns since the object
+     * is already encoded in the first column of the sealed class itself.
+     */
+    private class SealedObjectEncoder(
+        csv: Csv,
+        writer: CsvWriter,
+        parent: CsvEncoder
+    ) : CsvEncoder(csv, writer, parent)
 }

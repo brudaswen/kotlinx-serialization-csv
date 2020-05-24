@@ -9,7 +9,6 @@ package kotlinx.serialization.csv
  * @param quoteMode The quote mode used to decide if a column value should get quoted (default: `MINIMAL`).
  * @param escapeChar The escape character used to escape reserved characters in a column value.
  * @param nullString The value to identify `null` values (default: empty string).
- * @param unitString The value to identify [Unit] values (default: `Unit`).
  * @param ignoreEmptyLines Ignore empty lines during parsing (default: `true`).
  * @param hasHeaderRecord First line is header record (default: `false`).
  * @param headerSeparator Character that is used to separate hierarchical header names (default: `.`).
@@ -22,7 +21,6 @@ data class CsvConfiguration(
     val quoteMode: QuoteMode = QuoteMode.MINIMAL,
     val escapeChar: Char? = if (quoteMode == QuoteMode.NONE) '\\' else null,
     val nullString: String = "",
-    val unitString: String = Unit.toString(),
     val ignoreEmptyLines: Boolean = true,
     val hasHeaderRecord: Boolean = false,
     val headerSeparator: Char = '.',
@@ -35,10 +33,6 @@ data class CsvConfiguration(
         }
         require(delimiter != escapeChar) {
             "The escapeChar character and the delimiter cannot be the same ('$delimiter')."
-        }
-
-        require(nullString != unitString) {
-            "The nullString and the unitString cannot be the same ('$nullString')."
         }
 
         if (quoteMode == QuoteMode.NONE) {

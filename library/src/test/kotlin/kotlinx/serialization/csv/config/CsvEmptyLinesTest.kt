@@ -1,11 +1,11 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.IntStringRecord
 import kotlinx.serialization.csv.records.NullRecord
-import kotlinx.serialization.list
-import kotlinx.serialization.serializer
 import kotlinx.serialization.test.assertParse
 import kotlin.test.Test
 

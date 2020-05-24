@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.CompositeDecoder
 import kotlinx.serialization.SerialDescriptor
 import kotlinx.serialization.csv.Csv
 
@@ -14,5 +15,25 @@ internal class CollectionCsvDecoder(
     parent: CsvDecoder
 ) : CsvDecoder(csv, reader, parent) {
 
-    override fun decodeCollectionSize(desc: SerialDescriptor) = decodeInt()
+    private var elementIndex = 0
+
+    override fun decodeSequentially(): Boolean = true
+
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.READ_DONE
+        else -> elementIndex
+    }
+
+    override fun decodeCollectionSize(descriptor: SerialDescriptor) = decodeInt()
+
+    override fun endChildStructure(descriptor: SerialDescriptor) {
+        super.endChildStructure(descriptor)
+        elementIndex++
+    }
+
+    override fun decodeColumn(): String {
+        val value = super.decodeColumn()
+        elementIndex++
+        return value
+    }
 }

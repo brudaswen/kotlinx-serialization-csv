@@ -13,13 +13,16 @@ internal class RecordListCsvEncoder(
     writer: CsvWriter
 ) : CsvEncoder(csv, writer, null) {
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
+    override fun beginStructure(
+        descriptor: SerialDescriptor,
+        vararg typeSerializers: KSerializer<*>
+    ): CompositeEncoder {
         // For complex records: Begin a new record and end it in [endChildStructure]
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
-            printHeaderRecord(desc)
+            printHeaderRecord(descriptor)
         }
         writer.beginRecord()
-        return super.beginStructure(desc, *typeParams)
+        return super.beginStructure(descriptor, *typeSerializers)
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {

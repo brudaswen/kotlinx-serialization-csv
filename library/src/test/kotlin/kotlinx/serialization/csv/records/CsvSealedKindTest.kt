@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.internal.nullable
-import kotlinx.serialization.list
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -14,7 +14,7 @@ class CsvSealedKindTest {
 
     @Test
     fun testSealedObject() = assertStringFormAndRestored(
-        "kotlinx.serialization.csv.records.SealedRecord.Object,kotlinx.serialization.csv.records.SealedRecord.Object,,,,,",
+        "kotlinx.serialization.csv.records.SealedRecord.Object,,,,",
         SealedRecord.Object,
         SealedRecord.serializer(),
         Csv
@@ -31,7 +31,7 @@ class CsvSealedKindTest {
 
     @Test
     fun testSealedOtherObject() = assertStringFormAndRestored(
-        "kotlinx.serialization.csv.records.SealedRecord.OtherObject,,kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,",
+        "kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,",
         SealedRecord.OtherObject,
         SealedRecord.serializer(),
         Csv
@@ -39,7 +39,7 @@ class CsvSealedKindTest {
 
     @Test
     fun testSealedClass() = assertStringFormAndRestored(
-        "kotlinx.serialization.csv.records.SealedRecord.Class,,,42,testing,,",
+        "kotlinx.serialization.csv.records.SealedRecord.Class,42,testing,,",
         SealedRecord.Class("testing"),
         SealedRecord.serializer(),
         Csv
@@ -47,7 +47,7 @@ class CsvSealedKindTest {
 
     @Test
     fun testSealedOtherClass() = assertStringFormAndRestored(
-        "kotlinx.serialization.csv.records.SealedRecord.OtherClass,,,,,41,test-ing",
+        "kotlinx.serialization.csv.records.SealedRecord.OtherClass,,,41,test-ing",
         SealedRecord.OtherClass("test-ing"),
         SealedRecord.serializer(),
         Csv
@@ -55,7 +55,11 @@ class CsvSealedKindTest {
 
     @Test
     fun testSealedList() = assertStringFormAndRestored(
-        "kotlinx.serialization.csv.records.SealedRecord.Object,kotlinx.serialization.csv.records.SealedRecord.Object,,,,,\r\nkotlinx.serialization.csv.records.SealedRecord.OtherObject,,kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,\r\nkotlinx.serialization.csv.records.SealedRecord.Class,,,42,testing,,",
+        """
+          |kotlinx.serialization.csv.records.SealedRecord.Object,,,,
+          |kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,
+          |kotlinx.serialization.csv.records.SealedRecord.Class,42,testing,,
+        """.trimMargin().replace("\n", "\r\n"),
         listOf(
             SealedRecord.Object,
             SealedRecord.OtherObject,

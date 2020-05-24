@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.csv.*
+import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.*
 import kotlinx.serialization.csv.records.*
 import kotlinx.serialization.test.assertStringFormAndRestored
@@ -316,34 +317,34 @@ class CsvQuoteModeTest {
     // TestUnit
 
     @Test
-    fun test_None_WithUnit_NotRequiringQuotes() = testUnit(NONE, "unit")
+    fun test_None_WithUnit_NotRequiringQuotes() = testUnit(NONE, "kotlin.Unit")
 
     @Test
-    fun test_None_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(NONE, "\\un\\it")
+    fun test_None_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(NONE, "kotl\\in.\\Un\\it")
 
     @Test
-    fun test_NonNumeric_WithUnit_NotRequiringQuotes() = testUnit(ALL_NON_NUMERIC, "\"unit\"")
+    fun test_NonNumeric_WithUnit_NotRequiringQuotes() = testUnit(ALL_NON_NUMERIC, "\"kotlin.Unit\"")
 
     @Test
-    fun test_NonNumeric_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL_NON_NUMERIC, "\"unit\"")
+    fun test_NonNumeric_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL_NON_NUMERIC, "\"kotlin.Unit\"")
 
     @Test
-    fun test_AllNonNull_WithUnit_NotRequiringQuotes() = testUnit(ALL_NON_NULL, "\"unit\"")
+    fun test_AllNonNull_WithUnit_NotRequiringQuotes() = testUnit(ALL_NON_NULL, "\"kotlin.Unit\"")
 
     @Test
-    fun test_AllNonNull_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL_NON_NULL, "\"unit\"")
+    fun test_AllNonNull_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL_NON_NULL, "\"kotlin.Unit\"")
 
     @Test
-    fun test_Minimal_WithUnit_NotRequiringQuotes() = testUnit(MINIMAL, "unit")
+    fun test_Minimal_WithUnit_NotRequiringQuotes() = testUnit(MINIMAL, "kotlin.Unit")
 
     @Test
-    fun test_Minimal_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(MINIMAL, "\"unit\"")
+    fun test_Minimal_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(MINIMAL, "\"kotlin.Unit\"")
 
     @Test
-    fun test_All_WithUnit_NotRequiringQuotes() = testUnit(ALL, "\"unit\"")
+    fun test_All_WithUnit_NotRequiringQuotes() = testUnit(ALL, "\"kotlin.Unit\"")
 
     @Test
-    fun test_All_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL, "\"unit\"")
+    fun test_All_WithUnit_RequiringQuotes() = testUnitRequiringQuotes(ALL, "\"kotlin.Unit\"")
 
 
     private fun testString(quoteMode: CsvConfiguration.QuoteMode, value: String, expected: String) =
@@ -489,8 +490,7 @@ class CsvQuoteModeTest {
         UnitRecord.serializer(),
         Csv(
             CsvConfiguration(
-                quoteMode = quoteMode,
-                unitString = "unit"
+                quoteMode = quoteMode
             )
         )
     )
@@ -503,8 +503,7 @@ class CsvQuoteModeTest {
             Csv(
                 CsvConfiguration(
                     quoteMode = quoteMode,
-                    unitString = "unit",
-                    delimiter = 'u',
+                    delimiter = 'U',
                     recordSeparator = "i"
                 )
             )

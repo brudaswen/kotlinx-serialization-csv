@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.csv.records.ComplexRecord
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
+import kotlinx.serialization.csv.records.ComplexRecord
 import kotlinx.serialization.csv.records.Enum
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test

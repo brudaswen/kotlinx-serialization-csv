@@ -21,14 +21,14 @@ internal class CollectionRecordCsvDecoder(
 
     private val recordNo = reader.recordNo
 
-    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
         // TODO Check for END_OF_RECORD
         reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.READ_DONE
         else -> elementIndex
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
-        super.endChildStructure(desc)
+    override fun endChildStructure(descriptor: SerialDescriptor) {
+        super.endChildStructure(descriptor)
         elementIndex++
     }
 

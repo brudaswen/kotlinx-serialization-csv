@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.encode
 
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.AbstractEncoder
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.modules.SerialModule
 
@@ -11,7 +12,7 @@ internal abstract class CsvEncoder(
     protected val csv: Csv,
     protected val writer: CsvWriter,
     private val parent: CsvEncoder?
-) : ElementValueEncoder() {
+) : AbstractEncoder() {
 
     override val context: SerialModule = csv.context
 
@@ -19,16 +20,19 @@ internal abstract class CsvEncoder(
         get() = csv.configuration
 
     override fun beginCollection(
-        desc: SerialDescriptor,
+        descriptor: SerialDescriptor,
         collectionSize: Int,
-        vararg typeParams: KSerializer<*>
+        vararg typeSerializers: KSerializer<*>
     ): CompositeEncoder {
         encodeCollectionSize(collectionSize)
-        return super.beginCollection(desc, collectionSize, *typeParams)
+        return super.beginCollection(descriptor, collectionSize, *typeSerializers)
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeEncoder {
-        return when (desc.kind) {
+    override fun beginStructure(
+        descriptor: SerialDescriptor,
+        vararg typeSerializers: KSerializer<*>
+    ): CompositeEncoder {
+        return when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP ->
                 SimpleCsvEncoder(csv, writer, this)
@@ -36,22 +40,22 @@ internal abstract class CsvEncoder(
             StructureKind.CLASS ->
                 SimpleCsvEncoder(csv, writer, this)
 
-            UnionKind.OBJECT ->
+            StructureKind.OBJECT ->
                 ObjectCsvEncoder(csv, writer, this)
 
             PolymorphicKind.SEALED ->
-                SealedCsvEncoder(csv, writer, this, desc)
+                SealedCsvEncoder(csv, writer, this, descriptor)
 
             PolymorphicKind.OPEN ->
                 SimpleCsvEncoder(csv, writer, this)
 
             else ->
-                error("CSV does not support '${desc.kind}'.")
+                error("CSV does not support '${descriptor.kind}'.")
         }
     }
 
-    override fun endStructure(desc: SerialDescriptor) {
-        parent?.endChildStructure(desc)
+    override fun endStructure(descriptor: SerialDescriptor) {
+        parent?.endChildStructure(descriptor)
     }
 
     protected open fun endChildStructure(desc: SerialDescriptor) {
@@ -97,12 +101,8 @@ internal abstract class CsvEncoder(
         encodeColumn(configuration.nullString, isNull = true)
     }
 
-    override fun encodeUnit() {
-        encodeColumn(configuration.unitString)
-    }
-
-    override fun encodeEnum(enumDescription: SerialDescriptor, ordinal: Int) {
-        encodeColumn(enumDescription.getElementName(ordinal))
+    override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
+        encodeColumn(enumDescriptor.getElementName(index))
     }
 
     protected fun printHeaderRecord(desc: SerialDescriptor) {
@@ -131,8 +131,10 @@ internal abstract class CsvEncoder(
                 childDesc.kind is PolymorphicKind.SEALED -> {
                     writer.printColumn(name)
                     val headerSeparator = configuration.headerSeparator
-                    printHeader("$name$headerSeparator", childDesc)
+                    printHeader("$name$headerSeparator", childDesc.getElementDescriptor(1))
                 }
+                childDesc.kind is StructureKind.OBJECT ->
+                    Unit
 
                 childDesc.elementsCount > 0 -> {
                     val headerSeparator = configuration.headerSeparator

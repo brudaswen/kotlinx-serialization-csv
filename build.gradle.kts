@@ -1,11 +1,11 @@
 plugins {
     base
-    kotlin("jvm") version "1.3.61" apply false
+    kotlin("jvm") version "1.3.72" apply false
     id("net.researchgate.release") version "2.6.0"
     id("io.codearte.nexus-staging") version "0.21.2"
 }
 
-val serializationVersion = "0.14.0"
+val serializationVersion = "0.20.0"
 
 allprojects {
     group = "de.brudaswen.kotlinx.serialization"

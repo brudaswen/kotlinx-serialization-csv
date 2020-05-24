@@ -1,8 +1,9 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.csv.*
-import kotlinx.serialization.internal.nullable
-import kotlinx.serialization.list
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.nullable
+import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertParse
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
@@ -136,7 +137,8 @@ class CsvNullableSimpleRecordTest {
         "-150\r\n\r\n150\r\n",
         listOf(
             IntRecord(-150), null,
-            IntRecord(150), null),
+            IntRecord(150), null
+        ),
         IntRecord.serializer().nullable.list,
         Csv(
             CsvConfiguration(

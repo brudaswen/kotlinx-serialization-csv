@@ -21,13 +21,6 @@ class CsvConfigurationTest {
     }
 
     @Test
-    fun `should fail if nullString equals unitString`() {
-        assertThrows<IllegalArgumentException> {
-            CsvConfiguration(nullString = "", unitString = "")
-        }
-    }
-
-    @Test
     fun `should fail if escapeChar not set`() {
         assertThrows<IllegalArgumentException> {
             CsvConfiguration(quoteMode = CsvConfiguration.QuoteMode.NONE, escapeChar = null)

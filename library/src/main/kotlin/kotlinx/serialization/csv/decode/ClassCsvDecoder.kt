@@ -20,29 +20,29 @@ internal class ClassCsvDecoder(
 
     private var elementIndex = 0
 
-    override fun decodeElementIndex(desc: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex >= desc.elementsCount -> CompositeDecoder.READ_DONE
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
+        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.READ_DONE
         classHeaders != null -> classHeaders[elementIndex]
         else -> elementIndex
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
-        return when (desc.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+        return when (descriptor.kind) {
             StructureKind.CLASS ->
                 ClassCsvDecoder(
                     csv,
                     reader,
                     this,
-                    classHeaders?.getSubHeaders(decodeElementIndex(desc))
+                    classHeaders?.getSubHeaders(decodeElementIndex(descriptor))
                 )
 
             else ->
-                super.beginStructure(desc, *typeParams)
+                super.beginStructure(descriptor, *typeParams)
         }
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
-        super.endChildStructure(desc)
+    override fun endChildStructure(descriptor: SerialDescriptor) {
+        super.endChildStructure(descriptor)
         elementIndex++
     }
 

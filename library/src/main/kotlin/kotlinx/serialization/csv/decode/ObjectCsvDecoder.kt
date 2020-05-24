@@ -15,9 +15,13 @@ internal class ObjectCsvDecoder(
     parent: CsvDecoder
 ) : CsvDecoder(csv, reader, parent) {
 
-    override fun endStructure(desc: SerialDescriptor) {
+    override fun decodeSequentially(): Boolean = true
+
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = 0
+
+    override fun endStructure(descriptor: SerialDescriptor) {
         val value = reader.readColumn()
-        require(value == desc.name) { "Expected '${desc.name}' but was '$value'." }
-        super.endStructure(desc)
+        require(value == descriptor.serialName) { "Expected '${descriptor.serialName}' but was '$value'." }
+        super.endStructure(descriptor)
     }
 }

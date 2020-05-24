@@ -3,7 +3,7 @@ package de.brudaswen.kotlinx.serialization.example
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.list
+import kotlinx.serialization.builtins.list
 
 @Serializable
 data class Person(val nickname: String, val name: String?, val appearance: Appearance)

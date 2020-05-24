@@ -26,8 +26,7 @@ class CsvNullStringTest {
         NullRecord.serializer(),
         Csv(
             CsvConfiguration(
-                nullString = "",
-                unitString = "unit"
+                nullString = ""
             )
         )
     )

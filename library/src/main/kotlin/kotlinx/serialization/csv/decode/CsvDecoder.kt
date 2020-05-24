@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.AbstractDecoder
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.modules.SerialModule
@@ -12,7 +13,7 @@ internal abstract class CsvDecoder(
     protected val csv: Csv,
     protected val reader: CsvReader,
     private val parent: CsvDecoder?
-) : ElementValueDecoder() {
+) : AbstractDecoder() {
 
     override val context: SerialModule
         get() = csv.context
@@ -22,8 +23,8 @@ internal abstract class CsvDecoder(
 
     protected var headers: Headers? = null
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
-        return when (desc.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+        return when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP ->
                 CollectionCsvDecoder(csv, reader, this)
@@ -31,25 +32,25 @@ internal abstract class CsvDecoder(
             StructureKind.CLASS ->
                 ClassCsvDecoder(csv, reader, this, headers)
 
-            UnionKind.OBJECT ->
+            StructureKind.OBJECT ->
                 ObjectCsvDecoder(csv, reader, this)
 
             PolymorphicKind.SEALED ->
-                SealedCsvDecoder(csv, reader, this, desc)
+                SealedCsvDecoder(csv, reader, this, descriptor)
 
             PolymorphicKind.OPEN ->
                 ClassCsvDecoder(csv, reader, this, headers)
 
             else ->
-                error("CSV does not support '${desc.kind}'.")
+                error("CSV does not support '${descriptor.kind}'.")
         }
     }
 
-    override fun endStructure(desc: SerialDescriptor) {
-        parent?.endChildStructure(desc)
+    override fun endStructure(descriptor: SerialDescriptor) {
+        parent?.endChildStructure(descriptor)
     }
 
-    protected open fun endChildStructure(desc: SerialDescriptor) {
+    protected open fun endChildStructure(descriptor: SerialDescriptor) {
     }
 
     override fun decodeByte(): Byte {
@@ -100,13 +101,8 @@ internal abstract class CsvDecoder(
         return null
     }
 
-    override fun decodeUnit() {
-        val value = decodeColumn()
-        require(value == configuration.unitString) { "Expected '${configuration.unitString}' but was '$value'." }
-    }
-
-    override fun decodeEnum(enumDescription: SerialDescriptor): Int {
-        return enumDescription.getElementIndex(decodeColumn())
+    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
+        return enumDescriptor.getElementIndex(decodeColumn())
     }
 
     protected open fun decodeColumn() = reader.readColumn()

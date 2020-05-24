@@ -1,13 +1,12 @@
 package kotlinx.serialization.csv.config
 
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.UnitRecord
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
 /**
- * Test [Csv] with different [CsvConfiguration.unitString]s.
+ * Test [Csv] with [kotlin.Unit].
  */
 class CsvUnitStringTest {
 
@@ -17,30 +16,5 @@ class CsvUnitStringTest {
         UnitRecord(Unit),
         UnitRecord.serializer(),
         Csv
-    )
-
-    @Test
-    fun testEmpty() = assertStringFormAndRestored(
-        "",
-        UnitRecord(Unit),
-        UnitRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                unitString = "",
-                nullString = "null"
-            )
-        )
-    )
-
-    @Test
-    fun testUnit() = assertStringFormAndRestored(
-        "Unit",
-        UnitRecord(Unit),
-        UnitRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                unitString = "Unit"
-            )
-        )
     )
 }

@@ -1,9 +1,9 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.*
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.internal.nullable
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
@@ -60,7 +60,7 @@ class CsvCollectionsTest {
             listOf(5, 6) to listOf(7, 8),
             listOf(9) to listOf(10, 11, 12, 13)
         ),
-        Pair(Int.serializer().list, Int.serializer().list).map,
+        MapSerializer(Int.serializer().list, Int.serializer().list),
         Csv
     )
 
@@ -80,7 +80,7 @@ class CsvCollectionsTest {
                 listOf(4, 5, 6) to listOf(7, 8, 9, 10)
             )
         ),
-        Pair(Int.serializer().list, Int.serializer().list).map.list,
+        MapSerializer(Int.serializer().list, Int.serializer().list).list,
         Csv
     )
 

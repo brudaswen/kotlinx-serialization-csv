@@ -20,26 +20,26 @@ internal class RootCsvDecoder(
 
     private var position = 0
 
-    override fun decodeElementIndex(desc: SerialDescriptor): Int {
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
         return if (reader.isDone) CompositeDecoder.READ_DONE else position
     }
 
-    override fun beginStructure(desc: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
-        return when (desc.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+        return when (descriptor.kind) {
             StructureKind.LIST ->
                 // Top level list is treated as list of multiple records
                 RecordListCsvDecoder(csv, reader)
 
             else -> {
                 // Top level is treated as one single record
-                readHeaders(desc)
-                super.beginStructure(desc, *typeParams)
+                readHeaders(descriptor)
+                super.beginStructure(descriptor, *typeParams)
             }
         }
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
-        super.endChildStructure(desc)
+    override fun endChildStructure(descriptor: SerialDescriptor) {
+        super.endChildStructure(descriptor)
         readTrailingDelimiter()
     }
 

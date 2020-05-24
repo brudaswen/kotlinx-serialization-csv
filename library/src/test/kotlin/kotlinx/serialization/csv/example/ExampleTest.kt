@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.example
 
+import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.example.Feature.*
@@ -7,7 +8,6 @@ import kotlinx.serialization.csv.example.Tire.Axis.FRONT
 import kotlinx.serialization.csv.example.Tire.Axis.REAR
 import kotlinx.serialization.csv.example.Tire.Side.LEFT
 import kotlinx.serialization.csv.example.Tire.Side.RIGHT
-import kotlinx.serialization.list
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.test.assertStringFormAndRestored
 import java.time.LocalDateTime
@@ -30,10 +30,10 @@ class ExampleTest {
 
     @Test
     fun testLocationRecords() = assertStringFormAndRestored(
-        """|id,date,position.latitude,position.longitude,driver.id,driver.foreName,driver.lastName,driver.birthday,vehicle.uuid,vehicle.type,vehicle.brand,vehicleData.speed,vehicleData.consumption,vehicleData.consumption.Unknown,vehicleData.consumption.Combustion.consumptionLiterPer100Km,vehicleData.consumption.Electric.consumptionKWhPer100Km
-           |0,2020-02-01T13:33:00,0.0,0.0,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,,Unknown,Unknown,,
-           |1,2020-02-01T13:37:00,0.1,0.1,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,27.7778,Electric,,,18.1
-           |9000,2020-02-05T07:59:00,48.137154,11.576124,42,Jane,Doe,1581602631744,c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,20.0,Combustion,,7.9,
+        """|id,date,position.latitude,position.longitude,driver.id,driver.foreName,driver.lastName,driver.birthday,vehicle.uuid,vehicle.type,vehicle.brand,vehicleData.speed,vehicleData.consumption,vehicleData.consumption.Combustion.consumptionLiterPer100Km,vehicleData.consumption.Electric.consumptionKWhPer100Km
+           |0,2020-02-01T13:33:00,0.0,0.0,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,,Unknown,,
+           |1,2020-02-01T13:37:00,0.1,0.1,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,27.7778,Electric,,18.1
+           |9000,2020-02-05T07:59:00,48.137154,11.576124,42,Jane,Doe,1581602631744,c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,20.0,Combustion,7.9,
         """.trimMargin().replace("\n", "\r\n"),
         listOf(
             LocationRecord(
