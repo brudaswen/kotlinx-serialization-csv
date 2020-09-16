@@ -29,7 +29,6 @@ internal abstract class CsvEncoder(
         collectionSize: Int,
     ): CompositeEncoder {
         encodeCollectionSize(collectionSize)
-        // TODO check valid with out typeSerializers?
         return super.beginCollection(descriptor, collectionSize)
     }
 
