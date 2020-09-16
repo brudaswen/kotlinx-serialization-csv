@@ -1,7 +1,10 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.*
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.descriptors.elementDescriptors
+import kotlinx.serialization.encoding.CompositeEncoder
 
 /**
  * CSV encoder for sealed classes.
@@ -17,10 +20,9 @@ internal class SealedCsvEncoder(
 ) : SimpleCsvEncoder(csv, writer, parent) {
 
     override fun beginStructure(
-        descriptor: SerialDescriptor,
-        vararg typeSerializers: KSerializer<*>
+        descriptor: SerialDescriptor
     ): CompositeEncoder {
-        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors.toList()
         val index = sealedChildren.indexOf(descriptor)
         for (innerDesc in sealedChildren.subList(0, index)) {
             printEmptyColumns(innerDesc)
@@ -30,12 +32,12 @@ internal class SealedCsvEncoder(
             is StructureKind.OBJECT ->
                 SealedObjectEncoder(csv, writer, this)
             else ->
-                super.beginStructure(descriptor, *typeSerializers)
+                super.beginStructure(descriptor)
         }
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {
-        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors()
+        val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors.toList()
         val index = sealedChildren.indexOf(desc)
         for (innerDesc in sealedChildren.subList(index + 1, sealedChildren.size)) {
             printEmptyColumns(innerDesc)
@@ -43,7 +45,7 @@ internal class SealedCsvEncoder(
     }
 
     private fun printEmptyColumns(desc: SerialDescriptor) {
-        for (innerDesc in desc.elementDescriptors()) {
+        for (innerDesc in desc.elementDescriptors.toList()) {
             encodeNull()
         }
     }

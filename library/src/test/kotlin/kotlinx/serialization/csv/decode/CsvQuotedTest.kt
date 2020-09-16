@@ -13,7 +13,7 @@ class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiter() {
-        Csv.parse(
+        Csv.decodeFromString(
             StringRecord.serializer(),
             "\"test,ing\""
         ) shouldBe StringRecord(
@@ -23,7 +23,7 @@ class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces() {
-        Csv.parse(
+        Csv.decodeFromString(
             StringRecord.serializer(),
             " \"test,ing\" "
         ) shouldBe StringRecord(
@@ -33,7 +33,7 @@ class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces2() {
-        Csv.parse(
+        Csv.decodeFromString(
             IntStringRecord.serializer(),
             " \"42\" , \"test , ing\" "
         ) shouldBe IntStringRecord(

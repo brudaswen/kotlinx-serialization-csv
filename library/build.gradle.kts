@@ -2,7 +2,7 @@ import java.time.Duration
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.3.61"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
     id("org.jetbrains.dokka") version "0.9.18"
     id("de.marcphilipp.nexus-publish") version "0.4.0"
     `maven-publish`
@@ -19,7 +19,7 @@ val testImplementation by configurations
 
 dependencies {
     api(kotlin("stdlib-jdk8"))
-    api("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializationVersion")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")

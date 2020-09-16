@@ -1,7 +1,7 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.SerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
 
 /**
@@ -23,7 +23,7 @@ internal class CollectionRecordCsvDecoder(
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
         // TODO Check for END_OF_RECORD
-        reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.READ_DONE
+        reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.DECODE_DONE
         else -> elementIndex
     }
 

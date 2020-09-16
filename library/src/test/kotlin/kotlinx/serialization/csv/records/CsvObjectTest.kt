@@ -1,7 +1,6 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.UnstableDefault
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
@@ -38,7 +37,7 @@ class CsvObjectTest {
             null,
             ObjectRecord
         ),
-        ObjectRecord.serializer().nullable.list,
+        ListSerializer(ObjectRecord.serializer().nullable),
         Csv(
             CsvConfiguration(
                 ignoreEmptyLines = false
@@ -47,10 +46,9 @@ class CsvObjectTest {
     )
 
     @Test
-    @UnstableDefault
     fun testInvalidObject() {
         assertThrows<IllegalArgumentException> {
-            Csv.parse(ObjectRecord.serializer(), "kotlinx.serialization.csv.records.InvalidName")
+            Csv.decodeFromString(ObjectRecord.serializer(), "kotlinx.serialization.csv.records.InvalidName")
         }
     }
 }

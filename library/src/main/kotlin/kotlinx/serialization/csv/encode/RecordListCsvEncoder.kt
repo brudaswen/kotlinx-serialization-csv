@@ -1,9 +1,8 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.CompositeEncoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.encoding.CompositeEncoder
 
 /**
  * Encodes list of multiple CSV records/lines.
@@ -14,15 +13,14 @@ internal class RecordListCsvEncoder(
 ) : CsvEncoder(csv, writer, null) {
 
     override fun beginStructure(
-        descriptor: SerialDescriptor,
-        vararg typeSerializers: KSerializer<*>
+        descriptor: SerialDescriptor
     ): CompositeEncoder {
         // For complex records: Begin a new record and end it in [endChildStructure]
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
             printHeaderRecord(descriptor)
         }
         writer.beginRecord()
-        return super.beginStructure(descriptor, *typeSerializers)
+        return super.beginStructure(descriptor)
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {

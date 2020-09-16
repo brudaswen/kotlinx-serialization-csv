@@ -20,7 +20,7 @@ class CsvCollectionsTest {
             listOf(3, 4),
             listOf(5, 6, 7)
         ),
-        Int.serializer().list.list,
+        ListSerializer(ListSerializer(Int.serializer())),
         Csv
     )
 
@@ -32,7 +32,7 @@ class CsvCollectionsTest {
             setOf(3, 4),
             setOf(5, 6, 7)
         ),
-        Int.serializer().set.list,
+        ListSerializer(SetSerializer(Int.serializer())),
         Csv
     )
 
@@ -44,7 +44,7 @@ class CsvCollectionsTest {
             null,
             listOf(5, null, 7)
         ),
-        Int.serializer().nullable.list.nullable.list,
+        ListSerializer(ListSerializer(Int.serializer().nullable).nullable),
         Csv(
             CsvConfiguration(
                 ignoreEmptyLines = false
@@ -60,7 +60,7 @@ class CsvCollectionsTest {
             listOf(5, 6) to listOf(7, 8),
             listOf(9) to listOf(10, 11, 12, 13)
         ),
-        MapSerializer(Int.serializer().list, Int.serializer().list),
+        MapSerializer(ListSerializer(Int.serializer()), ListSerializer(Int.serializer())),
         Csv
     )
 
@@ -80,7 +80,7 @@ class CsvCollectionsTest {
                 listOf(4, 5, 6) to listOf(7, 8, 9, 10)
             )
         ),
-        MapSerializer(Int.serializer().list, Int.serializer().list).list,
+        ListSerializer(MapSerializer(ListSerializer(Int.serializer()), ListSerializer(Int.serializer()))),
         Csv
     )
 
@@ -118,7 +118,7 @@ class CsvCollectionsTest {
                 )
             )
         ),
-        Record.serializer().list,
+        ListSerializer(Record.serializer()),
         Csv
     )
 }

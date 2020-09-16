@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
@@ -64,7 +65,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = false
@@ -80,7 +81,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true
@@ -96,7 +97,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true,
@@ -121,7 +122,7 @@ class CsvHasTrailingDelimiterTest {
     fun testPrimitiveListWithTrailingDelimiter() = assertStringFormAndRestored(
         "-150,\r\n150,\r\n42,",
         listOf(-150, 150, 42),
-        Int.serializer().list,
+        ListSerializer(Int.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true
@@ -148,7 +149,7 @@ class CsvHasTrailingDelimiterTest {
             Enum.FIRST,
             Enum.FIRST
         ),
-        Enum.serializer().list,
+        ListSerializer(Enum.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true

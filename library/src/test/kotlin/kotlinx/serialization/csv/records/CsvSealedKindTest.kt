@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
@@ -65,7 +66,7 @@ class CsvSealedKindTest {
             SealedRecord.OtherObject,
             SealedRecord.Class("testing")
         ),
-        SealedRecord.serializer().list,
+        ListSerializer(SealedRecord.serializer()),
         Csv
     )
 }

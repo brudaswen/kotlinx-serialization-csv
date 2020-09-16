@@ -1,6 +1,6 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.SerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
 
 /**

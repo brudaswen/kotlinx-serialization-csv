@@ -1,10 +1,14 @@
 package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.*
-import kotlinx.serialization.builtins.AbstractDecoder
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.descriptors.PolymorphicKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.AbstractDecoder
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.modules.SerializersModule
 
 /**
  * Default CSV decoder.
@@ -15,15 +19,15 @@ internal abstract class CsvDecoder(
     private val parent: CsvDecoder?
 ) : AbstractDecoder() {
 
-    override val context: SerialModule
-        get() = csv.context
+    override val serializersModule: SerializersModule
+        get() = csv.serializersModule
 
     protected val configuration: CsvConfiguration
         get() = csv.configuration
 
     protected var headers: Headers? = null
 
-    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP ->

@@ -1,10 +1,9 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
-import kotlinx.serialization.StructureKind
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.StructureKind
 
 /**
  * Decodes list of multiple CSV records/lines.
@@ -23,17 +22,17 @@ internal class RecordListCsvDecoder(
         }
 
         readEmptyLines()
-        return if (reader.isDone) CompositeDecoder.READ_DONE else elementIndex
+        return if (reader.isDone) CompositeDecoder.DECODE_DONE else elementIndex
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP ->
                 CollectionRecordCsvDecoder(csv, reader, this)
 
             else ->
-                super.beginStructure(descriptor, *typeParams)
+                super.beginStructure(descriptor)
         }
     }
 

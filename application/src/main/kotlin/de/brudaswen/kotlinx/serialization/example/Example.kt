@@ -1,6 +1,7 @@
 package de.brudaswen.kotlinx.serialization.example
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.builtins.list
@@ -21,7 +22,7 @@ fun main() {
         Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
         Person("Trinity", null, Appearance(Gender.FEMALE, null, 1.74))
     )
-    val serialized = csv.stringify(Person.serializer().list, records)
+    val serialized = csv.encodeToString(ListSerializer(Person.serializer()), records)
     println(serialized)
     // nickname,name,appearance.gender,appearance.age,appearance.height
     // Neo,Thomas A. Anderson,MALE,37,1.86
@@ -32,7 +33,7 @@ fun main() {
         Neo,MALE,1.86,37,Thomas A. Anderson
         Trinity,FEMALE,1.74,,
     """.trimIndent().replace("\n", "\r\n")
-    val parsed = csv.parse(Person.serializer().list, input)
+    val parsed = csv.decodeFromString(ListSerializer(Person.serializer()), input)
     println(parsed)
     // [
     //   Person(nickname=Neo, name=Thomas A. Anderson, appearance=Appearance(gender=MALE, age=37, height=1.86)),

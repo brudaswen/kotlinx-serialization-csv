@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.example
 
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
@@ -55,7 +56,7 @@ class ExampleTest {
                 VehicleData(20.0, Consumption.Combustion(7.9))
             )
         ),
-        LocationRecord.serializer().list,
+        ListSerializer(LocationRecord.serializer()),
         Csv(
             CsvConfiguration.rfc4180.copy(
                 hasHeaderRecord = true
@@ -86,14 +87,12 @@ class ExampleTest {
             VehiclePartRecord(204, porsche, Tire(REAR, LEFT, 265, 35, 20), 0.2),
             VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2)
         ),
-        VehiclePartRecord.serializer().list,
+        ListSerializer(VehiclePartRecord.serializer()),
         Csv(
             CsvConfiguration.rfc4180,
             SerializersModule {
-                polymorphic(Part::class) {
-                    Tire::class with Tire.serializer()
-                    Oil::class with Oil.serializer()
-                }
+                polymorphic(Part::class, Tire::class, Tire.serializer())
+                polymorphic(Part::class, Oil::class, Oil.serializer())
             }
         )
     )
@@ -113,7 +112,7 @@ class ExampleTest {
                 mapOf(ELECTRIC to 0, XENON to 1)
             )
         ),
-        VehicleFeaturesRecord.serializer().list,
+        ListSerializer(VehicleFeaturesRecord.serializer()),
         Csv(CsvConfiguration.rfc4180)
     )
 }

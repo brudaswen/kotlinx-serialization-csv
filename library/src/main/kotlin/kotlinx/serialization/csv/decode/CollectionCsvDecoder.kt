@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder
 
 /**
  * Decode collections (e.g. lists, sets, maps).
@@ -20,7 +20,7 @@ internal class CollectionCsvDecoder(
     override fun decodeSequentially(): Boolean = true
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.READ_DONE
+        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.DECODE_DONE
         else -> elementIndex
     }
 

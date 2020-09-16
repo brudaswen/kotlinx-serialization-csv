@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
@@ -50,7 +51,7 @@ class CsvNestedRecordTest {
                 )
             )
         ),
-        NestedRecord.serializer().list,
+        ListSerializer(NestedRecord.serializer()),
         Csv
     )
 
@@ -100,7 +101,7 @@ class CsvNestedRecordTest {
                 )
             )
         ),
-        NestedRecord.serializer().list,
+        ListSerializer(NestedRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasHeaderRecord = true
