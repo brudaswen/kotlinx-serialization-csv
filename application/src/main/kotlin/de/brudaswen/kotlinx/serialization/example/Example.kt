@@ -1,5 +1,6 @@
 package de.brudaswen.kotlinx.serialization.example
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
@@ -15,6 +16,7 @@ data class Appearance(val gender: Gender?, val age: Int?, val height: Double?)
 @Serializable
 enum class Gender { MALE, FEMALE }
 
+@ExperimentalSerializationApi
 fun main() {
     val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
 

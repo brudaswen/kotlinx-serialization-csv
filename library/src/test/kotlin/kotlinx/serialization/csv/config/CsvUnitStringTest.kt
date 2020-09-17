@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.UnitRecord
 import kotlinx.serialization.test.assertStringFormAndRestored
@@ -8,6 +9,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with [kotlin.Unit].
  */
+@ExperimentalSerializationApi
 class CsvUnitStringTest {
 
     @Test

@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
@@ -7,6 +8,7 @@ import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
+@ExperimentalSerializationApi
 class CsvNestedRecordTest {
 
     @Test

@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.NONE
@@ -11,6 +12,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.escapeChar]s.
  */
+@ExperimentalSerializationApi
 class CsvEscapeCharTest {
 
     @Test

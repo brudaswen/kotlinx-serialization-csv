@@ -21,6 +21,7 @@ import kotlinx.serialization.modules.SerializersModule
  * @param configuration CSV settings used during parsing/serialization.
  * @param context Serialization module settings (e.g. custom serializers).
  */
+@ExperimentalSerializationApi
 class Csv(
     internal val configuration: CsvConfiguration,
     override val serializersModule: SerializersModule = EmptySerializersModule

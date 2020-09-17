@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
@@ -9,6 +10,7 @@ import kotlinx.serialization.test.assertParse
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
+@ExperimentalSerializationApi
 class CsvHasHeaderRecordTest {
 
     @Test

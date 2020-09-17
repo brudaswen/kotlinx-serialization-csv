@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.encode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -12,6 +13,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
  * Writes columns for all possible child classes. The columns for the actual type get filled and all other columns
  * are filled with `null` values.
  */
+@ExperimentalSerializationApi
 internal class SealedCsvEncoder(
     csv: Csv,
     writer: CsvWriter,

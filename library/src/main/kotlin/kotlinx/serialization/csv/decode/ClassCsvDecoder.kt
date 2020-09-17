@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -10,6 +11,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  *
  * Supports header line such that class properties can be in different order.
  */
+@ExperimentalSerializationApi
 internal class ClassCsvDecoder(
     csv: Csv,
     reader: CsvReader,

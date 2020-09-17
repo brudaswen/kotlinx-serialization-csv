@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.NullRecord
@@ -9,6 +10,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.nullString]s.
  */
+@ExperimentalSerializationApi
 class CsvNullStringTest {
 
     @Test

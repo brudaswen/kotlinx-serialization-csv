@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.*
@@ -7,6 +8,7 @@ import kotlinx.serialization.csv.records.*
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
+@ExperimentalSerializationApi
 class CsvQuoteModeTest {
 
     // TestString

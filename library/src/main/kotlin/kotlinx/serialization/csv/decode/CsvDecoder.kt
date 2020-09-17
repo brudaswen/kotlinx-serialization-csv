@@ -13,6 +13,7 @@ import kotlinx.serialization.modules.SerializersModule
 /**
  * Default CSV decoder.
  */
+@ExperimentalSerializationApi
 internal abstract class CsvDecoder(
     protected val csv: Csv,
     protected val reader: CsvReader,

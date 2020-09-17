@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -12,6 +13,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  * (which is interpreted as multiple CSV records/lines). If this is the case, decoding continues in
  * [RecordListCsvDecoder].
  */
+@ExperimentalSerializationApi
 internal class RootCsvDecoder(
     csv: Csv,
     reader: CsvReader

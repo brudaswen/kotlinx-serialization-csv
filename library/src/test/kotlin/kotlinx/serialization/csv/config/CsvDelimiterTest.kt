@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.ComplexRecord
@@ -10,6 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.delimiter]s.
  */
+@ExperimentalSerializationApi
 class CsvDelimiterTest {
 
     @Test

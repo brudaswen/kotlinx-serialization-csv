@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.records
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.csv.Csv
@@ -10,6 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with [List]s, [Set]s and [Map]s.
  */
+@ExperimentalSerializationApi
 class CsvCollectionsTest {
 
     @Test

@@ -4,10 +4,12 @@
 
 package kotlinx.serialization.test
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.StringFormat
 import kotlin.test.assertEquals
 
+@ExperimentalSerializationApi
 inline fun <reified T : Any?> assertStringFormAndRestored(
     expected: String,
     original: T,
@@ -23,6 +25,7 @@ inline fun <reified T : Any?> assertStringFormAndRestored(
     assertEquals(original, restored)
 }
 
+@ExperimentalSerializationApi
 inline fun <reified T : Any> assertParse(
     input: String,
     expected: T,
@@ -35,6 +38,7 @@ inline fun <reified T : Any> assertParse(
     assertEquals(expected, restored)
 }
 
+@ExperimentalSerializationApi
 inline fun <reified T : Any> StringFormat.assertStringFormAndRestored(
     expected: String,
     original: T,

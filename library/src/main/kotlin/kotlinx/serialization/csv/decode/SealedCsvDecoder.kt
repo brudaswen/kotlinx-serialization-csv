@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -12,6 +13,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  * Expects columns for all possible child classes. The columns for the actual type should be filled and all other
  * columns are expected to contain `null` values.
  */
+@ExperimentalSerializationApi
 internal class SealedCsvDecoder(
     csv: Csv,
     reader: CsvReader,

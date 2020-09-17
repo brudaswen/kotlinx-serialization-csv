@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.CompositeDecoder
@@ -9,6 +10,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  *
  * Expects that the first values defines the number of elements in the collection.
  */
+@ExperimentalSerializationApi
 internal class CollectionCsvDecoder(
     csv: Csv,
     reader: CsvReader,

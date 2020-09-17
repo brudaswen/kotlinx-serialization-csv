@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.config
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.builtins.serializer
@@ -13,6 +14,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with simple primitive records.
  */
+@ExperimentalSerializationApi
 class CsvEmptyLinesTest {
 
     @Test
