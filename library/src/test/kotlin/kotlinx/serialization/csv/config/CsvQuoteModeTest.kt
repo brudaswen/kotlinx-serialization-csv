@@ -8,7 +8,7 @@ import kotlinx.serialization.csv.records.*
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvQuoteModeTest {
 
     // TestString

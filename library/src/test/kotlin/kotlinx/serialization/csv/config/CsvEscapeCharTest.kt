@@ -12,7 +12,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.escapeChar]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvEscapeCharTest {
 
     @Test

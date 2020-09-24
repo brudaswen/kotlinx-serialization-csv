@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
 
 /**
  * CSV decoder for `object`s.
@@ -10,7 +10,7 @@ import kotlinx.serialization.csv.Csv
  * Expects the name of the object (either fully-qualified class name or
  * [kotlinx.serialization.SerialName]).
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class ObjectCsvDecoder(
     csv: Csv,
     reader: CsvReader,

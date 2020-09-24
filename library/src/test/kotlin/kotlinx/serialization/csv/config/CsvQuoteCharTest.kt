@@ -12,7 +12,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.quoteChar]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvQuoteCharTest {
 
     @Test

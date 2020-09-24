@@ -1,6 +1,6 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.descriptors.PolymorphicKind
@@ -9,11 +9,14 @@ import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.modules.SerializersModule
+import kotlin.collections.getOrElse
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 /**
  * Default CSV decoder.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal abstract class CsvDecoder(
     protected val csv: Csv,
     protected val reader: CsvReader,

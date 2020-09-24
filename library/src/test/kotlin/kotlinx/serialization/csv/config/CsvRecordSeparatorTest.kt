@@ -2,7 +2,6 @@ package kotlinx.serialization.csv.config
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.IntRecord
@@ -12,7 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.recordSeparator]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvRecordSeparatorTest {
 
     @Test

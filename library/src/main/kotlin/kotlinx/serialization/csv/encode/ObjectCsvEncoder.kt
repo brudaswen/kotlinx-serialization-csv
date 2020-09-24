@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.encode
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
 
 /**
  * CSV encoder for `object`s.
@@ -10,7 +10,7 @@ import kotlinx.serialization.csv.Csv
  * Writes the name of the object (either fully-qualified class name or
  * [kotlinx.serialization.SerialName]).
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class ObjectCsvEncoder(
     csv: Csv,
     writer: CsvWriter,

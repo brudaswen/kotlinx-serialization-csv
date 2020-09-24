@@ -1,12 +1,10 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 
 /**
  * Default CSV encoder that writes each value into the next column.
  */
-@ExperimentalSerializationApi
 internal open class SimpleCsvEncoder(
     csv: Csv,
     writer: CsvWriter,

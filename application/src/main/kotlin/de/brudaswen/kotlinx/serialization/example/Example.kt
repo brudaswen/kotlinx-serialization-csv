@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.builtins.list
 
 @Serializable
 data class Person(val nickname: String, val name: String?, val appearance: Appearance)
@@ -16,7 +15,7 @@ data class Appearance(val gender: Gender?, val age: Int?, val height: Double?)
 @Serializable
 enum class Gender { MALE, FEMALE }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 fun main() {
     val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
 

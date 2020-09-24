@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  *
  * Supports header line such that class properties can be in different order.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class ClassCsvDecoder(
     csv: Csv,
     reader: CsvReader,

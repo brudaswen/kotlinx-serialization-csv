@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  * (which is interpreted as multiple CSV records/lines). If this is the case, decoding continues in
  * [RecordListCsvDecoder].
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class RootCsvDecoder(
     csv: Csv,
     reader: CsvReader

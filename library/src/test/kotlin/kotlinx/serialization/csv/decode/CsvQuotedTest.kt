@@ -10,7 +10,7 @@ import kotlin.test.Test
 /**
  * Test [kotlinx.serialization.csv.decode.CsvDecoder] with quoted values.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvQuotedTest {
 
     @Test

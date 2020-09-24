@@ -11,7 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with [List]s, [Set]s and [Map]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvCollectionsTest {
 
     @Test

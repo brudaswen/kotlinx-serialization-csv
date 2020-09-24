@@ -7,9 +7,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.UUID
+import java.util.*
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = UUID::class)
 object UUIDSerializer : KSerializer<UUID> {
 
@@ -20,7 +20,7 @@ object UUIDSerializer : KSerializer<UUID> {
         UUID.fromString(decoder.decodeString())
 }
 
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 @Serializer(forClass = LocalDateTime::class)
 object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
     private val format = DateTimeFormatter.ISO_DATE_TIME

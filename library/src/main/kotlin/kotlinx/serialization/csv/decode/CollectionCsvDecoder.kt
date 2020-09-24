@@ -10,7 +10,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  *
  * Expects that the first values defines the number of elements in the collection.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class CollectionCsvDecoder(
     csv: Csv,
     reader: CsvReader,

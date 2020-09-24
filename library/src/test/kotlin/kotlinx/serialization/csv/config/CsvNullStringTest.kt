@@ -10,7 +10,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.nullString]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvNullStringTest {
 
     @Test

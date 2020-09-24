@@ -1,8 +1,8 @@
 package kotlinx.serialization.csv.encode
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeEncoder
 
@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
  * (which is interpreted as multiple CSV records/lines). If this is the case, encoding continues in
  * [RecordListCsvEncoder].
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal class RootCsvEncoder(
     csv: Csv,
     writer: CsvWriter

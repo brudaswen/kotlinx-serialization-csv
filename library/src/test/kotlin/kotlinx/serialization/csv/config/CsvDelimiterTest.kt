@@ -11,7 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.delimiter]s.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvDelimiterTest {
 
     @Test

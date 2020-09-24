@@ -12,7 +12,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with simple primitive records.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvObjectTest {
 
     @Test

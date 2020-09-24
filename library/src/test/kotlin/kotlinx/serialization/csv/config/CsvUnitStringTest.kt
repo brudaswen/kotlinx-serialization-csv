@@ -9,7 +9,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with [kotlin.Unit].
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 class CsvUnitStringTest {
 
     @Test

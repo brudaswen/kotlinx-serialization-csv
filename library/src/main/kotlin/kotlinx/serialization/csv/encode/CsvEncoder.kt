@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.*
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -13,7 +14,7 @@ import kotlinx.serialization.modules.SerializersModule
 /**
  * Default CSV encoder.
  */
-@ExperimentalSerializationApi
+@OptIn(ExperimentalSerializationApi::class)
 internal abstract class CsvEncoder(
     protected val csv: Csv,
     protected val writer: CsvWriter,

@@ -1,3 +1,4 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
 @file:UseSerializers(UUIDSerializer::class, LocalDateTimeSerializer::class)
 
 package kotlinx.serialization.csv.example

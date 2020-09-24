@@ -1,7 +1,7 @@
 package kotlinx.serialization.csv.example
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.list
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.example.Feature.*
@@ -18,6 +18,7 @@ import kotlin.test.Test
 /**
  * Test complex [LocationRecord].
  */
+@OptIn(ExperimentalSerializationApi::class)
 class ExampleTest {
 
     // Persons
