@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.test.assertParse
 import kotlinx.serialization.test.assertStringFormAndRestored
@@ -9,6 +10,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with simple [Serializable] records.
  */
+@OptIn(ExperimentalSerializationApi::class)
 class CsvSimpleRecordTest {
 
     @Test
@@ -134,7 +136,7 @@ class CsvSimpleRecordTest {
             IntRecord(-150),
             IntRecord(150)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv
     )
 
@@ -145,7 +147,7 @@ class CsvSimpleRecordTest {
             IntRecord(-150),
             IntRecord(150)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv
     )
 }

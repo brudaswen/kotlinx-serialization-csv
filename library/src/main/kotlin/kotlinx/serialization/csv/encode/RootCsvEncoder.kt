@@ -1,10 +1,10 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.CompositeEncoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
-import kotlinx.serialization.StructureKind
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.CompositeEncoder
 
 /**
  * Initial entry point for encoding.
@@ -13,6 +13,7 @@ import kotlinx.serialization.csv.Csv
  * (which is interpreted as multiple CSV records/lines). If this is the case, encoding continues in
  * [RecordListCsvEncoder].
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal class RootCsvEncoder(
     csv: Csv,
     writer: CsvWriter
@@ -23,25 +24,23 @@ internal class RootCsvEncoder(
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
-        collectionSize: Int,
-        vararg typeSerializers: KSerializer<*>
+        collectionSize: Int
     ): CompositeEncoder {
         return if (descriptor.kind == StructureKind.LIST) {
             RecordListCsvEncoder(csv, writer)
         } else {
-            super.beginCollection(descriptor, collectionSize, *typeSerializers)
+            super.beginCollection(descriptor, collectionSize)
         }
     }
 
     override fun beginStructure(
-        descriptor: SerialDescriptor,
-        vararg typeSerializers: KSerializer<*>
+        descriptor: SerialDescriptor
     ): CompositeEncoder {
         if (configuration.hasHeaderRecord && writer.isFirstRecord) {
             printHeaderRecord(descriptor)
         }
         writer.beginRecord()
-        return super.beginStructure(descriptor, *typeSerializers)
+        return super.beginStructure(descriptor)
     }
 
     override fun endChildStructure(desc: SerialDescriptor) {

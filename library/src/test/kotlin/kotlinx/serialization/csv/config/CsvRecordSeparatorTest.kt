@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.IntRecord
@@ -10,6 +11,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with different [CsvConfiguration.recordSeparator]s.
  */
+@OptIn(ExperimentalSerializationApi::class)
 class CsvRecordSeparatorTest {
 
     @Test
@@ -20,7 +22,7 @@ class CsvRecordSeparatorTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv
     )
 
@@ -32,7 +34,7 @@ class CsvRecordSeparatorTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 recordSeparator = "\r\n"
@@ -48,7 +50,7 @@ class CsvRecordSeparatorTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 recordSeparator = "\n"
@@ -64,7 +66,7 @@ class CsvRecordSeparatorTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 recordSeparator = "#"

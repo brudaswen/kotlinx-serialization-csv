@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
@@ -9,6 +10,7 @@ import kotlinx.serialization.csv.records.IntRecord
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
+@OptIn(ExperimentalSerializationApi::class)
 class CsvHasTrailingDelimiterTest {
 
     @Test
@@ -64,7 +66,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = false
@@ -80,7 +82,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true
@@ -96,7 +98,7 @@ class CsvHasTrailingDelimiterTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true,
@@ -121,7 +123,7 @@ class CsvHasTrailingDelimiterTest {
     fun testPrimitiveListWithTrailingDelimiter() = assertStringFormAndRestored(
         "-150,\r\n150,\r\n42,",
         listOf(-150, 150, 42),
-        Int.serializer().list,
+        ListSerializer(Int.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true
@@ -148,7 +150,7 @@ class CsvHasTrailingDelimiterTest {
             Enum.FIRST,
             Enum.FIRST
         ),
-        Enum.serializer().list,
+        ListSerializer(Enum.serializer()),
         Csv(
             CsvConfiguration(
                 hasTrailingDelimiter = true

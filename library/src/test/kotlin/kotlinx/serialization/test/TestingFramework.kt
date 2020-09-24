@@ -4,10 +4,12 @@
 
 package kotlinx.serialization.test
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.StringFormat
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any?> assertStringFormAndRestored(
     expected: String,
     original: T,
@@ -15,14 +17,15 @@ inline fun <reified T : Any?> assertStringFormAndRestored(
     format: StringFormat,
     printResult: Boolean = false
 ) {
-    val string = format.stringify(serializer, original)
+    val string = format.encodeToString(serializer, original)
     if (printResult) println("[Serialized form] $string")
     assertEquals(expected, string)
-    val restored = format.parse(serializer, string)
+    val restored = format.decodeFromString(serializer, string)
     if (printResult) println("[Restored form] $restored")
     assertEquals(original, restored)
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any> assertParse(
     input: String,
     expected: T,
@@ -30,21 +33,22 @@ inline fun <reified T : Any> assertParse(
     format: StringFormat,
     printResult: Boolean = false
 ) {
-    val restored = format.parse(serializer, input)
+    val restored = format.decodeFromString(serializer, input)
     if (printResult) println("[Restored form] $restored")
     assertEquals(expected, restored)
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any> StringFormat.assertStringFormAndRestored(
     expected: String,
     original: T,
     serializer: KSerializer<T>,
     printResult: Boolean = false
 ) {
-    val string = this.stringify(serializer, original)
+    val string = this.encodeToString(serializer, original)
     if (printResult) println("[Serialized form] $string")
     assertEquals(expected, string)
-    val restored = this.parse(serializer, string)
+    val restored = this.decodeFromString(serializer, string)
     if (printResult) println("[Restored form] $restored")
     assertEquals(original, restored)
 }

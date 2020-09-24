@@ -59,7 +59,10 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
         }
 
         if (mode == WriteMode.ESCAPED && escapeChar != null) {
-            val escapedValue = value.escape("$escapeChar$delimiter$quoteChar$recordSeparator", escapeChar = escapeChar)
+            val escapedValue = value.escape(
+                escapeCharacters = "$escapeChar$delimiter$quoteChar$recordSeparator",
+                escapeChar = escapeChar
+            )
             sb.append(escapedValue)
         } else if (mode == WriteMode.QUOTED || mode == WriteMode.ESCAPED) {
             val escapedValue = value.replace("$quoteChar", "$quoteChar$quoteChar")
@@ -79,7 +82,7 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
 
     /** Check if given [value] contains reserved chars that require quoting. */
     private fun requiresQuoting(value: String): Boolean {
-        val chars = "${configuration.delimiter}${configuration.quoteChar}${configuration.recordSeparator}"
+        val chars = with(configuration) { "${delimiter}${quoteChar}${recordSeparator}" }
         return value.contains("[${Regex.escape(chars)}]".toRegex())
     }
 
@@ -107,8 +110,10 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
     private enum class WriteMode {
         /** Write quoted value. */
         QUOTED,
+
         /** Write value and escape reserved chars. */
         ESCAPED,
+
         /** Write plain value without any quoting or escaping. */
         PLAIN
     }

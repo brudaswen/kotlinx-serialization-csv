@@ -6,35 +6,35 @@ import kotlinx.serialization.csv.decode.CsvReader
 import kotlinx.serialization.csv.decode.RootCsvDecoder
 import kotlinx.serialization.csv.decode.StringSource
 import kotlinx.serialization.csv.encode.RootCsvEncoder
-import kotlinx.serialization.modules.EmptyModule
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.modules.SerializersModule
 
 /**
  * The main entry point to work with CSV serialization.
  *
  * It is typically used by constructing an application-specific instance, with configured CSV-specific behaviour
  * ([configuration] parameter) and, if necessary, registered
- * custom serializers (in [SerialModule] provided by [context] parameter).
+ * custom serializers (in [SerializersModule] provided by [context] parameter).
  *
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  *
  * @param configuration CSV settings used during parsing/serialization.
- * @param context Serialization module settings (e.g. custom serializers).
+ * @param serializersModule Serialization module settings (e.g. custom serializers).
  */
+@ExperimentalSerializationApi
 class Csv(
     internal val configuration: CsvConfiguration,
-    override val context: SerialModule = EmptyModule
+    override val serializersModule: SerializersModule = EmptySerializersModule
 ) : SerialFormat, StringFormat {
-
     /**
      * Serialize [value] into CSV record(s).
      *
      * @param serializer The serializer used to serialize the given object.
      * @param value The [Serializable] object.
      */
-    override fun <T> stringify(serializer: SerializationStrategy<T>, value: T): String {
+    override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String {
         val result = StringBuilder()
-        RootCsvEncoder(this, result).encode(serializer, value)
+        RootCsvEncoder(this, result).encodeSerializableValue(serializer, value)
         return result.toString()
     }
 
@@ -44,10 +44,10 @@ class Csv(
      * @param deserializer The deserializer used to parse the given CSV string.
      * @param string The CSV string to parse.
      */
-    override fun <T> parse(deserializer: DeserializationStrategy<T>, string: String): T {
+    override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
         val reader = CsvReader(StringSource(string), configuration)
         val input = RootCsvDecoder(this, reader)
-        val result = input.decode(deserializer)
+        val result = input.decodeSerializableValue(deserializer)
 
         require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
         return result
@@ -64,7 +64,6 @@ class Csv(
          * - [CsvConfiguration.recordSeparator] = `"\r\n"`
          * - [CsvConfiguration.ignoreEmptyLines] = `true`
          */
-        @UnstableDefault
         val default = Csv(CsvConfiguration.default)
 
         /**
@@ -78,8 +77,8 @@ class Csv(
          */
         val rfc4180 = Csv(CsvConfiguration.rfc4180)
 
-        override val context: SerialModule
-            get() = default.context
+        override val serializersModule: SerializersModule
+            get() = default.serializersModule
 
         /**
          * Serialize [value] into CSV record(s) using [CsvConfiguration.default].
@@ -87,9 +86,8 @@ class Csv(
          * @param serializer The serializer used to serialize the given object.
          * @param value The [Serializable] object.
          */
-        @UnstableDefault
-        override fun <T> stringify(serializer: SerializationStrategy<T>, value: T): String =
-            default.stringify(serializer, value)
+        override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String =
+            default.encodeToString(serializer, value)
 
         /**
          * Parse CSV [string] into [Serializable] object using [CsvConfiguration.default].
@@ -97,8 +95,10 @@ class Csv(
          * @param deserializer The deserializer used to parse the given CSV string.
          * @param string The CSV string to parse.
          */
-        @UnstableDefault
-        override fun <T> parse(deserializer: DeserializationStrategy<T>, string: String): T =
-            default.parse(deserializer, string)
+        override fun <T> decodeFromString(
+            deserializer: DeserializationStrategy<T>,
+            string: String
+        ): T =
+            default.decodeFromString(deserializer, string)
     }
 }

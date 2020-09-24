@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.*
@@ -8,6 +9,7 @@ import kotlinx.serialization.test.assertParse
 import kotlinx.serialization.test.assertStringFormAndRestored
 import kotlin.test.Test
 
+@OptIn(ExperimentalSerializationApi::class)
 class CsvHasHeaderRecordTest {
 
     @Test
@@ -50,7 +52,7 @@ class CsvHasHeaderRecordTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasHeaderRecord = false
@@ -66,7 +68,7 @@ class CsvHasHeaderRecordTest {
             IntRecord(2),
             IntRecord(3)
         ),
-        IntRecord.serializer().list,
+        ListSerializer(IntRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasHeaderRecord = true
@@ -117,7 +119,7 @@ class CsvHasHeaderRecordTest {
             IntStringRecord(1, "testing"),
             IntStringRecord(2, "bar")
         ),
-        IntStringRecord.serializer().list,
+        ListSerializer(IntStringRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasHeaderRecord = true
@@ -171,7 +173,7 @@ class CsvHasHeaderRecordTest {
                 )
             )
         ),
-        NestedRecord.serializer().list,
+        ListSerializer(NestedRecord.serializer()),
         Csv(
             CsvConfiguration(
                 hasHeaderRecord = true

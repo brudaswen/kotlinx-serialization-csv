@@ -1,16 +1,17 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
-import kotlinx.serialization.StructureKind
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.CompositeDecoder
 
 /**
  * CSV decoder for classes.
  *
  * Supports header line such that class properties can be in different order.
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal class ClassCsvDecoder(
     csv: Csv,
     reader: CsvReader,
@@ -21,12 +22,12 @@ internal class ClassCsvDecoder(
     private var elementIndex = 0
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.READ_DONE
+        reader.isDone || elementIndex >= descriptor.elementsCount -> CompositeDecoder.DECODE_DONE
         classHeaders != null -> classHeaders[elementIndex]
         else -> elementIndex
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
             StructureKind.CLASS ->
                 ClassCsvDecoder(
@@ -37,7 +38,7 @@ internal class ClassCsvDecoder(
                 )
 
             else ->
-                super.beginStructure(descriptor, *typeParams)
+                super.beginStructure(descriptor)
         }
     }
 

@@ -1,20 +1,27 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.*
-import kotlinx.serialization.builtins.AbstractEncoder
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.modules.SerialModule
+import kotlinx.serialization.descriptors.PolymorphicKind
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.SerialKind
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.AbstractEncoder
+import kotlinx.serialization.encoding.CompositeEncoder
+import kotlinx.serialization.modules.SerializersModule
 
 /**
  * Default CSV encoder.
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal abstract class CsvEncoder(
     protected val csv: Csv,
     protected val writer: CsvWriter,
     private val parent: CsvEncoder?
 ) : AbstractEncoder() {
 
-    override val context: SerialModule = csv.context
+    override val serializersModule: SerializersModule = csv.serializersModule
 
     protected val configuration
         get() = csv.configuration
@@ -22,10 +29,9 @@ internal abstract class CsvEncoder(
     override fun beginCollection(
         descriptor: SerialDescriptor,
         collectionSize: Int,
-        vararg typeSerializers: KSerializer<*>
     ): CompositeEncoder {
         encodeCollectionSize(collectionSize)
-        return super.beginCollection(descriptor, collectionSize, *typeSerializers)
+        return super.beginCollection(descriptor, collectionSize)
     }
 
     override fun beginStructure(
@@ -125,7 +131,12 @@ internal abstract class CsvEncoder(
             val childDesc = desc.getElementDescriptor(i)
 
             when {
-                childDesc.kind is UnionKind ->
+                // TODO Check
+                childDesc.kind is SerialKind.CONTEXTUAL ->
+                    writer.printColumn(name)
+
+                // TODO Check
+                childDesc.kind is SerialKind.ENUM ->
                     writer.printColumn(name)
 
                 childDesc.kind is PolymorphicKind.SEALED -> {
@@ -151,7 +162,11 @@ internal abstract class CsvEncoder(
         writer.printColumn(collectionSize.toString(), isNumeric = true)
     }
 
-    protected open fun encodeColumn(value: String, isNumeric: Boolean = false, isNull: Boolean = false) {
+    protected open fun encodeColumn(
+        value: String,
+        isNumeric: Boolean = false,
+        isNull: Boolean = false
+    ) {
         writer.printColumn(value, isNumeric, isNull)
     }
 }

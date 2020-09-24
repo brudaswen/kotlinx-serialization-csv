@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.IntStringRecord
 import kotlinx.serialization.csv.records.StringRecord
@@ -9,11 +10,12 @@ import kotlin.test.Test
 /**
  * Test [kotlinx.serialization.csv.decode.CsvDecoder] with quoted values.
  */
+@OptIn(ExperimentalSerializationApi::class)
 class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiter() {
-        Csv.parse(
+        Csv.decodeFromString(
             StringRecord.serializer(),
             "\"test,ing\""
         ) shouldBe StringRecord(
@@ -23,7 +25,7 @@ class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces() {
-        Csv.parse(
+        Csv.decodeFromString(
             StringRecord.serializer(),
             " \"test,ing\" "
         ) shouldBe StringRecord(
@@ -33,7 +35,7 @@ class CsvQuotedTest {
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces2() {
-        Csv.parse(
+        Csv.decodeFromString(
             IntStringRecord.serializer(),
             " \"42\" , \"test , ing\" "
         ) shouldBe IntStringRecord(

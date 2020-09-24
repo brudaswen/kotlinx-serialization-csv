@@ -1,10 +1,10 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.CompositeDecoder
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialDescriptor
-import kotlinx.serialization.StructureKind
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.encoding.CompositeDecoder
 
 /**
  * Initial entry point for decoding.
@@ -13,6 +13,7 @@ import kotlinx.serialization.csv.Csv
  * (which is interpreted as multiple CSV records/lines). If this is the case, decoding continues in
  * [RecordListCsvDecoder].
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal class RootCsvDecoder(
     csv: Csv,
     reader: CsvReader
@@ -21,10 +22,10 @@ internal class RootCsvDecoder(
     private var position = 0
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        return if (reader.isDone) CompositeDecoder.READ_DONE else position
+        return if (reader.isDone) CompositeDecoder.DECODE_DONE else position
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor, vararg typeParams: KSerializer<*>): CompositeDecoder {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
             StructureKind.LIST ->
                 // Top level list is treated as list of multiple records
@@ -33,7 +34,7 @@ internal class RootCsvDecoder(
             else -> {
                 // Top level is treated as one single record
                 readHeaders(descriptor)
-                super.beginStructure(descriptor, *typeParams)
+                super.beginStructure(descriptor)
             }
         }
     }

@@ -1,3 +1,4 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
 @file:UseSerializers(UUIDSerializer::class, LocalDateTimeSerializer::class)
 
 package kotlinx.serialization.csv.example
@@ -53,6 +54,7 @@ data class Vehicle(
 @Serializable
 enum class VehicleType {
     CAR,
+
     @SerialName("MOTORBIKE")
     BIKE
 }
@@ -116,5 +118,5 @@ data class Oil(
 
 @Serializable
 enum class Feature {
-    PETROL, DIESEL, ELECTRIC, MANUAL, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON
+    ELECTRIC, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON
 }

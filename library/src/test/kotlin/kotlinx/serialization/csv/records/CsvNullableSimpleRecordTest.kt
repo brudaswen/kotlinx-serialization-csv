@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.records
 
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
@@ -11,6 +12,7 @@ import kotlin.test.Test
 /**
  * Test [Csv] with simple nullable [Serializable] records.
  */
+@OptIn(ExperimentalSerializationApi::class)
 class CsvNullableSimpleRecordTest {
 
     @Test
@@ -124,7 +126,7 @@ class CsvNullableSimpleRecordTest {
             IntRecord(-150), null,
             IntRecord(150)
         ),
-        IntRecord.serializer().nullable.list,
+        ListSerializer(IntRecord.serializer().nullable),
         Csv(
             CsvConfiguration(
                 ignoreEmptyLines = false
@@ -139,7 +141,7 @@ class CsvNullableSimpleRecordTest {
             IntRecord(-150), null,
             IntRecord(150), null
         ),
-        IntRecord.serializer().nullable.list,
+        ListSerializer(IntRecord.serializer().nullable),
         Csv(
             CsvConfiguration(
                 ignoreEmptyLines = false
