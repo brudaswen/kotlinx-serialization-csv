@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.0.0] - 2020-09-24
+### Changed
+- Compatibility with *Kotlin Serialization* `1.0.0-RC`.
+
+
 ## [0.2.0] - 2020-05-24
 ### Changed
 - Compatibility with *Kotlin Serialization* `0.20.0`.

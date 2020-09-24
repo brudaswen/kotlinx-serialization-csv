@@ -15,10 +15,10 @@ open classes should be avoided.
 ## Gradle Dependencies
 ```kotlin
 // Kotlin Serialization CSV
-implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:0.2.0")
+implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:1.0.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0.0-RC")
 ```
 
 ## Usage
@@ -28,6 +28,12 @@ of the *Kotlin Serialization* library.
 
 ### CSV Example
 ```kotlin
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.CsvConfiguration
+
 @Serializable
 data class Person(val nickname: String, val name: String?, val appearance: Appearance)
 
@@ -37,6 +43,7 @@ data class Appearance(val gender: Gender?, val age: Int?, val height: Double?)
 @Serializable
 enum class Gender { MALE, FEMALE }
 
+@OptIn(ExperimentalSerializationApi::class)
 fun main() {
     val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
 
@@ -44,7 +51,7 @@ fun main() {
         Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
         Person("Trinity", null, Appearance(Gender.FEMALE, null, 1.74))
     )
-    val serialized = csv.stringify(Person.serializer().list, records)
+    val serialized = csv.encodeToString(ListSerializer(Person.serializer()), records)
     println(serialized)
     // nickname,name,appearance.gender,appearance.age,appearance.height
     // Neo,Thomas A. Anderson,MALE,37,1.86
@@ -55,7 +62,7 @@ fun main() {
         Neo,MALE,1.86,37,Thomas A. Anderson
         Trinity,FEMALE,1.74,,
     """.trimIndent().replace("\n", "\r\n")
-    val parsed = csv.parse(Person.serializer().list, input)
+    val parsed = csv.decodeFromString(ListSerializer(Person.serializer()), input)
     println(parsed)
     // [
     //   Person(nickname=Neo, name=Thomas A. Anderson, appearance=Appearance(gender=MALE, age=37, height=1.86)),
@@ -93,7 +100,7 @@ CSV serialization and parsing options can be changed by providing a custom `CsvC
 
 | Dependency             | Versions |
 |---                     |---       |
-| *Kotlin Serialization* | 0.20.0   |
+| *Kotlin Serialization* | 1.0.0-RC |
 
 ## License
 
