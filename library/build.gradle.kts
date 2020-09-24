@@ -3,7 +3,7 @@ import java.time.Duration
 plugins {
     kotlin("jvm")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
-    id("org.jetbrains.dokka") version "0.9.18"
+    id("org.jetbrains.dokka") version "1.4.10"
     id("de.marcphilipp.nexus-publish") version "0.4.0"
     `maven-publish`
     signing
@@ -44,17 +44,11 @@ tasks.withType<GenerateModuleMetadata> {
     enabled = !isSnapshot()
 }
 
-val dokkaJavadoc by tasks.creating(org.jetbrains.dokka.gradle.DokkaTask::class) {
-    // TODO Change to "javadoc" as soon as https://youtrack.jetbrains.com/issue/KT-31710 is fixed
-    outputFormat = "html"
-    outputDirectory = "$buildDir/dokkaJavadoc"
-}
-
 val dokkaJavadocJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
-    from(dokkaJavadoc)
+    from(tasks.dokkaJavadoc)
 }
 
 val publishRelease = tasks.create("publishRelease") {
@@ -154,8 +148,5 @@ tasks.check {
 }
 
 fun isSnapshot() = version.toString().endsWith("-SNAPSHOT")
-
-fun org.jetbrains.dokka.gradle.DokkaTask.externalDocumentationLink(closure: org.jetbrains.dokka.DokkaConfiguration.ExternalDocumentationLink.Builder.() -> Unit) =
-    externalDocumentationLink(delegateClosureOf(closure))
 
 fun url(path: String) = uri(path).toURL()
