@@ -162,7 +162,11 @@ internal abstract class CsvEncoder(
         writer.printColumn(collectionSize.toString(), isNumeric = true)
     }
 
-    protected open fun encodeColumn(value: String, isNumeric: Boolean = false, isNull: Boolean = false) {
+    protected open fun encodeColumn(
+        value: String,
+        isNumeric: Boolean = false,
+        isNull: Boolean = false
+    ) {
         writer.printColumn(value, isNumeric, isNull)
     }
 }

@@ -81,6 +81,7 @@ data class Location(val lat: Double, val lon: Double)
 
 @Serializable
 object ObjectRecord {
+    @Suppress("unused")
     const val x = 42
 }
 

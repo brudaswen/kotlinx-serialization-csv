@@ -2,6 +2,7 @@ package kotlinx.serialization.csv.example
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.example.Feature.*
@@ -26,9 +27,23 @@ class ExampleTest {
     private val janeDoe = Person(42, "Jane", "Doe", 1581602631744)
 
     // Vehicles
-    private val tesla = Vehicle(UUID.fromString("f9682dcb-30f7-4e88-915e-60e3b2758da7"), VehicleType.CAR, "Tesla")
-    private val porsche = Vehicle(UUID.fromString("5e1afd88-97a2-4373-a83c-44a49c552abd"), VehicleType.CAR, "Porsche")
-    private val harley = Vehicle(UUID.fromString("c038c27b-a3fd-4e35-b6ac-ab06d747e16c"), VehicleType.BIKE, "Harley")
+    private val tesla = Vehicle(
+        UUID.fromString("f9682dcb-30f7-4e88-915e-60e3b2758da7"),
+        VehicleType.CAR,
+        "Tesla"
+    )
+
+    private val porsche = Vehicle(
+        UUID.fromString("5e1afd88-97a2-4373-a83c-44a49c552abd"),
+        VehicleType.CAR,
+        "Porsche"
+    )
+
+    private val harley = Vehicle(
+        UUID.fromString("c038c27b-a3fd-4e35-b6ac-ab06d747e16c"),
+        VehicleType.BIKE,
+        "Harley"
+    )
 
     @Test
     fun testLocationRecords() = assertStringFormAndRestored(
@@ -115,5 +130,26 @@ class ExampleTest {
         ),
         ListSerializer(VehicleFeaturesRecord.serializer()),
         Csv(CsvConfiguration.rfc4180)
+    )
+
+    @Test
+    fun testExcel() = assertStringFormAndRestored(
+        """|c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,,
+           |c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,0,0
+           |
+           |f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,5,ELECTRIC,AUTOMATIC,HEATED_SEATS,NAVIGATION_SYSTEM,XENON,2,ELECTRIC,0,XENON,1
+        """.trimMargin().replace("\n", "\r\n"),
+        listOf(
+            VehicleFeaturesRecord(harley, null, null),
+            VehicleFeaturesRecord(harley, emptyList(), emptyMap()),
+            null,
+            VehicleFeaturesRecord(
+                tesla,
+                listOf(ELECTRIC, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON),
+                mapOf(ELECTRIC to 0, XENON to 1)
+            )
+        ),
+        ListSerializer(VehicleFeaturesRecord.serializer().nullable),
+        Csv(CsvConfiguration.excel)
     )
 }

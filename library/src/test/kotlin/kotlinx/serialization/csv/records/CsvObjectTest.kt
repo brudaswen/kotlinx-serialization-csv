@@ -50,7 +50,10 @@ class CsvObjectTest {
     @Test
     fun testInvalidObject() {
         assertThrows<IllegalArgumentException> {
-            Csv.decodeFromString(ObjectRecord.serializer(), "kotlinx.serialization.csv.records.InvalidName")
+            Csv.decodeFromString(
+                ObjectRecord.serializer(),
+                "kotlinx.serialization.csv.records.InvalidName"
+            )
         }
     }
 }

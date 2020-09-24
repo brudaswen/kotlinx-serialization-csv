@@ -82,7 +82,12 @@ class CsvCollectionsTest {
                 listOf(4, 5, 6) to listOf(7, 8, 9, 10)
             )
         ),
-        ListSerializer(MapSerializer(ListSerializer(Int.serializer()), ListSerializer(Int.serializer()))),
+        ListSerializer(
+            MapSerializer(
+                ListSerializer(Int.serializer()),
+                ListSerializer(Int.serializer())
+            )
+        ),
         Csv
     )
 

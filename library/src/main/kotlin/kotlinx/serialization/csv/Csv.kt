@@ -14,12 +14,12 @@ import kotlinx.serialization.modules.SerializersModule
  *
  * It is typically used by constructing an application-specific instance, with configured CSV-specific behaviour
  * ([configuration] parameter) and, if necessary, registered
- * custom serializers (in [SerialModule] provided by [context] parameter).
+ * custom serializers (in [SerializersModule] provided by [context] parameter).
  *
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  *
  * @param configuration CSV settings used during parsing/serialization.
- * @param context Serialization module settings (e.g. custom serializers).
+ * @param serializersModule Serialization module settings (e.g. custom serializers).
  */
 @ExperimentalSerializationApi
 class Csv(
@@ -95,7 +95,10 @@ class Csv(
          * @param deserializer The deserializer used to parse the given CSV string.
          * @param string The CSV string to parse.
          */
-        override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T =
+        override fun <T> decodeFromString(
+            deserializer: DeserializationStrategy<T>,
+            string: String
+        ): T =
             default.decodeFromString(deserializer, string)
     }
 }
