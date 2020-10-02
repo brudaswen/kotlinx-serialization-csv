@@ -18,7 +18,7 @@ open classes should be avoided.
 implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:1.0.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0.0-RC")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC2")
 ```
 
 ## Usage
@@ -100,7 +100,7 @@ CSV serialization and parsing options can be changed by providing a custom `CsvC
 
 | Dependency             | Versions |
 |---                     |---       |
-| *Kotlin Serialization* | 1.0.0-RC |
+| *Kotlin Serialization* | 1.0.0-RC2 |
 
 ## License
 
