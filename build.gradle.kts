@@ -5,7 +5,7 @@ plugins {
     id("io.codearte.nexus-staging") version "0.22.0"
 }
 
-val serializationVersion = "1.0.0-RC2"
+val serializationVersion = "1.0.0"
 
 allprojects {
     group = "de.brudaswen.kotlinx.serialization"
