@@ -35,8 +35,7 @@ internal abstract class CsvEncoder(
     }
 
     override fun beginStructure(
-        descriptor: SerialDescriptor,
-        vararg typeSerializers: KSerializer<*>
+        descriptor: SerialDescriptor
     ): CompositeEncoder {
         return when (descriptor.kind) {
             StructureKind.LIST,
