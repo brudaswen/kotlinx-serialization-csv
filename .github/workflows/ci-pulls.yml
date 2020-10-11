@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout GIT repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Upload report to codecov.io
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: library/build/reports/jacoco/test/jacocoTestReport.xml
+        flags: unittests
+        fail_ci_if_error: true
