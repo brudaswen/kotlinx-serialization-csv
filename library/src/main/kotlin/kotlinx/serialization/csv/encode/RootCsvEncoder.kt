@@ -43,7 +43,7 @@ internal class RootCsvEncoder(
         return super.beginStructure(descriptor)
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
+    override fun endChildStructure(descriptor: SerialDescriptor) {
         writer.endRecord()
     }
 

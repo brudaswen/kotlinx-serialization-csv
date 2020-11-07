@@ -62,7 +62,7 @@ internal abstract class CsvEncoder(
         parent?.endChildStructure(descriptor)
     }
 
-    protected open fun endChildStructure(desc: SerialDescriptor) {
+    protected open fun endChildStructure(descriptor: SerialDescriptor) {
     }
 
     override fun encodeByte(value: Byte) {
@@ -109,24 +109,24 @@ internal abstract class CsvEncoder(
         encodeColumn(enumDescriptor.getElementName(index))
     }
 
-    protected fun printHeaderRecord(desc: SerialDescriptor) {
+    protected fun printHeaderRecord(descriptor: SerialDescriptor) {
         writer.beginRecord()
-        printHeader("", desc)
+        printHeader("", descriptor)
         writer.endRecord()
     }
 
-    private fun printHeader(prefix: String, desc: SerialDescriptor) {
-        when (desc.kind) {
+    private fun printHeader(prefix: String, descriptor: SerialDescriptor) {
+        when (descriptor.kind) {
             is StructureKind.LIST,
             is StructureKind.MAP,
             is PolymorphicKind.OPEN -> {
-                error("CSV headers are not supported for variable sized type '${desc.kind}'.")
+                error("CSV headers are not supported for variable sized type '${descriptor.kind}'.")
             }
         }
 
-        for (i in 0 until desc.elementsCount) {
-            val name = prefix + desc.getElementName(i)
-            val childDesc = desc.getElementDescriptor(i)
+        for (i in 0 until descriptor.elementsCount) {
+            val name = prefix + descriptor.getElementName(i)
+            val childDesc = descriptor.getElementDescriptor(i)
 
             when {
                 // TODO Check

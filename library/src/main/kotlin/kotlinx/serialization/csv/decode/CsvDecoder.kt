@@ -114,15 +114,15 @@ internal abstract class CsvDecoder(
 
     protected open fun decodeColumn() = reader.readColumn()
 
-    protected fun readHeaders(desc: SerialDescriptor) {
+    protected fun readHeaders(descriptor: SerialDescriptor) {
         if (configuration.hasHeaderRecord && headers == null) {
-            this.headers = readHeaders(desc, "")
+            this.headers = readHeaders(descriptor, "")
 
             readTrailingDelimiter()
         }
     }
 
-    private fun readHeaders(desc: SerialDescriptor, prefix: String): Headers {
+    private fun readHeaders(descriptor: SerialDescriptor, prefix: String): Headers {
         val headers = Headers()
         var position = 0
         while (!reader.isDone && reader.isFirstRecord) {
@@ -138,15 +138,15 @@ internal abstract class CsvDecoder(
 
             // If there is an exact name match, store the header, otherwise try reading class structure
             val header = value.substringAfter(prefix)
-            val headerIndex = desc.getElementIndex(header)
+            val headerIndex = descriptor.getElementIndex(header)
             if (headerIndex != CompositeDecoder.UNKNOWN_NAME) {
                 headers[position] = headerIndex
                 reader.unmark()
             } else {
                 val name = header.substringBefore(configuration.headerSeparator)
-                val nameIndex = desc.getElementIndex(name)
+                val nameIndex = descriptor.getElementIndex(name)
                 if (nameIndex != CompositeDecoder.UNKNOWN_NAME) {
-                    val childDesc = desc.getElementDescriptor(nameIndex)
+                    val childDesc = descriptor.getElementDescriptor(nameIndex)
                     if (childDesc.kind is StructureKind.CLASS) {
                         reader.reset()
                         headers[position] = nameIndex

@@ -58,8 +58,8 @@ internal class SealedCsvDecoder(
         return value
     }
 
-    private fun readEmptyColumns(desc: SerialDescriptor) {
-        for (innerDesc in desc.elementDescriptors.toList()) {
+    private fun readEmptyColumns(descriptor: SerialDescriptor) {
+        for (innerDesc in descriptor.elementDescriptors.toList()) {
             decodeNull()
         }
     }

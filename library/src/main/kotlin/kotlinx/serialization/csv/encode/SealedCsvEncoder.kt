@@ -38,16 +38,16 @@ internal class SealedCsvEncoder(
         }
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
+    override fun endChildStructure(descriptor: SerialDescriptor) {
         val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors.toList()
-        val index = sealedChildren.indexOf(desc)
+        val index = sealedChildren.indexOf(descriptor)
         for (innerDesc in sealedChildren.subList(index + 1, sealedChildren.size)) {
             printEmptyColumns(innerDesc)
         }
     }
 
-    private fun printEmptyColumns(desc: SerialDescriptor) {
-        for (innerDesc in desc.elementDescriptors.toList()) {
+    private fun printEmptyColumns(descriptor: SerialDescriptor) {
+        for (innerDesc in descriptor.elementDescriptors.toList()) {
             encodeNull()
         }
     }
