@@ -7,6 +7,9 @@ import kotlinx.serialization.csv.CsvConfiguration
  */
 internal class CsvReader(private val source: Source, private val configuration: CsvConfiguration) {
 
+    val offset
+        get() = source.offset
+
     var recordNo = 0
         private set
 

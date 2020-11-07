@@ -7,7 +7,9 @@ package kotlinx.serialization.test
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.StringFormat
+import kotlinx.serialization.csv.CsvDecodingException
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalSerializationApi::class)
 inline fun <reified T : Any?> assertStringFormAndRestored(
@@ -36,6 +38,17 @@ inline fun <reified T : Any> assertParse(
     val restored = format.decodeFromString(serializer, input)
     if (printResult) println("[Restored form] $restored")
     assertEquals(expected, restored)
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+inline fun <reified T : Any> assertParseFails(
+    input: String,
+    serializer: KSerializer<T>,
+    format: StringFormat
+) {
+    assertFailsWith<CsvDecodingException> {
+        format.decodeFromString(serializer, input)
+    }
 }
 
 @OptIn(ExperimentalSerializationApi::class)

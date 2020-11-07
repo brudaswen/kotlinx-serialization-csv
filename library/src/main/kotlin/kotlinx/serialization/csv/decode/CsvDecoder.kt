@@ -3,6 +3,8 @@ package kotlinx.serialization.csv.decode
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
+import kotlinx.serialization.csv.UnknownColumnHeaderException
+import kotlinx.serialization.csv.UnsupportedSerialDescriptorException
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -24,10 +26,10 @@ internal abstract class CsvDecoder(
     override val serializersModule: SerializersModule
         get() = csv.serializersModule
 
-    protected val configuration: CsvConfiguration
+    private val configuration: CsvConfiguration
         get() = csv.configuration
 
-    protected var headers: Headers? = null
+    private var headers: Headers? = null
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
         return when (descriptor.kind) {
@@ -47,8 +49,7 @@ internal abstract class CsvDecoder(
             PolymorphicKind.OPEN ->
                 ClassCsvDecoder(csv, reader, this, headers)
 
-            else ->
-                error("CSV does not support '${descriptor.kind}'.")
+            else -> throw UnsupportedSerialDescriptorException(descriptor)
         }
     }
 
@@ -124,9 +125,11 @@ internal abstract class CsvDecoder(
     private fun readHeaders(desc: SerialDescriptor, prefix: String): Headers {
         val headers = Headers()
         var position = 0
-        while (reader.isFirstRecord) {
-            // Read header value and check if it (still) starts with required prefix
+        while (!reader.isDone && reader.isFirstRecord) {
+            val offset = reader.offset
             reader.mark()
+
+            // Read header value and check if it (still) starts with required prefix
             val value = reader.readColumn()
             if (!value.startsWith(prefix)) {
                 reader.reset()
@@ -151,8 +154,13 @@ internal abstract class CsvDecoder(
                     } else {
                         reader.unmark()
                     }
-                } else {
+                } else if (csv.configuration.ignoreUnknownColumns) {
+                    headers[position] = CompositeDecoder.UNKNOWN_NAME
                     reader.unmark()
+                } else if (value == "" && !reader.isFirstRecord && configuration.hasTrailingDelimiter) {
+                    reader.unmark()
+                } else {
+                    throw UnknownColumnHeaderException(offset, value)
                 }
             }
             position++
@@ -176,8 +184,11 @@ internal abstract class CsvDecoder(
         private val map = mutableMapOf<Int, Int>()
         private val subHeaders = mutableMapOf<Int, Headers>()
 
+        val size
+            get() = map.size
+
         operator fun get(position: Int) =
-            map.getOrElse(position) { CompositeDecoder.UNKNOWN_NAME }
+            map[position]
 
         operator fun set(key: Int, value: Int) {
             map[key] = value

@@ -94,6 +94,7 @@ CSV serialization and parsing options can be changed by providing a custom `CsvC
 | `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing. |
 | `hasHeaderRecord`      | `false`        | First line is header record. |
 | `headerSeparator`      | `.`            | Character that is used to separate hierarchical header names. |
+| `ignoreUnknownColumns` | `false`        | Ignore unknown columns (only has effect when `hasHeaderRecord` is enabled). |
 | `hasTrailingDelimiter` | `false`        | If records end with a trailing `delimiter`. |
 
 ## Requirements
