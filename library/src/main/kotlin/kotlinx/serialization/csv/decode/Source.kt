@@ -6,6 +6,11 @@ package kotlinx.serialization.csv.decode
 interface Source {
 
     /**
+     * Current read offset in the source.
+     */
+    val offset: Int
+
+    /**
      * Check if there are more characters to read.
      * @return True if EOF has not been read, yet; false if EOF has already been read.
      */

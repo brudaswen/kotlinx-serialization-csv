@@ -7,6 +7,9 @@ private const val EOF = -1
  */
 internal class StringSource(private val content: String) : Source {
 
+    override val offset: Int
+        get() = position
+
     private var position = 0
 
     private var marks = arrayListOf<Int>()

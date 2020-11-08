@@ -12,6 +12,7 @@ package kotlinx.serialization.csv
  * @param ignoreEmptyLines Ignore empty lines during parsing (default: `true`).
  * @param hasHeaderRecord First line is header record (default: `false`).
  * @param headerSeparator Character that is used to separate hierarchical header names (default: `.`).
+ * @param ignoreUnknownColumns Ignore unknown columns when `hasHeaderRecord` is enabled (default: `false`).
  * @param hasTrailingDelimiter If records end with a trailing [delimiter] (default: `false`).
  */
 data class CsvConfiguration(
@@ -24,7 +25,8 @@ data class CsvConfiguration(
     val ignoreEmptyLines: Boolean = true,
     val hasHeaderRecord: Boolean = false,
     val headerSeparator: Char = '.',
-    val hasTrailingDelimiter: Boolean = false
+    val ignoreUnknownColumns: Boolean = false,
+    val hasTrailingDelimiter: Boolean = false,
 ) {
 
     init {
