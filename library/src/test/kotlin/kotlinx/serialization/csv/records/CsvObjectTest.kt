@@ -5,7 +5,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
@@ -16,35 +16,32 @@ import kotlin.test.Test
 class CsvObjectTest {
 
     @Test
-    fun testObject() = assertStringFormAndRestored(
+    fun testObject() = Csv.assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.ObjectRecord",
         ObjectRecord,
-        ObjectRecord.serializer(),
-        Csv
+        ObjectRecord.serializer()
     )
 
     @Test
-    fun testNullableObject() = assertStringFormAndRestored(
+    fun testNullableObject() = Csv.assertEncodeAndDecode(
         "",
         null,
-        ObjectRecord.serializer().nullable,
-        Csv
+        ObjectRecord.serializer().nullable
     )
 
     @Test
-    fun testObjectList() = assertStringFormAndRestored(
+    fun testObjectList() = Csv(
+        CsvConfiguration(
+            ignoreEmptyLines = false
+        )
+    ).assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.ObjectRecord\r\n\r\nkotlinx.serialization.csv.records.ObjectRecord",
         listOf(
             ObjectRecord,
             null,
             ObjectRecord
         ),
-        ListSerializer(ObjectRecord.serializer().nullable),
-        Csv(
-            CsvConfiguration(
-                ignoreEmptyLines = false
-            )
-        )
+        ListSerializer(ObjectRecord.serializer().nullable)
     )
 
     @Test

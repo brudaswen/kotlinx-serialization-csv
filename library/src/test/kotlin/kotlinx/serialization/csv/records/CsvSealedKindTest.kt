@@ -4,7 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Ignore
 import kotlin.test.Test
 
@@ -15,48 +15,43 @@ import kotlin.test.Test
 class CsvSealedKindTest {
 
     @Test
-    fun testSealedObject() = assertStringFormAndRestored(
+    fun testSealedObject() = Csv.assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.SealedRecord.Object,,,,",
         SealedRecord.Object,
-        SealedRecord.serializer(),
-        Csv
+        SealedRecord.serializer()
     )
 
     @Ignore("For now, serialization library does not provide the required information to write multiple columns")
     @Test
-    fun testSealedNullable() = assertStringFormAndRestored(
+    fun testSealedNullable() = Csv.assertEncodeAndDecode(
         ",,",
         null,
-        SealedRecord.serializer().nullable,
-        Csv
+        SealedRecord.serializer().nullable
     )
 
     @Test
-    fun testSealedOtherObject() = assertStringFormAndRestored(
+    fun testSealedOtherObject() = Csv.assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,",
         SealedRecord.OtherObject,
-        SealedRecord.serializer(),
-        Csv
+        SealedRecord.serializer()
     )
 
     @Test
-    fun testSealedClass() = assertStringFormAndRestored(
+    fun testSealedClass() = Csv.assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.SealedRecord.Class,42,testing,,",
         SealedRecord.Class("testing"),
-        SealedRecord.serializer(),
-        Csv
+        SealedRecord.serializer()
     )
 
     @Test
-    fun testSealedOtherClass() = assertStringFormAndRestored(
+    fun testSealedOtherClass() = Csv.assertEncodeAndDecode(
         "kotlinx.serialization.csv.records.SealedRecord.OtherClass,,,41,test-ing",
         SealedRecord.OtherClass("test-ing"),
-        SealedRecord.serializer(),
-        Csv
+        SealedRecord.serializer()
     )
 
     @Test
-    fun testSealedList() = assertStringFormAndRestored(
+    fun testSealedList() = Csv.assertEncodeAndDecode(
         """
           |kotlinx.serialization.csv.records.SealedRecord.Object,,,,
           |kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,
@@ -67,7 +62,6 @@ class CsvSealedKindTest {
             SealedRecord.OtherObject,
             SealedRecord.Class("testing")
         ),
-        ListSerializer(SealedRecord.serializer()),
-        Csv
+        ListSerializer(SealedRecord.serializer())
     )
 }

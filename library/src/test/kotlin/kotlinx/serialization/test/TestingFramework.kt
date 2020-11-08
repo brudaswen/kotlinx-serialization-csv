@@ -12,58 +12,40 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any?> assertStringFormAndRestored(
+inline fun <reified T : Any?> StringFormat.assertEncodeAndDecode(
     expected: String,
     original: T,
     serializer: KSerializer<T>,
-    format: StringFormat,
     printResult: Boolean = false
 ) {
-    val string = format.encodeToString(serializer, original)
+    val string = encodeToString(serializer, original)
     if (printResult) println("[Serialized form] $string")
     assertEquals(expected, string)
-    val restored = format.decodeFromString(serializer, string)
+    val restored = decodeFromString(serializer, string)
     if (printResult) println("[Restored form] $restored")
     assertEquals(original, restored)
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any> assertParse(
+inline fun <reified T : Any> StringFormat.assertDecode(
     input: String,
     expected: T,
     serializer: KSerializer<T>,
-    format: StringFormat,
     printResult: Boolean = false
 ) {
-    val restored = format.decodeFromString(serializer, input)
+    val restored = decodeFromString(serializer, input)
     if (printResult) println("[Restored form] $restored")
     assertEquals(expected, restored)
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any> assertParseFails(
+inline fun <reified T : Any> StringFormat.assertDecodeFails(
     input: String,
-    serializer: KSerializer<T>,
-    format: StringFormat
+    serializer: KSerializer<T>
 ) {
     assertFailsWith<CsvDecodingException> {
-        format.decodeFromString(serializer, input)
+        decodeFromString(serializer, input)
     }
-}
-
-@OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T : Any> StringFormat.assertStringFormAndRestored(
-    expected: String,
-    original: T,
-    serializer: KSerializer<T>,
-    printResult: Boolean = false
-) {
-    val string = this.encodeToString(serializer, original)
-    if (printResult) println("[Serialized form] $string")
-    assertEquals(expected, string)
-    val restored = this.decodeFromString(serializer, string)
-    if (printResult) println("[Restored form] $restored")
-    assertEquals(original, restored)
 }
 
 infix fun <T> T.shouldBe(expected: T) = assertEquals(expected, this)

@@ -23,7 +23,7 @@ internal class RecordListCsvEncoder(
         return super.beginStructure(descriptor)
     }
 
-    override fun endChildStructure(desc: SerialDescriptor) {
+    override fun endChildStructure(descriptor: SerialDescriptor) {
         // For complex records: End the record here
         writer.endRecord()
     }

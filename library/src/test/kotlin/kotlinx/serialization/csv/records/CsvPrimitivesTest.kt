@@ -4,7 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -14,98 +14,86 @@ import kotlin.test.Test
 class CsvPrimitivesTest {
 
     @Test
-    fun testByte() = assertStringFormAndRestored(
+    fun testByte() = Csv.assertEncodeAndDecode(
         "-123",
         -123,
-        Byte.serializer(),
-        Csv
+        Byte.serializer()
     )
 
     @Test
-    fun testShort() = assertStringFormAndRestored(
+    fun testShort() = Csv.assertEncodeAndDecode(
         "-150",
         -150,
-        Short.serializer(),
-        Csv
+        Short.serializer()
     )
 
     @Test
-    fun testInt() = assertStringFormAndRestored(
+    fun testInt() = Csv.assertEncodeAndDecode(
         "-150",
         -150,
-        Int.serializer(),
-        Csv
+        Int.serializer()
     )
 
     @Test
-    fun testLong() = assertStringFormAndRestored(
+    fun testLong() = Csv.assertEncodeAndDecode(
         "-150",
         -150,
-        Long.serializer(),
-        Csv
+        Long.serializer()
     )
 
     @Test
-    fun testFloat() = assertStringFormAndRestored(
+    fun testFloat() = Csv.assertEncodeAndDecode(
         "-150.0",
         -150f,
-        Float.serializer(),
-        Csv
+        Float.serializer()
     )
 
     @Test
-    fun testDouble() = assertStringFormAndRestored(
+    fun testDouble() = Csv.assertEncodeAndDecode(
         "-150.0",
         -150.0,
-        Double.serializer(),
-        Csv
+        Double.serializer()
     )
 
     @Test
-    fun testBooleanTrue() = assertStringFormAndRestored(
+    fun testBooleanTrue() = Csv.assertEncodeAndDecode(
         "true",
         true,
-        Boolean.serializer(),
-        Csv
+        Boolean.serializer()
     )
 
     @Test
-    fun testBooleanFalse() = assertStringFormAndRestored(
+    fun testBooleanFalse() = Csv.assertEncodeAndDecode(
         "false",
         false,
-        Boolean.serializer(),
-        Csv
+        Boolean.serializer()
     )
 
     @Test
-    fun testChar() = assertStringFormAndRestored(
+    fun testChar() = Csv.assertEncodeAndDecode(
         "a",
         'a',
-        Char.serializer(),
-        Csv
+        Char.serializer()
     )
 
     @Test
-    fun testString() = assertStringFormAndRestored(
+    fun testString() = Csv.assertEncodeAndDecode(
         "testing",
         "testing",
-        String.serializer(),
-        Csv
+        String.serializer()
     )
 
     @Test
-    fun testUnit() = assertStringFormAndRestored(
+    fun testUnit() = Csv.assertEncodeAndDecode(
         "kotlin.Unit",
         Unit,
-        Unit.serializer(),
-        Csv
+        Unit.serializer()
     )
 
     @Test
-    fun testIntList() = assertStringFormAndRestored(
+    fun testIntList() = Csv.assertEncodeAndDecode(
         "-150\r\n150\r\n42",
         listOf(-150, 150, 42),
-        ListSerializer(Int.serializer()),
-        Csv
+        ListSerializer(Int.serializer())
     )
 }

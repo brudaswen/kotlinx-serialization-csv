@@ -6,7 +6,7 @@ import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.ALL
 import kotlinx.serialization.csv.records.IntRecord
 import kotlinx.serialization.csv.records.StringRecord
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -16,66 +16,61 @@ import kotlin.test.Test
 class CsvQuoteCharTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv(
+        CsvConfiguration(
+            quoteMode = ALL
+        )
+    ).assertEncodeAndDecode(
         "\"1\"",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = ALL
-            )
-        )
+        IntRecord.serializer()
     )
 
     @Test
-    fun testDoubleQuote() = assertStringFormAndRestored(
+    fun testDoubleQuote() = Csv(
+        CsvConfiguration(
+            quoteMode = ALL,
+            quoteChar = '"'
+        )
+    ).assertEncodeAndDecode(
         "\"1\"",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = ALL,
-                quoteChar = '"'
-            )
-        )
+        IntRecord.serializer()
     )
 
     @Test
-    fun testSingleQuote() = assertStringFormAndRestored(
+    fun testSingleQuote() = Csv(
+        CsvConfiguration(
+            quoteMode = ALL,
+            quoteChar = '\''
+        )
+    ).assertEncodeAndDecode(
         "'1'",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = ALL,
-                quoteChar = '\''
-            )
-        )
+        IntRecord.serializer()
     )
 
     @Test
-    fun testBang() = assertStringFormAndRestored(
+    fun testBang() = Csv(
+        CsvConfiguration(
+            quoteMode = ALL,
+            quoteChar = '!'
+        )
+    ).assertEncodeAndDecode(
         "!1!",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = ALL,
-                quoteChar = '!'
-            )
-        )
+        IntRecord.serializer()
     )
 
     @Test
-    fun testEscapingOfQuoteChar() = assertStringFormAndRestored(
+    fun testEscapingOfQuoteChar() = Csv(
+        CsvConfiguration(
+            quoteMode = ALL,
+            quoteChar = '\''
+        )
+    ).assertEncodeAndDecode(
         "'a''b'",
         StringRecord("a'b"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = ALL,
-                quoteChar = '\''
-            )
-        )
+        StringRecord.serializer()
     )
 }

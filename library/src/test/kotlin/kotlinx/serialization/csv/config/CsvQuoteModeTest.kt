@@ -5,7 +5,7 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.*
 import kotlinx.serialization.csv.records.*
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -453,99 +453,92 @@ class CsvQuoteModeTest {
 
 
     private fun testString(quoteMode: CsvConfiguration.QuoteMode, value: String, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode
+            )
+        ).assertEncodeAndDecode(
             expected,
             StringRecord(value),
-            StringRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode
-                )
-            )
+            StringRecord.serializer()
         )
 
     private fun testByte(quoteMode: CsvConfiguration.QuoteMode, value: Byte, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             ByteRecord(value),
-            ByteRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            ByteRecord.serializer()
         )
 
     private fun testShort(quoteMode: CsvConfiguration.QuoteMode, value: Short, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             ShortRecord(value),
-            ShortRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            ShortRecord.serializer()
         )
 
     private fun testInt(quoteMode: CsvConfiguration.QuoteMode, value: Int, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             IntRecord(value),
-            IntRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            IntRecord.serializer()
         )
 
     private fun testLong(quoteMode: CsvConfiguration.QuoteMode, value: Long, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             LongRecord(value),
-            LongRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            LongRecord.serializer()
         )
 
     private fun testFloat(quoteMode: CsvConfiguration.QuoteMode, value: Float, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             FloatRecord(value),
-            FloatRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            FloatRecord.serializer()
         )
 
     private fun testDouble(quoteMode: CsvConfiguration.QuoteMode, value: Double, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = '1',
+                recordSeparator = "2"
+            )
+        ).assertEncodeAndDecode(
             expected,
             DoubleRecord(value),
-            DoubleRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = '1',
-                    recordSeparator = "2"
-                )
-            )
+            DoubleRecord.serializer()
         )
 
     private fun testBoolean(
@@ -553,70 +546,65 @@ class CsvQuoteModeTest {
         value: Boolean,
         expected: String
     ) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = 'f',
+                recordSeparator = "a"
+            )
+        ).assertEncodeAndDecode(
             expected,
             BooleanRecord(value),
-            BooleanRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = 'f',
-                    recordSeparator = "a"
-                )
-            )
+            BooleanRecord.serializer()
         )
 
     private fun testNull(quoteMode: CsvConfiguration.QuoteMode, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                nullString = "null"
+            )
+        ).assertEncodeAndDecode(
             expected,
             NullRecord(null),
-            NullRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    nullString = "null"
-                )
-            )
+            NullRecord.serializer()
         )
 
     private fun testNullRequiringQuotes(quoteMode: CsvConfiguration.QuoteMode, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                nullString = "null",
+                delimiter = 'u',
+                recordSeparator = "l"
+            )
+        ).assertEncodeAndDecode(
             expected,
             NullRecord(null),
-            NullRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    nullString = "null",
-                    delimiter = 'u',
-                    recordSeparator = "l"
-                )
-            )
+            NullRecord.serializer()
         )
 
     private fun testUnit(quoteMode: CsvConfiguration.QuoteMode, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode
+            )
+        ).assertEncodeAndDecode(
             expected,
             UnitRecord(Unit),
-            UnitRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode
-                )
-            )
+            UnitRecord.serializer()
         )
 
     private fun testUnitRequiringQuotes(quoteMode: CsvConfiguration.QuoteMode, expected: String) =
-        assertStringFormAndRestored(
+        Csv(
+            CsvConfiguration(
+                quoteMode = quoteMode,
+                delimiter = 'U',
+                recordSeparator = "i"
+            )
+        ).assertEncodeAndDecode(
             expected,
             UnitRecord(Unit),
-            UnitRecord.serializer(),
-            Csv(
-                CsvConfiguration(
-                    quoteMode = quoteMode,
-                    delimiter = 'U',
-                    recordSeparator = "i"
-                )
-            )
+            UnitRecord.serializer()
         )
 }

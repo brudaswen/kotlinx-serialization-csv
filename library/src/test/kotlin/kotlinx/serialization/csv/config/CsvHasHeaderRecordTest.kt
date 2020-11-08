@@ -5,130 +5,125 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.*
-import kotlinx.serialization.test.assertParse
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertDecode
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 @OptIn(ExperimentalSerializationApi::class)
 class CsvHasHeaderRecordTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv.assertEncodeAndDecode(
         "1",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv
+        IntRecord.serializer()
     )
 
     @Test
-    fun testWithoutHeaderRecords() = assertStringFormAndRestored(
-        "1",
-        IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = false
-            )
+    fun testWithoutHeaderRecords() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = false
         )
+    ).assertEncodeAndDecode(
+        "1",
+        IntRecord(1),
+        IntRecord.serializer()
     )
 
     @Test
-    fun testWithHeaderRecords() = assertStringFormAndRestored(
+    fun testWithHeaderRecords() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "a\r\n1",
         IntRecord(1),
-        IntRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        IntRecord.serializer()
     )
 
     @Test
-    fun testListWithoutHeaderRecords() = assertStringFormAndRestored(
+    fun testListWithoutHeaderRecords() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = false
+        )
+    ).assertEncodeAndDecode(
         "1\r\n2\r\n3",
         listOf(
             IntRecord(1),
             IntRecord(2),
             IntRecord(3)
         ),
-        ListSerializer(IntRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = false
-            )
-        )
+        ListSerializer(IntRecord.serializer())
     )
 
     @Test
-    fun testListWithHeaderRecords() = assertStringFormAndRestored(
+    fun testListWithHeaderRecords() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "a\r\n1\r\n2\r\n3",
         listOf(
             IntRecord(1),
             IntRecord(2),
             IntRecord(3)
         ),
-        ListSerializer(IntRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        ListSerializer(IntRecord.serializer())
     )
 
     @Test
-    fun testMultipleColumns() = assertStringFormAndRestored(
+    fun testMultipleColumns() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "a,b\r\n1,testing",
         IntStringRecord(1, "testing"),
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testSerialName() = assertStringFormAndRestored(
+    fun testSerialName() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "first,second\r\n1,2",
         SerialNameRecord(1, 2),
-        SerialNameRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        SerialNameRecord.serializer()
     )
 
     @Test
-    fun testMultipleColumnsReordered() = assertParse(
+    fun testMultipleColumnsReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecode(
         "b,a\r\ntesting,1",
         IntStringRecord(1, "testing"),
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testListMultipleColumnsReordered() = assertParse(
+    fun testListMultipleColumnsReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecode(
         "b,a\r\ntesting,1\r\nbar,2",
         listOf(
             IntStringRecord(1, "testing"),
             IntStringRecord(2, "bar")
         ),
-        ListSerializer(IntStringRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        ListSerializer(IntStringRecord.serializer())
     )
 
     @Test
-    fun testNestedRecordWithHeaderReordered() = assertParse(
+    fun testNestedRecordWithHeaderReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecode(
         "time,data.location.lon,data.location.lat,data.info,data.speed,name\r\n0,1.0,0.0,info,100,Alice",
         NestedRecord(
             0,
@@ -140,16 +135,15 @@ class CsvHasHeaderRecordTest {
                 ), 100, "info"
             )
         ),
-        NestedRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        NestedRecord.serializer()
     )
 
     @Test
-    fun testNestedRecordListWithHeaderReordered() = assertParse(
+    fun testNestedRecordListWithHeaderReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecode(
         "time,name,data.location.lon,data.location.lat,data.speed,data.info\r\n0,Alice,1.0,0.0,100,info\r\n1,Bob,20.0,10.0,50,info2",
         listOf(
             NestedRecord(
@@ -173,11 +167,6 @@ class CsvHasHeaderRecordTest {
                 )
             )
         ),
-        ListSerializer(NestedRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        ListSerializer(NestedRecord.serializer())
     )
 }
