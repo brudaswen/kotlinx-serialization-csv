@@ -3,6 +3,7 @@ package kotlinx.serialization.csv.decode
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.UNKNOWN_NAME
 
 /**
  * CSV decoder for `object`s.
@@ -19,7 +20,7 @@ internal class ObjectCsvDecoder(
 
     override fun decodeSequentially(): Boolean = true
 
-    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = 0
+    override fun decodeElementIndex(descriptor: SerialDescriptor): Int = UNKNOWN_NAME
 
     override fun endStructure(descriptor: SerialDescriptor) {
         val value = reader.readColumn()

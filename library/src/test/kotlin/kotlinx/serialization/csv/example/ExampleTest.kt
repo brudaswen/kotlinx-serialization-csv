@@ -4,7 +4,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.example.Feature.*
 import kotlinx.serialization.csv.example.Tire.Axis.FRONT
 import kotlinx.serialization.csv.example.Tire.Axis.REAR
@@ -46,16 +45,14 @@ class ExampleTest {
     )
 
     @Test
-    fun testLocationRecords() = Csv(
-        CsvConfiguration.rfc4180.copy(
-            hasHeaderRecord = true
-        )
-    ).assertEncodeAndDecode(
+    fun testLocationRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
         """|id,date,position.latitude,position.longitude,driver.id,driver.foreName,driver.lastName,driver.birthday,vehicle.uuid,vehicle.type,vehicle.brand,vehicleData.speed,vehicleData.consumption,vehicleData.consumption.Combustion.consumptionLiterPer100Km,vehicleData.consumption.Electric.consumptionKWhPer100Km
            |0,2020-02-01T13:33:00,0.0,0.0,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,,Unknown,,
            |1,2020-02-01T13:37:00,0.1,0.1,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,27.7778,Electric,,18.1
            |9000,2020-02-05T07:59:00,48.137154,11.576124,42,Jane,Doe,1581602631744,c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,20.0,Combustion,7.9,
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             LocationRecord(
                 0, LocalDateTime.of(2020, 2, 1, 13, 33),
@@ -80,13 +77,12 @@ class ExampleTest {
     )
 
     @Test
-    fun testVehiclePartRecords() = Csv(
-        CsvConfiguration.rfc4180,
-        SerializersModule {
+    fun testVehiclePartRecords() = Csv {
+        serializersModule = SerializersModule {
             polymorphic(Part::class, Tire::class, Tire.serializer())
             polymorphic(Part::class, Oil::class, Oil.serializer())
         }
-    ).assertEncodeAndDecode(
+    }.assertEncodeAndDecode(
         """|101,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,FRONT,LEFT,245,35,21,0.25
            |102,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,FRONT,RIGHT,245,35,21,0.21
            |103,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,REAR,LEFT,265,35,21,0.35
@@ -96,7 +92,7 @@ class ExampleTest {
            |203,5e1afd88-97a2-4373-a83c-44a49c552abd,CAR,Porsche,Tire,FRONT,RIGHT,265,35,20,0.2
            |204,5e1afd88-97a2-4373-a83c-44a49c552abd,CAR,Porsche,Tire,REAR,LEFT,265,35,20,0.2
            |205,5e1afd88-97a2-4373-a83c-44a49c552abd,CAR,Porsche,Tire,REAR,RIGHT,265,35,20,0.2
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             VehiclePartRecord(101, tesla, Tire(FRONT, LEFT, 245, 35, 21), 0.25),
             VehiclePartRecord(102, tesla, Tire(FRONT, RIGHT, 245, 35, 21), 0.21),
@@ -112,11 +108,11 @@ class ExampleTest {
     )
 
     @Test
-    fun testVehicleFeaturesRecords() = Csv(CsvConfiguration.rfc4180).assertEncodeAndDecode(
+    fun testVehicleFeaturesRecords() = Csv.assertEncodeAndDecode(
         """|c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,,
            |c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,0,0
            |f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,5,ELECTRIC,AUTOMATIC,HEATED_SEATS,NAVIGATION_SYSTEM,XENON,2,ELECTRIC,0,XENON,1
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             VehicleFeaturesRecord(harley, null, null),
             VehicleFeaturesRecord(harley, emptyList(), emptyMap()),
@@ -130,7 +126,7 @@ class ExampleTest {
     )
 
     @Test
-    fun testExcel() = Csv(CsvConfiguration.excel).assertEncodeAndDecode(
+    fun testRfc4180() = Csv.Rfc4180.assertEncodeAndDecode(
         """|c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,,
            |c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,0,0
            |

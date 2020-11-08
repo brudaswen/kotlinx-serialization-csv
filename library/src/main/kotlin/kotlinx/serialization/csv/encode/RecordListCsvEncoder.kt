@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.encode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.CompositeEncoder
@@ -7,6 +8,7 @@ import kotlinx.serialization.encoding.CompositeEncoder
 /**
  * Encodes list of multiple CSV records/lines.
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal class RecordListCsvEncoder(
     csv: Csv,
     writer: CsvWriter
@@ -16,7 +18,7 @@ internal class RecordListCsvEncoder(
         descriptor: SerialDescriptor
     ): CompositeEncoder {
         // For complex records: Begin a new record and end it in [endChildStructure]
-        if (configuration.hasHeaderRecord && writer.isFirstRecord) {
+        if (config.hasHeaderRecord && writer.isFirstRecord) {
             printHeaderRecord(descriptor)
         }
         writer.beginRecord()

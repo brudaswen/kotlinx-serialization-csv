@@ -2,6 +2,8 @@ package kotlinx.serialization.csv.encode
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.HeadersNotSupportedForSerialDescriptorException
+import kotlinx.serialization.csv.UnsupportedSerialDescriptorException
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.SerialKind
@@ -22,8 +24,8 @@ internal abstract class CsvEncoder(
 
     override val serializersModule: SerializersModule = csv.serializersModule
 
-    protected val configuration
-        get() = csv.configuration
+    protected val config
+        get() = csv.config
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
@@ -53,8 +55,7 @@ internal abstract class CsvEncoder(
             PolymorphicKind.OPEN ->
                 SimpleCsvEncoder(csv, writer, this)
 
-            else ->
-                error("CSV does not support '${descriptor.kind}'.")
+            else -> throw UnsupportedSerialDescriptorException(descriptor)
         }
     }
 
@@ -102,7 +103,7 @@ internal abstract class CsvEncoder(
     }
 
     override fun encodeNull() {
-        encodeColumn(configuration.nullString, isNull = true)
+        encodeColumn(config.nullString, isNull = true)
     }
 
     override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
@@ -120,7 +121,7 @@ internal abstract class CsvEncoder(
             is StructureKind.LIST,
             is StructureKind.MAP,
             is PolymorphicKind.OPEN -> {
-                error("CSV headers are not supported for variable sized type '${descriptor.kind}'.")
+                throw HeadersNotSupportedForSerialDescriptorException(descriptor)
             }
         }
 
@@ -139,14 +140,14 @@ internal abstract class CsvEncoder(
 
                 childDesc.kind is PolymorphicKind.SEALED -> {
                     writer.printColumn(name)
-                    val headerSeparator = configuration.headerSeparator
+                    val headerSeparator = config.headerSeparator
                     printHeader("$name$headerSeparator", childDesc.getElementDescriptor(1))
                 }
                 childDesc.kind is StructureKind.OBJECT ->
                     Unit
 
                 childDesc.elementsCount > 0 -> {
-                    val headerSeparator = configuration.headerSeparator
+                    val headerSeparator = config.headerSeparator
                     printHeader("$name$headerSeparator", childDesc)
                 }
 

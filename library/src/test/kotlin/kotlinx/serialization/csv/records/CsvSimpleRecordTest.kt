@@ -118,7 +118,7 @@ class CsvSimpleRecordTest {
 
     @Test
     fun testIntList() = Csv.assertEncodeAndDecode(
-        "-150\r\n150",
+        "-150\n150",
         listOf(
             IntRecord(-150),
             IntRecord(150)
@@ -128,7 +128,7 @@ class CsvSimpleRecordTest {
 
     @Test
     fun testIntListWithLastLineEmpty() = Csv.assertDecode(
-        "-150\r\n150\r\n",
+        "-150\n150\n",
         listOf(
             IntRecord(-150),
             IntRecord(150)

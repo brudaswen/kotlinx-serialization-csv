@@ -1,31 +1,30 @@
 package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
-import kotlinx.serialization.csv.CsvConfiguration.Companion.rfc4180
+import kotlinx.serialization.csv.config.CsvBuilder
+import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.decode.CsvReader
 import kotlinx.serialization.csv.decode.RootCsvDecoder
 import kotlinx.serialization.csv.decode.StringSource
 import kotlinx.serialization.csv.encode.RootCsvEncoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 
 /**
  * The main entry point to work with CSV serialization.
  *
  * It is typically used by constructing an application-specific instance, with configured CSV-specific behaviour
- * ([configuration] parameter) and, if necessary, registered
- * custom serializers (in [SerializersModule] provided by [context] parameter).
+ * and, if necessary, registered in [SerializersModule] custom serializers.
+ * `Csv` instance can be configured in its `Csv {}` factory function using [CsvBuilder].
+ * For demonstration purposes or trivial usages, Csv [companion][Csv.Default] can be used instead.
  *
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
- *
- * @param configuration CSV settings used during parsing/serialization.
- * @param serializersModule Serialization module settings (e.g. custom serializers).
  */
 @ExperimentalSerializationApi
-class Csv(
-    internal val configuration: CsvConfiguration,
-    override val serializersModule: SerializersModule = EmptySerializersModule
-) : SerialFormat, StringFormat {
+sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
+
+    override val serializersModule: SerializersModule
+        get() = config.serializersModule
+
     /**
      * Serialize [value] into CSV record(s).
      *
@@ -45,7 +44,7 @@ class Csv(
      * @param string The CSV string to parse.
      */
     override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
-        val reader = CsvReader(StringSource(string), configuration)
+        val reader = CsvReader(StringSource(string), config)
         val input = RootCsvDecoder(this, reader)
         val result = input.decodeSerializableValue(deserializer)
 
@@ -53,52 +52,43 @@ class Csv(
         return result
     }
 
-    companion object : StringFormat {
+    internal class Impl(config: CsvConfig) : Csv(config)
+
+    /**
+     * Standard *Comma Separated Value* format.
+     *
+     * Settings are:
+     * - [CsvConfig.delimiter] = `','`
+     * - [CsvConfig.quoteChar] = `'"'`
+     * - [CsvConfig.recordSeparator] = `"\n"`
+     * - [CsvConfig.ignoreEmptyLines] = `true`
+     */
+    companion object Default : Csv(CsvConfig.Default) {
 
         /**
-         * Standard Comma Separated Value format, as for [rfc4180] but allowing empty lines.
+         * [RFC 4180](http://tools.ietf.org/html/rfc4180) *Comma Separated Value* format.
          *
          * Settings are:
-         * - [CsvConfiguration.delimiter] = `','`
-         * - [CsvConfiguration.quoteChar] = `'"'`
-         * - [CsvConfiguration.recordSeparator] = `"\r\n"`
-         * - [CsvConfiguration.ignoreEmptyLines] = `true`
+         * - [CsvConfig.delimiter] = `','`
+         * - [CsvConfig.quoteChar] = `'"'`
+         * - [CsvConfig.recordSeparator] = `"\r\n"`
+         * - [CsvConfig.ignoreEmptyLines] = `false`
          */
-        val default = Csv(CsvConfiguration.default)
-
-        /**
-         * Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180).
-         *
-         * Settings are:
-         * - [CsvConfiguration.delimiter] = `','`
-         * - [CsvConfiguration.quoteChar] = `'"'`
-         * - [CsvConfiguration.recordSeparator] = `"\r\n"`
-         * - [CsvConfiguration.ignoreEmptyLines] = `false`
-         */
-        val rfc4180 = Csv(CsvConfiguration.rfc4180)
-
-        override val serializersModule: SerializersModule
-            get() = default.serializersModule
-
-        /**
-         * Serialize [value] into CSV record(s) using [CsvConfiguration.default].
-         *
-         * @param serializer The serializer used to serialize the given object.
-         * @param value The [Serializable] object.
-         */
-        override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String =
-            default.encodeToString(serializer, value)
-
-        /**
-         * Parse CSV [string] into [Serializable] object using [CsvConfiguration.default].
-         *
-         * @param deserializer The deserializer used to parse the given CSV string.
-         * @param string The CSV string to parse.
-         */
-        override fun <T> decodeFromString(
-            deserializer: DeserializationStrategy<T>,
-            string: String
-        ): T =
-            default.decodeFromString(deserializer, string)
+        val Rfc4180: Csv
+            get() = Impl(CsvConfig.Rfc4180)
     }
+}
+
+/**
+ * Creates an instance of [Csv] configured from the optionally given [Csv instance][from] and
+ * adjusted with [action].
+ */
+@ExperimentalSerializationApi
+@Suppress("FunctionName")
+fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv {
+    val conf = CsvBuilder(from.config).run {
+        action()
+        build()
+    }
+    return Csv.Impl(conf)
 }

@@ -4,7 +4,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
@@ -16,7 +15,7 @@ class CsvCollectionsTest {
 
     @Test
     fun testListOfIntList() = Csv.assertEncodeAndDecode(
-        "1,2\r\n3,4\r\n5,6,7",
+        "1,2\n3,4\n5,6,7",
         listOf(
             listOf(1, 2),
             listOf(3, 4),
@@ -27,7 +26,7 @@ class CsvCollectionsTest {
 
     @Test
     fun testListOfIntSet() = Csv.assertEncodeAndDecode(
-        "1,2\r\n3,4\r\n5,6,7",
+        "1,2\n3,4\n5,6,7",
         listOf(
             setOf(1, 2),
             setOf(3, 4),
@@ -37,12 +36,10 @@ class CsvCollectionsTest {
     )
 
     @Test
-    fun testNullableListOfNullableIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = false
-        )
-    ).assertEncodeAndDecode(
-        "1,2\r\n\r\n5,,7",
+    fun testNullableListOfNullableIntList() = Csv {
+        ignoreEmptyLines = false
+    }.assertEncodeAndDecode(
+        "1,2\n\n5,,7",
         listOf(
             listOf(1, 2),
             null,
@@ -66,7 +63,7 @@ class CsvCollectionsTest {
     fun testMultipleMapOfIntLists() = Csv.assertEncodeAndDecode(
         """|2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13
            |1,1,2,2,3,3,4,5,6,4,7,8,9,10
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             mapOf(
                 listOf(1, 2) to listOf(3, 4),
@@ -103,7 +100,7 @@ class CsvCollectionsTest {
     fun testMultipleRecordsWithMapOfIntLists() = Csv.assertEncodeAndDecode(
         """|3,2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13
            |2,1,1,2,2,3,3,4,5,6,4,7,8,9,10
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             Record(
                 mapOf(

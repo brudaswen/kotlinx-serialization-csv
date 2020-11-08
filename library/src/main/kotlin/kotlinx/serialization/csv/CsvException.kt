@@ -17,14 +17,16 @@ internal open class CsvException(message: String) : SerializationException(messa
 internal class CsvEncodingException(message: String) : CsvException(message)
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun UnsupportedSerialDescriptorException(descriptor: SerialDescriptor) = CsvEncodingException (
-    "CSV does not support '${descriptor.kind}'."
-)
+internal fun UnsupportedSerialDescriptorException(descriptor: SerialDescriptor) =
+    CsvEncodingException(
+        "CSV does not support '${descriptor.kind}'."
+    )
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun HeadersNotSupportedForSerialDescriptorException(descriptor: SerialDescriptor) = CsvEncodingException (
-    "CSV headers are not supported for variable sized type '${descriptor.kind}'."
-)
+internal fun HeadersNotSupportedForSerialDescriptorException(descriptor: SerialDescriptor) =
+    CsvEncodingException(
+        "CSV headers are not supported for variable sized type '${descriptor.kind}'."
+    )
 
 /**
  * Thrown when [Csv] has failed to parse the given CSV string or deserialize it to a target class.

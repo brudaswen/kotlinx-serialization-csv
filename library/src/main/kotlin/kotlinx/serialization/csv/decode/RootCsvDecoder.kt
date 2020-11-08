@@ -5,6 +5,7 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 
 /**
  * Initial entry point for decoding.
@@ -22,7 +23,7 @@ internal class RootCsvDecoder(
     private var position = 0
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-        return if (reader.isDone) CompositeDecoder.DECODE_DONE else position
+        return if (reader.isDone) DECODE_DONE else position
     }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {

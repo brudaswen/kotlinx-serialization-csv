@@ -2,14 +2,15 @@ package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.UnknownColumnHeaderException
 import kotlinx.serialization.csv.UnsupportedSerialDescriptorException
+import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.UNKNOWN_NAME
 import kotlinx.serialization.modules.SerializersModule
 import kotlin.collections.set
 
@@ -26,8 +27,8 @@ internal abstract class CsvDecoder(
     override val serializersModule: SerializersModule
         get() = csv.serializersModule
 
-    private val configuration: CsvConfiguration
-        get() = csv.configuration
+    protected val config: CsvConfig
+        get() = csv.config
 
     private var headers: Headers? = null
 
@@ -104,7 +105,7 @@ internal abstract class CsvDecoder(
 
     override fun decodeNull(): Nothing? {
         val value = decodeColumn()
-        require(value == configuration.nullString) { "Expected '${configuration.nullString}' but was '$value'." }
+        require(value == config.nullString) { "Expected '${config.nullString}' but was '$value'." }
         return null
     }
 
@@ -115,7 +116,7 @@ internal abstract class CsvDecoder(
     protected open fun decodeColumn() = reader.readColumn()
 
     protected fun readHeaders(descriptor: SerialDescriptor) {
-        if (configuration.hasHeaderRecord && headers == null) {
+        if (config.hasHeaderRecord && headers == null) {
             this.headers = readHeaders(descriptor, "")
 
             readTrailingDelimiter()
@@ -139,13 +140,13 @@ internal abstract class CsvDecoder(
             // If there is an exact name match, store the header, otherwise try reading class structure
             val header = value.substringAfter(prefix)
             val headerIndex = descriptor.getElementIndex(header)
-            if (headerIndex != CompositeDecoder.UNKNOWN_NAME) {
+            if (headerIndex != UNKNOWN_NAME) {
                 headers[position] = headerIndex
                 reader.unmark()
             } else {
-                val name = header.substringBefore(configuration.headerSeparator)
+                val name = header.substringBefore(config.headerSeparator)
                 val nameIndex = descriptor.getElementIndex(name)
-                if (nameIndex != CompositeDecoder.UNKNOWN_NAME) {
+                if (nameIndex != UNKNOWN_NAME) {
                     val childDesc = descriptor.getElementDescriptor(nameIndex)
                     if (childDesc.kind is StructureKind.CLASS) {
                         reader.reset()
@@ -154,10 +155,10 @@ internal abstract class CsvDecoder(
                     } else {
                         reader.unmark()
                     }
-                } else if (csv.configuration.ignoreUnknownColumns) {
-                    headers[position] = CompositeDecoder.UNKNOWN_NAME
+                } else if (csv.config.ignoreUnknownColumns) {
+                    headers[position] = UNKNOWN_NAME
                     reader.unmark()
-                } else if (value == "" && !reader.isFirstRecord && configuration.hasTrailingDelimiter) {
+                } else if (value == "" && !reader.isFirstRecord && config.hasTrailingDelimiter) {
                     reader.unmark()
                 } else {
                     throw UnknownColumnHeaderException(offset, value)
@@ -168,14 +169,8 @@ internal abstract class CsvDecoder(
         return headers
     }
 
-    protected fun readEmptyLines() {
-        if (configuration.ignoreEmptyLines) {
-            reader.readEmptyLines()
-        }
-    }
-
     protected fun readTrailingDelimiter() {
-        if (configuration.hasTrailingDelimiter) {
+        if (config.hasTrailingDelimiter) {
             reader.readEndOfRecord()
         }
     }

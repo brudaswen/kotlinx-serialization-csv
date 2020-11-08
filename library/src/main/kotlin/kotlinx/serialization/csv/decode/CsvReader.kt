@@ -1,11 +1,11 @@
 package kotlinx.serialization.csv.decode
 
-import kotlinx.serialization.csv.CsvConfiguration
+import kotlinx.serialization.csv.config.CsvConfig
 
 /**
  * Reader that parses CSV input.
  */
-internal class CsvReader(private val source: Source, private val configuration: CsvConfiguration) {
+internal class CsvReader(private val source: Source, private val config: CsvConfig) {
 
     val offset
         get() = source.offset
@@ -27,12 +27,12 @@ internal class CsvReader(private val source: Source, private val configuration: 
     fun readColumn(): String {
         val value = StringBuilder()
 
-        val delimiter = configuration.delimiter
-        val escapeChar = configuration.escapeChar
-        val quoteChar = configuration.quoteChar
+        val delimiter = config.delimiter
+        val escapeChar = config.escapeChar
+        val quoteChar = config.quoteChar
 
         while (source.canRead()) {
-            if (read(configuration.recordSeparator)) {
+            if (read(config.recordSeparator)) {
                 recordNo++
                 break
             }
@@ -65,8 +65,8 @@ internal class CsvReader(private val source: Source, private val configuration: 
     private fun readQuotedColumn(): String {
         val value = StringBuilder()
 
-        val escapeChar = configuration.escapeChar
-        val quoteChar = configuration.quoteChar
+        val escapeChar = config.escapeChar
+        val quoteChar = config.quoteChar
 
         while (source.canRead()) {
             val char = source.read()
@@ -98,7 +98,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
      */
     private fun readWhitespace() {
         while (source.canRead()) {
-            if (read(configuration.recordSeparator)) {
+            if (read(config.recordSeparator)) {
                 recordNo++
                 break
             }
@@ -127,13 +127,11 @@ internal class CsvReader(private val source: Source, private val configuration: 
 
     /** Read empty lines from the stream. */
     fun readEmptyLines() {
-        if (configuration.ignoreEmptyLines) {
-            while (read(configuration.recordSeparator)) {
-                // Read all empty lines
-            }
-            if (source.peek() == null) {
-                source.read()
-            }
+        while (read(config.recordSeparator)) {
+            // Read all empty lines
+        }
+        if (source.peek() == null) {
+            source.read()
         }
     }
 
@@ -142,7 +140,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
         if (source.peek() == null) {
             source.read()
         } else {
-            read(configuration.recordSeparator)
+            read(config.recordSeparator)
         }
     }
 
@@ -196,7 +194,7 @@ internal class CsvReader(private val source: Source, private val configuration: 
      */
     fun isNullToken(): Boolean {
         source.mark()
-        val isNull = readColumn() == configuration.nullString
+        val isNull = readColumn() == config.nullString
         source.reset()
         return isNull
     }

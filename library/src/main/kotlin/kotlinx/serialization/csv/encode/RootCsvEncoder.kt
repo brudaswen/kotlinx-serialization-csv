@@ -20,7 +20,7 @@ internal class RootCsvEncoder(
 ) : CsvEncoder(csv, writer, null) {
 
     internal constructor(csv: Csv, output: Appendable) :
-            this(csv, CsvWriter(output, csv.configuration))
+            this(csv, CsvWriter(output, csv.config))
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
@@ -36,7 +36,7 @@ internal class RootCsvEncoder(
     override fun beginStructure(
         descriptor: SerialDescriptor
     ): CompositeEncoder {
-        if (configuration.hasHeaderRecord && writer.isFirstRecord) {
+        if (config.hasHeaderRecord && writer.isFirstRecord) {
             printHeaderRecord(descriptor)
         }
         writer.beginRecord()

@@ -5,7 +5,6 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
@@ -93,12 +92,10 @@ class CsvNullablePrimitivesTest {
     )
 
     @Test
-    fun testIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = false
-        )
-    ).assertEncodeAndDecode(
-        "-150\r\n\r\n42",
+    fun testIntList() = Csv {
+        ignoreEmptyLines = false
+    }.assertEncodeAndDecode(
+        "-150\n\n42",
         listOf(-150, null, 42),
         ListSerializer(Int.serializer().nullable)
     )
