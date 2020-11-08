@@ -8,63 +8,64 @@ import kotlinx.serialization.csv.records.Data
 import kotlinx.serialization.csv.records.IntStringRecord
 import kotlinx.serialization.csv.records.Location
 import kotlinx.serialization.csv.records.NestedRecord
-import kotlinx.serialization.test.assertParse
-import kotlinx.serialization.test.assertParseFails
+import kotlinx.serialization.test.assertDecode
+import kotlinx.serialization.test.assertDecodeFails
 import kotlin.test.Test
 
 @OptIn(ExperimentalSerializationApi::class)
 internal class CsvIgnoreUnknownKeysTest {
 
     @Test
-    fun testMultipleColumns() = assertParse(
+    fun testMultipleColumns() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true,
+            ignoreUnknownColumns = true
+        )
+    ).assertDecode(
         "a,b,IGNORED\r\n1,testing,ignored",
         IntStringRecord(1, "testing"),
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true,
-                ignoreUnknownColumns = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testMultipleColumns_failure() = assertParseFails(
+    fun testMultipleColumns_failure() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecodeFails(
         "a,b,IGNORED\r\n1,testing,ignored",
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testMultipleColumnsReordered() = assertParse(
+    fun testMultipleColumnsReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true,
+            ignoreUnknownColumns = true
+        )
+    ).assertDecode(
         "IGNORED,b,a\r\nignored,testing,1",
         IntStringRecord(1, "testing"),
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true,
-                ignoreUnknownColumns = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testMultipleColumnsReordered_failure() = assertParseFails(
+    fun testMultipleColumnsReordered_failure() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertDecodeFails(
         "IGNORED,b,a\r\nignored,testing,1",
-        IntStringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        IntStringRecord.serializer()
     )
 
     @Test
-    fun testNestedRecordListWithHeaderReordered() = assertParse(
+    fun testNestedRecordListWithHeaderReordered() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true,
+            ignoreUnknownColumns = true
+        )
+    ).assertDecode(
         """IGNORED,time,name,data.location.lon,data.location.IGNORED,data.location.lat,data.speed,data.info,IGNORED
           |IGNORED,0,Alice,1.0,IGNORED,0.0,100,info,IGNORED
           |IGNORED,1,Bob,20.0,IGNORED,10.0,50,info2,IGNORED
@@ -95,12 +96,6 @@ internal class CsvIgnoreUnknownKeysTest {
                 )
             )
         ),
-        ListSerializer(NestedRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true,
-                ignoreUnknownColumns = true
-            )
-        )
+        ListSerializer(NestedRecord.serializer())
     )
 }

@@ -4,14 +4,14 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 @OptIn(ExperimentalSerializationApi::class)
 class CsvNestedRecordTest {
 
     @Test
-    fun testNestedRecord() = assertStringFormAndRestored(
+    fun testNestedRecord() = Csv.assertEncodeAndDecode(
         "0,Alice,0.0,1.0,100,info",
         NestedRecord(
             0,
@@ -23,12 +23,11 @@ class CsvNestedRecordTest {
                 ), 100, "info"
             )
         ),
-        NestedRecord.serializer(),
-        Csv
+        NestedRecord.serializer()
     )
 
     @Test
-    fun testNestedRecordList() = assertStringFormAndRestored(
+    fun testNestedRecordList() = Csv.assertEncodeAndDecode(
         "0,Alice,0.0,1.0,100,info\r\n1,Bob,10.0,20.0,50,info2",
         listOf(
             NestedRecord(
@@ -52,12 +51,15 @@ class CsvNestedRecordTest {
                 )
             )
         ),
-        ListSerializer(NestedRecord.serializer()),
-        Csv
+        ListSerializer(NestedRecord.serializer())
     )
 
     @Test
-    fun testNestedRecordWithHeader() = assertStringFormAndRestored(
+    fun testNestedRecordWithHeader() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "time,name,data.location.lat,data.location.lon,data.speed,data.info\r\n0,Alice,0.0,1.0,100,info",
         NestedRecord(
             0,
@@ -69,16 +71,15 @@ class CsvNestedRecordTest {
                 ), 100, "info"
             )
         ),
-        NestedRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        NestedRecord.serializer()
     )
 
     @Test
-    fun testNestedRecordListWithHeader() = assertStringFormAndRestored(
+    fun testNestedRecordListWithHeader() = Csv(
+        CsvConfiguration(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         "time,name,data.location.lat,data.location.lon,data.speed,data.info\r\n0,Alice,0.0,1.0,100,info\r\n1,Bob,10.0,20.0,50,info2",
         listOf(
             NestedRecord(
@@ -102,11 +103,6 @@ class CsvNestedRecordTest {
                 )
             )
         ),
-        ListSerializer(NestedRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                hasHeaderRecord = true
-            )
-        )
+        ListSerializer(NestedRecord.serializer())
     )
 }

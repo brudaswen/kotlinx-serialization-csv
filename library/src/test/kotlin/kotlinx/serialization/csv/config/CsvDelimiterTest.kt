@@ -5,7 +5,7 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.ComplexRecord
 import kotlinx.serialization.csv.records.Enum
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -15,7 +15,7 @@ import kotlin.test.Test
 class CsvDelimiterTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv.assertEncodeAndDecode(
         "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
         ComplexRecord(
             -150,
@@ -30,36 +30,38 @@ class CsvDelimiterTest {
             Unit,
             Enum.FIRST
         ),
-        ComplexRecord.serializer(),
-        Csv
+        ComplexRecord.serializer()
     )
 
     @Test
-    fun testComma() = assertStringFormAndRestored(
-        "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
-        ),
-        ComplexRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                delimiter = ','
-            )
+    fun testComma() = Csv(
+        CsvConfiguration(
+            delimiter = ','
         )
+    ).assertEncodeAndDecode(
+        "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
+        ComplexRecord(
+            -150,
+            -1,
+            42,
+            Long.MAX_VALUE,
+            -2f,
+            24.24,
+            true,
+            "testing",
+            null,
+            Unit,
+            Enum.FIRST
+        ),
+        ComplexRecord.serializer()
     )
 
     @Test
-    fun testColon() = assertStringFormAndRestored(
+    fun testColon() = Csv(
+        CsvConfiguration(
+            delimiter = ';'
+        )
+    ).assertEncodeAndDecode(
         "-150;-1;42;9223372036854775807;-2.0;24.24;true;testing;;kotlin.Unit;FIRST",
         ComplexRecord(
             -150,
@@ -74,16 +76,15 @@ class CsvDelimiterTest {
             Unit,
             Enum.FIRST
         ),
-        ComplexRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                delimiter = ';'
-            )
-        )
+        ComplexRecord.serializer()
     )
 
     @Test
-    fun testDot() = assertStringFormAndRestored(
+    fun testDot() = Csv(
+        CsvConfiguration(
+            delimiter = '.'
+        )
+    ).assertEncodeAndDecode(
         "-150.-1.42.9223372036854775807.\"-2.0\".\"24.24\".true.testing..\"kotlin.Unit\".FIRST",
         ComplexRecord(
             -150,
@@ -98,16 +99,15 @@ class CsvDelimiterTest {
             Unit,
             Enum.FIRST
         ),
-        ComplexRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                delimiter = '.'
-            )
-        )
+        ComplexRecord.serializer()
     )
 
     @Test
-    fun testTab() = assertStringFormAndRestored(
+    fun testTab() = Csv(
+        CsvConfiguration(
+            delimiter = '\t'
+        )
+    ).assertEncodeAndDecode(
         "-150\t-1\t42\t9223372036854775807\t-2.0\t24.24\ttrue\ttesting\t\tkotlin.Unit\tFIRST",
         ComplexRecord(
             -150,
@@ -122,11 +122,6 @@ class CsvDelimiterTest {
             Unit,
             Enum.FIRST
         ),
-        ComplexRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                delimiter = '\t'
-            )
-        )
+        ComplexRecord.serializer()
     )
 }

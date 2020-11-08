@@ -5,8 +5,8 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.CsvConfiguration.QuoteMode.NONE
 import kotlinx.serialization.csv.records.StringRecord
-import kotlinx.serialization.test.assertParse
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertDecode
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -16,129 +16,119 @@ import kotlin.test.Test
 class CsvEscapeCharTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE
+        )
+    ).assertEncodeAndDecode(
         "a\\\"b",
         StringRecord("a\"b"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testSlash() = assertStringFormAndRestored(
+    fun testSlash() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE,
+            escapeChar = '\\'
+        )
+    ).assertEncodeAndDecode(
         "a\\\"b",
         StringRecord("a\"b"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE,
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testBang() = assertStringFormAndRestored(
+    fun testBang() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE,
+            escapeChar = '!'
+        )
+    ).assertEncodeAndDecode(
         "a!\"b",
         StringRecord("a\"b"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE,
-                escapeChar = '!'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testEscapedDelimiter() = assertStringFormAndRestored(
+    fun testEscapedDelimiter() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE,
+            escapeChar = '\\'
+        )
+    ).assertEncodeAndDecode(
         """test\,ing""",
         StringRecord("test,ing"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE,
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testEscapedEscapeChar() = assertStringFormAndRestored(
+    fun testEscapedEscapeChar() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE,
+            escapeChar = '\\'
+        )
+    ).assertEncodeAndDecode(
         """test\\ing""",
         StringRecord("""test\ing"""),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE,
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testParseEscapedEscapeChar() = assertParse(
+    fun testParseEscapedEscapeChar() = Csv(
+        CsvConfiguration(
+            escapeChar = '\\'
+        )
+    ).assertDecode(
         """test\\ing""",
         StringRecord("""test\ing"""),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testEscapedNewLine() = assertStringFormAndRestored(
+    fun testEscapedNewLine() = Csv(
+        CsvConfiguration(
+            quoteMode = NONE,
+            escapeChar = '\\'
+        )
+    ).assertEncodeAndDecode(
         """test\ning""",
         StringRecord("test\ning"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                quoteMode = NONE,
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testParseEscapedNewLine() = assertParse(
+    fun testParseEscapedNewLine() = Csv(
+        CsvConfiguration(
+            escapeChar = '\\'
+        )
+    ).assertDecode(
         """test\ning""",
         StringRecord("test\ning"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testTab() = assertStringFormAndRestored(
+    fun testTab() = Csv(
+        CsvConfiguration(
+            delimiter = '\t',
+            quoteMode = NONE,
+            escapeChar = '\\'
+        )
+    ).assertEncodeAndDecode(
         """test\ting""",
         StringRecord("test\ting"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                delimiter = '\t',
-                quoteMode = NONE,
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 
     @Test
-    fun testParseEscapedTab() = assertParse(
+    fun testParseEscapedTab() = Csv(
+        CsvConfiguration(
+            escapeChar = '\\'
+        )
+    ).assertDecode(
         """test\ting""",
         StringRecord("test\ting"),
-        StringRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                escapeChar = '\\'
-            )
-        )
+        StringRecord.serializer()
     )
 }

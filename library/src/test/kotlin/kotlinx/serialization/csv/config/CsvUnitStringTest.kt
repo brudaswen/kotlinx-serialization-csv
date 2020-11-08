@@ -3,7 +3,7 @@ package kotlinx.serialization.csv.config
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.UnitRecord
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -13,10 +13,9 @@ import kotlin.test.Test
 class CsvUnitStringTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv.assertEncodeAndDecode(
         "kotlin.Unit",
         UnitRecord(Unit),
-        UnitRecord.serializer(),
-        Csv
+        UnitRecord.serializer()
     )
 }

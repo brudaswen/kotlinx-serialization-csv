@@ -6,7 +6,7 @@ import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -16,102 +16,90 @@ import kotlin.test.Test
 class CsvNullablePrimitivesTest {
 
     @Test
-    fun testByte() = assertStringFormAndRestored(
+    fun testByte() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Byte.serializer().nullable,
-        Csv
+        Byte.serializer().nullable
     )
 
     @Test
-    fun testShort() = assertStringFormAndRestored(
+    fun testShort() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Short.serializer().nullable,
-        Csv
+        Short.serializer().nullable
     )
 
     @Test
-    fun testInt() = assertStringFormAndRestored(
+    fun testInt() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Int.serializer().nullable,
-        Csv
+        Int.serializer().nullable
     )
 
     @Test
-    fun testLong() = assertStringFormAndRestored(
+    fun testLong() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Long.serializer().nullable,
-        Csv
+        Long.serializer().nullable
     )
 
     @Test
-    fun testFloat() = assertStringFormAndRestored(
+    fun testFloat() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Float.serializer().nullable,
-        Csv
+        Float.serializer().nullable
     )
 
     @Test
-    fun testDouble() = assertStringFormAndRestored(
+    fun testDouble() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Double.serializer().nullable,
-        Csv
+        Double.serializer().nullable
     )
 
     @Test
-    fun testBooleanTrue() = assertStringFormAndRestored(
+    fun testBooleanTrue() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Boolean.serializer().nullable,
-        Csv
+        Boolean.serializer().nullable
     )
 
     @Test
-    fun testBooleanFalse() = assertStringFormAndRestored(
+    fun testBooleanFalse() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Boolean.serializer().nullable,
-        Csv
+        Boolean.serializer().nullable
     )
 
     @Test
-    fun testChar() = assertStringFormAndRestored(
+    fun testChar() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Char.serializer().nullable,
-        Csv
+        Char.serializer().nullable
     )
 
     @Test
-    fun testString() = assertStringFormAndRestored(
+    fun testString() = Csv.assertEncodeAndDecode(
         "",
         null,
-        String.serializer().nullable,
-        Csv
+        String.serializer().nullable
     )
 
     @Test
-    fun testUnit() = assertStringFormAndRestored(
+    fun testUnit() = Csv.assertEncodeAndDecode(
         "",
         null,
-        Unit.serializer().nullable,
-        Csv
+        Unit.serializer().nullable
     )
 
     @Test
-    fun testIntList() = assertStringFormAndRestored(
+    fun testIntList() = Csv(
+        CsvConfiguration(
+            ignoreEmptyLines = false
+        )
+    ).assertEncodeAndDecode(
         "-150\r\n\r\n42",
         listOf(-150, null, 42),
-        ListSerializer(Int.serializer().nullable),
-        Csv(
-            CsvConfiguration(
-                ignoreEmptyLines = false
-            )
-        )
+        ListSerializer(Int.serializer().nullable)
     )
 }

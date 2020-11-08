@@ -5,8 +5,8 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.test.assertParse
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertDecode
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -16,136 +16,121 @@ import kotlin.test.Test
 class CsvNullableSimpleRecordTest {
 
     @Test
-    fun testInteger() = assertStringFormAndRestored(
+    fun testInteger() = Csv.assertEncodeAndDecode(
         "",
         null,
-        IntRecord.serializer().nullable,
-        Csv
+        IntRecord.serializer().nullable
     )
 
     @Test
-    fun testByte() = assertStringFormAndRestored(
+    fun testByte() = Csv.assertEncodeAndDecode(
         "",
         null,
-        ByteRecord.serializer().nullable,
-        Csv
+        ByteRecord.serializer().nullable
     )
 
     @Test
-    fun testShort() = assertStringFormAndRestored(
+    fun testShort() = Csv.assertEncodeAndDecode(
         "",
         null,
-        ShortRecord.serializer().nullable,
-        Csv
+        ShortRecord.serializer().nullable
     )
 
     @Test
-    fun testLong() = assertStringFormAndRestored(
+    fun testLong() = Csv.assertEncodeAndDecode(
         "",
         null,
-        LongRecord.serializer().nullable,
-        Csv
+        LongRecord.serializer().nullable
     )
 
     @Test
-    fun testFloat() = assertStringFormAndRestored(
+    fun testFloat() = Csv.assertEncodeAndDecode(
         "",
         null,
-        FloatRecord.serializer().nullable,
-        Csv
+        FloatRecord.serializer().nullable
     )
 
     @Test
-    fun testDouble() = assertStringFormAndRestored(
+    fun testDouble() = Csv.assertEncodeAndDecode(
         "",
         null,
-        DoubleRecord.serializer().nullable,
-        Csv
+        DoubleRecord.serializer().nullable
     )
 
     @Test
-    fun testBoolean() = assertStringFormAndRestored(
+    fun testBoolean() = Csv.assertEncodeAndDecode(
         "",
         null,
-        BooleanRecord.serializer().nullable,
-        Csv
+        BooleanRecord.serializer().nullable
     )
 
     @Test
-    fun testChar() = assertStringFormAndRestored(
+    fun testChar() = Csv.assertEncodeAndDecode(
         "",
         null,
-        CharRecord.serializer().nullable,
-        Csv
+        CharRecord.serializer().nullable
     )
 
     @Test
-    fun testString() = assertStringFormAndRestored(
+    fun testString() = Csv.assertEncodeAndDecode(
         "",
         null,
-        StringRecord.serializer().nullable,
-        Csv
+        StringRecord.serializer().nullable
     )
 
     @Test
-    fun testNull() = assertStringFormAndRestored(
+    fun testNull() = Csv.assertEncodeAndDecode(
         "",
         null,
-        NullRecord.serializer().nullable,
-        Csv
+        NullRecord.serializer().nullable
     )
 
     @Test
-    fun testUnit() = assertStringFormAndRestored(
+    fun testUnit() = Csv.assertEncodeAndDecode(
         "",
         null,
-        UnitRecord.serializer().nullable,
-        Csv
+        UnitRecord.serializer().nullable
     )
 
     @Test
-    fun testEnum() = assertStringFormAndRestored(
+    fun testEnum() = Csv.assertEncodeAndDecode(
         "",
         null,
-        EnumRecord.serializer().nullable,
-        Csv
+        EnumRecord.serializer().nullable
     )
 
     @Test
-    fun testComplex() = assertStringFormAndRestored(
+    fun testComplex() = Csv.assertEncodeAndDecode(
         "",
         null,
-        ComplexRecord.serializer().nullable,
-        Csv
+        ComplexRecord.serializer().nullable
     )
 
     @Test
-    fun testIntList() = assertStringFormAndRestored(
+    fun testIntList() = Csv(
+        CsvConfiguration(
+            ignoreEmptyLines = false
+        )
+    ).assertEncodeAndDecode(
         "-150\r\n\r\n150",
         listOf(
             IntRecord(-150), null,
             IntRecord(150)
         ),
-        ListSerializer(IntRecord.serializer().nullable),
-        Csv(
-            CsvConfiguration(
-                ignoreEmptyLines = false
-            )
-        )
+        ListSerializer(IntRecord.serializer().nullable)
     )
 
     @Test
-    fun testIntListWithLastLineEmpty() = assertParse(
+    fun testIntListWithLastLineEmpty() = Csv(
+        CsvConfiguration(
+            ignoreEmptyLines = false
+        )
+    ).assertDecode(
         "-150\r\n\r\n150\r\n",
         listOf(
             IntRecord(-150), null,
             IntRecord(150), null
         ),
-        ListSerializer(IntRecord.serializer().nullable),
-        Csv(
-            CsvConfiguration(
-                ignoreEmptyLines = false
-            )
-        )
+        ListSerializer(IntRecord.serializer().nullable)
     )
 }

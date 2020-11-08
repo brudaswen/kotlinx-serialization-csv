@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.*
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -15,59 +15,55 @@ import kotlin.test.Test
 class CsvCollectionsTest {
 
     @Test
-    fun testListOfIntList() = assertStringFormAndRestored(
+    fun testListOfIntList() = Csv.assertEncodeAndDecode(
         "1,2\r\n3,4\r\n5,6,7",
         listOf(
             listOf(1, 2),
             listOf(3, 4),
             listOf(5, 6, 7)
         ),
-        ListSerializer(ListSerializer(Int.serializer())),
-        Csv
+        ListSerializer(ListSerializer(Int.serializer()))
     )
 
     @Test
-    fun testListOfIntSet() = assertStringFormAndRestored(
+    fun testListOfIntSet() = Csv.assertEncodeAndDecode(
         "1,2\r\n3,4\r\n5,6,7",
         listOf(
             setOf(1, 2),
             setOf(3, 4),
             setOf(5, 6, 7)
         ),
-        ListSerializer(SetSerializer(Int.serializer())),
-        Csv
+        ListSerializer(SetSerializer(Int.serializer()))
     )
 
     @Test
-    fun testNullableListOfNullableIntList() = assertStringFormAndRestored(
+    fun testNullableListOfNullableIntList() = Csv(
+        CsvConfiguration(
+            ignoreEmptyLines = false
+        )
+    ).assertEncodeAndDecode(
         "1,2\r\n\r\n5,,7",
         listOf(
             listOf(1, 2),
             null,
             listOf(5, null, 7)
         ),
-        ListSerializer(ListSerializer(Int.serializer().nullable).nullable),
-        Csv(
-            CsvConfiguration(
-                ignoreEmptyLines = false
-            )
-        )
+        ListSerializer(ListSerializer(Int.serializer().nullable).nullable)
     )
 
     @Test
-    fun testMapOfIntLists() = assertStringFormAndRestored(
+    fun testMapOfIntLists() = Csv.assertEncodeAndDecode(
         "3,2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13",
         mapOf(
             listOf(1, 2) to listOf(3, 4),
             listOf(5, 6) to listOf(7, 8),
             listOf(9) to listOf(10, 11, 12, 13)
         ),
-        MapSerializer(ListSerializer(Int.serializer()), ListSerializer(Int.serializer())),
-        Csv
+        MapSerializer(ListSerializer(Int.serializer()), ListSerializer(Int.serializer()))
     )
 
     @Test
-    fun testMultipleMapOfIntLists() = assertStringFormAndRestored(
+    fun testMultipleMapOfIntLists() = Csv.assertEncodeAndDecode(
         """|2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13
            |1,1,2,2,3,3,4,5,6,4,7,8,9,10
         """.trimMargin().replace("\n", "\r\n"),
@@ -87,12 +83,11 @@ class CsvCollectionsTest {
                 ListSerializer(Int.serializer()),
                 ListSerializer(Int.serializer())
             )
-        ),
-        Csv
+        )
     )
 
     @Test
-    fun testRecordWithMapOfIntLists() = assertStringFormAndRestored(
+    fun testRecordWithMapOfIntLists() = Csv.assertEncodeAndDecode(
         "3,2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13",
         Record(
             mapOf(
@@ -101,12 +96,11 @@ class CsvCollectionsTest {
                 listOf(9) to listOf(10, 11, 12, 13)
             )
         ),
-        Record.serializer(),
-        Csv
+        Record.serializer()
     )
 
     @Test
-    fun testMultipleRecordsWithMapOfIntLists() = assertStringFormAndRestored(
+    fun testMultipleRecordsWithMapOfIntLists() = Csv.assertEncodeAndDecode(
         """|3,2,1,2,2,3,4,2,5,6,2,7,8,1,9,4,10,11,12,13
            |2,1,1,2,2,3,3,4,5,6,4,7,8,9,10
         """.trimMargin().replace("\n", "\r\n"),
@@ -125,8 +119,7 @@ class CsvCollectionsTest {
                 )
             )
         ),
-        ListSerializer(Record.serializer()),
-        Csv
+        ListSerializer(Record.serializer())
     )
 }
 

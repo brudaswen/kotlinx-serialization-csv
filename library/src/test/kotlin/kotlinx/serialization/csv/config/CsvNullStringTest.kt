@@ -4,7 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.NullRecord
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -14,46 +14,42 @@ import kotlin.test.Test
 class CsvNullStringTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv.assertEncodeAndDecode(
         "",
         NullRecord(null),
-        NullRecord.serializer(),
-        Csv
+        NullRecord.serializer()
     )
 
     @Test
-    fun testEmpty() = assertStringFormAndRestored(
-        "",
-        NullRecord(null),
-        NullRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                nullString = ""
-            )
+    fun testEmpty() = Csv(
+        CsvConfiguration(
+            nullString = ""
         )
+    ).assertEncodeAndDecode(
+        "",
+        NullRecord(null),
+        NullRecord.serializer()
     )
 
     @Test
-    fun testNull() = assertStringFormAndRestored(
+    fun testNull() = Csv(
+        CsvConfiguration(
+            nullString = "null"
+        )
+    ).assertEncodeAndDecode(
         "null",
         NullRecord(null),
-        NullRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                nullString = "null"
-            )
-        )
+        NullRecord.serializer()
     )
 
     @Test
-    fun testNA() = assertStringFormAndRestored(
+    fun testNA() = Csv(
+        CsvConfiguration(
+            nullString = "N/A"
+        )
+    ).assertEncodeAndDecode(
         "N/A",
         NullRecord(null),
-        NullRecord.serializer(),
-        Csv(
-            CsvConfiguration(
-                nullString = "N/A"
-            )
-        )
+        NullRecord.serializer()
     )
 }

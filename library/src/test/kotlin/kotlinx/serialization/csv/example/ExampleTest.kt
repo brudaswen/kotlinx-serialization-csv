@@ -11,7 +11,7 @@ import kotlinx.serialization.csv.example.Tire.Axis.REAR
 import kotlinx.serialization.csv.example.Tire.Side.LEFT
 import kotlinx.serialization.csv.example.Tire.Side.RIGHT
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
@@ -46,7 +46,11 @@ class ExampleTest {
     )
 
     @Test
-    fun testLocationRecords() = assertStringFormAndRestored(
+    fun testLocationRecords() = Csv(
+        CsvConfiguration.rfc4180.copy(
+            hasHeaderRecord = true
+        )
+    ).assertEncodeAndDecode(
         """|id,date,position.latitude,position.longitude,driver.id,driver.foreName,driver.lastName,driver.birthday,vehicle.uuid,vehicle.type,vehicle.brand,vehicleData.speed,vehicleData.consumption,vehicleData.consumption.Combustion.consumptionLiterPer100Km,vehicleData.consumption.Electric.consumptionKWhPer100Km
            |0,2020-02-01T13:33:00,0.0,0.0,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,,Unknown,,
            |1,2020-02-01T13:37:00,0.1,0.1,12,Jon,Smith,,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,27.7778,Electric,,18.1
@@ -72,16 +76,17 @@ class ExampleTest {
                 VehicleData(20.0, Consumption.Combustion(7.9))
             )
         ),
-        ListSerializer(LocationRecord.serializer()),
-        Csv(
-            CsvConfiguration.rfc4180.copy(
-                hasHeaderRecord = true
-            )
-        )
+        ListSerializer(LocationRecord.serializer())
     )
 
     @Test
-    fun testVehiclePartRecords() = assertStringFormAndRestored(
+    fun testVehiclePartRecords() = Csv(
+        CsvConfiguration.rfc4180,
+        SerializersModule {
+            polymorphic(Part::class, Tire::class, Tire.serializer())
+            polymorphic(Part::class, Oil::class, Oil.serializer())
+        }
+    ).assertEncodeAndDecode(
         """|101,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,FRONT,LEFT,245,35,21,0.25
            |102,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,FRONT,RIGHT,245,35,21,0.21
            |103,f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,Tire,REAR,LEFT,265,35,21,0.35
@@ -103,18 +108,11 @@ class ExampleTest {
             VehiclePartRecord(204, porsche, Tire(REAR, LEFT, 265, 35, 20), 0.2),
             VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2)
         ),
-        ListSerializer(VehiclePartRecord.serializer()),
-        Csv(
-            CsvConfiguration.rfc4180,
-            SerializersModule {
-                polymorphic(Part::class, Tire::class, Tire.serializer())
-                polymorphic(Part::class, Oil::class, Oil.serializer())
-            }
-        )
+        ListSerializer(VehiclePartRecord.serializer())
     )
 
     @Test
-    fun testVehicleFeaturesRecords() = assertStringFormAndRestored(
+    fun testVehicleFeaturesRecords() = Csv(CsvConfiguration.rfc4180).assertEncodeAndDecode(
         """|c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,,
            |c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,0,0
            |f9682dcb-30f7-4e88-915e-60e3b2758da7,CAR,Tesla,5,ELECTRIC,AUTOMATIC,HEATED_SEATS,NAVIGATION_SYSTEM,XENON,2,ELECTRIC,0,XENON,1
@@ -128,12 +126,11 @@ class ExampleTest {
                 mapOf(ELECTRIC to 0, XENON to 1)
             )
         ),
-        ListSerializer(VehicleFeaturesRecord.serializer()),
-        Csv(CsvConfiguration.rfc4180)
+        ListSerializer(VehicleFeaturesRecord.serializer())
     )
 
     @Test
-    fun testExcel() = assertStringFormAndRestored(
+    fun testExcel() = Csv(CsvConfiguration.excel).assertEncodeAndDecode(
         """|c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,,
            |c038c27b-a3fd-4e35-b6ac-ab06d747e16c,MOTORBIKE,Harley,0,0
            |
@@ -149,7 +146,6 @@ class ExampleTest {
                 mapOf(ELECTRIC to 0, XENON to 1)
             )
         ),
-        ListSerializer(VehicleFeaturesRecord.serializer().nullable),
-        Csv(CsvConfiguration.excel)
+        ListSerializer(VehicleFeaturesRecord.serializer().nullable)
     )
 }

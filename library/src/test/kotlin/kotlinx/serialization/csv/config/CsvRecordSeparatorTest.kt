@@ -5,7 +5,7 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.IntRecord
-import kotlinx.serialization.test.assertStringFormAndRestored
+import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
 /**
@@ -15,62 +15,58 @@ import kotlin.test.Test
 class CsvRecordSeparatorTest {
 
     @Test
-    fun testDefault() = assertStringFormAndRestored(
+    fun testDefault() = Csv.assertEncodeAndDecode(
         "1\r\n2\r\n3",
         listOf(
             IntRecord(1),
             IntRecord(2),
             IntRecord(3)
         ),
-        ListSerializer(IntRecord.serializer()),
-        Csv
+        ListSerializer(IntRecord.serializer())
     )
 
     @Test
-    fun testWindows() = assertStringFormAndRestored(
-        "1\r\n2\r\n3",
-        listOf(
-            IntRecord(1),
-            IntRecord(2),
-            IntRecord(3)
-        ),
-        ListSerializer(IntRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                recordSeparator = "\r\n"
-            )
+    fun testWindows() = Csv(
+        CsvConfiguration(
+            recordSeparator = "\r\n"
         )
+    ).assertEncodeAndDecode(
+        "1\r\n2\r\n3",
+        listOf(
+            IntRecord(1),
+            IntRecord(2),
+            IntRecord(3)
+        ),
+        ListSerializer(IntRecord.serializer())
     )
 
     @Test
-    fun testUnix() = assertStringFormAndRestored(
+    fun testUnix() = Csv(
+        CsvConfiguration(
+            recordSeparator = "\n"
+        )
+    ).assertEncodeAndDecode(
         "1\n2\n3",
         listOf(
             IntRecord(1),
             IntRecord(2),
             IntRecord(3)
         ),
-        ListSerializer(IntRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                recordSeparator = "\n"
-            )
-        )
+        ListSerializer(IntRecord.serializer())
     )
 
     @Test
-    fun testHash() = assertStringFormAndRestored(
+    fun testHash() = Csv(
+        CsvConfiguration(
+            recordSeparator = "#"
+        )
+    ).assertEncodeAndDecode(
         "1#2#3",
         listOf(
             IntRecord(1),
             IntRecord(2),
             IntRecord(3)
         ),
-        ListSerializer(IntRecord.serializer()),
-        Csv(
-            CsvConfiguration(
-                recordSeparator = "#"
-            )
-        )
+        ListSerializer(IntRecord.serializer())
     )
 }
