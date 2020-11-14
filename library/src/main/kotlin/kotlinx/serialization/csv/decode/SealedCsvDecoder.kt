@@ -6,6 +6,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 
 /**
  * CSV decoder for sealed classes.
@@ -24,7 +25,7 @@ internal class SealedCsvDecoder(
     private var elementIndex = 0
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
-        reader.isDone || elementIndex > 1 -> CompositeDecoder.DECODE_DONE
+        reader.isDone || elementIndex > 1 -> DECODE_DONE
         else -> elementIndex
     }
 
@@ -74,6 +75,6 @@ internal class SealedCsvDecoder(
         parent: CsvDecoder
     ) : CsvDecoder(csv, reader, parent) {
         override fun decodeElementIndex(descriptor: SerialDescriptor): Int =
-            CompositeDecoder.DECODE_DONE
+            DECODE_DONE
     }
 }

@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.encode
 
-import kotlinx.serialization.csv.CsvConfiguration
+import kotlinx.serialization.csv.config.CsvConfig
+import kotlinx.serialization.csv.config.QuoteMode
 
 /**
  * Writer to generate CSV output.
@@ -8,7 +9,7 @@ import kotlinx.serialization.csv.CsvConfiguration
  * To write one CSV record, call [beginRecord], followed by multiple calls to [printColumn] and
  * finally call [endRecord] to finish the record.
  */
-internal class CsvWriter(private val sb: Appendable, private val configuration: CsvConfiguration) {
+internal class CsvWriter(private val sb: Appendable, private val config: CsvConfig) {
 
     var isFirstRecord = true
     private var isFirstColumn = true
@@ -19,7 +20,7 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
      */
     fun beginRecord() {
         if (!isFirstRecord) {
-            sb.append(configuration.recordSeparator)
+            sb.append(config.recordSeparator)
         }
     }
 
@@ -28,7 +29,7 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
      * this may print a trailing column delimiter.
      */
     fun endRecord() {
-        if (configuration.hasTrailingDelimiter) {
+        if (config.hasTrailingDelimiter) {
             nextColumn()
         }
         isFirstRecord = false
@@ -45,17 +46,17 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
     fun printColumn(value: String, isNumeric: Boolean = false, isNull: Boolean = false) {
         nextColumn()
 
-        val delimiter = configuration.delimiter
-        val recordSeparator = configuration.recordSeparator
-        val quoteChar = configuration.quoteChar
-        val escapeChar = configuration.escapeChar
+        val delimiter = config.delimiter
+        val recordSeparator = config.recordSeparator
+        val quoteChar = config.quoteChar
+        val escapeChar = config.escapeChar
 
-        val mode: WriteMode = when (configuration.quoteMode) {
-            CsvConfiguration.QuoteMode.ALL -> WriteMode.QUOTED
-            CsvConfiguration.QuoteMode.ALL_NON_NULL -> if (!isNull || requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
-            CsvConfiguration.QuoteMode.ALL_NON_NUMERIC -> if (!isNumeric || requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
-            CsvConfiguration.QuoteMode.MINIMAL -> if (requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
-            CsvConfiguration.QuoteMode.NONE -> WriteMode.ESCAPED
+        val mode: WriteMode = when (config.quoteMode) {
+            QuoteMode.ALL -> WriteMode.QUOTED
+            QuoteMode.ALL_NON_NULL -> if (!isNull || requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
+            QuoteMode.ALL_NON_NUMERIC -> if (!isNumeric || requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
+            QuoteMode.MINIMAL -> if (requiresQuoting(value)) WriteMode.QUOTED else WriteMode.PLAIN
+            QuoteMode.NONE -> WriteMode.ESCAPED
         }
 
         if (mode == WriteMode.ESCAPED && escapeChar != null) {
@@ -75,14 +76,14 @@ internal class CsvWriter(private val sb: Appendable, private val configuration: 
     /** End the current column (which writes the column delimiter). */
     private fun nextColumn() {
         if (!isFirstColumn) {
-            sb.append(configuration.delimiter)
+            sb.append(config.delimiter)
         }
         isFirstColumn = false
     }
 
     /** Check if given [value] contains reserved chars that require quoting. */
     private fun requiresQuoting(value: String): Boolean {
-        val chars = with(configuration) { "${delimiter}${quoteChar}${recordSeparator}" }
+        val chars = with(config) { "${delimiter}${quoteChar}${recordSeparator}" }
         return value.contains("[${Regex.escape(chars)}]".toRegex())
     }
 

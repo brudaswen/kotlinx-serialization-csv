@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2020-11-08
+### Added
+- `Csv {}` builder function to configure Csv instance.
+
+### Changed
+- Use Unix newline (`\n`) as default `recordSeparator` (use `Csv { recordSeparator = "\r\n" }` or
+  `Csv.Rfc4180` for old behavior).
+- Using `QuoteMode.NONE` requires `escapeChar` to be set manually (use
+  `Csv { quoteMode = QuoteMode.NONE ; escapeChar = '\\' }` for old behavior).
+- Last line in CSV is *always* ignored when empty.
+- Throws `SerializationException` instead of `IllegalStateException` in case of error.
+
+### Removed
+- Removed `CsvConfiguration` (use `Csv {}` builder function instead).
+- Removed `Csv.default` (use `Csv { recordSeparator = "\r\n" }` instead).
+- Removed `Csv.rfc4180` (use `Csv.Rfc4180` instead).
+- Removed `Csv.excel` (use `Csv.Rfc4180` instead).
+
 ## [1.1.0] - 2020-11-08
 ### Added
 - Support `ignoreUnknownColumns`.

@@ -4,7 +4,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.csv.records.IntStringRecord
 import kotlinx.serialization.csv.records.NullRecord
 import kotlinx.serialization.test.assertDecode
@@ -17,34 +16,37 @@ import kotlin.test.Test
 class CsvEmptyLinesTest {
 
     @Test
-    fun testIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n-150\r\n150\r\n\r\n42\r\n",
+    fun testIntList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n-150\n150\n\n42\n",
         listOf(-150, 150, 42),
         ListSerializer(Int.serializer())
     )
 
     @Test
-    fun testEmptyIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n\r\n\r\n\r\n",
+    fun testEmptyIntList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n\n\n\n",
         listOf(),
         ListSerializer(Int.serializer())
     )
 
     @Test
-    fun testRecordList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n\r\n1,testing\r\n\r\n2,bar\r\n\r\n",
+    fun testLastLineAlwaysIgnored() = Csv {
+        ignoreEmptyLines = false
+    }.assertDecode(
+        "1\n2\n3\n4\n",
+        listOf(1, 2, 3, 4),
+        ListSerializer(Int.serializer())
+    )
+
+    @Test
+    fun testRecordList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n\n1,testing\n\n2,bar\n\n",
         listOf(
             IntStringRecord(1, "testing"),
             IntStringRecord(2, "bar")
@@ -53,24 +55,20 @@ class CsvEmptyLinesTest {
     )
 
     @Test
-    fun testEmptyRecordList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n\r\n\r\n\r\n",
+    fun testEmptyRecordList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n\n\n\n",
         listOf(),
         ListSerializer(IntStringRecord.serializer()),
     )
 
     @Test
-    fun testRecordListWithHeaders() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true,
-            hasHeaderRecord = true
-        )
-    ).assertDecode(
-        "\r\na,b\r\n\r\n1,testing\r\n\r\n2,bar\r\n\r\n",
+    fun testRecordListWithHeaders() = Csv {
+        ignoreEmptyLines = true
+        hasHeaderRecord = true
+    }.assertDecode(
+        "\na,b\n\n1,testing\n\n2,bar\n\n",
         listOf(
             IntStringRecord(1, "testing"),
             IntStringRecord(2, "bar")
@@ -79,24 +77,20 @@ class CsvEmptyLinesTest {
     )
 
     @Test
-    fun testEmptyRecordListWithHeaders() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true,
-            hasHeaderRecord = true
-        )
-    ).assertDecode(
-        "\r\na,b\r\n\r\n\r\n\r\n",
+    fun testEmptyRecordListWithHeaders() = Csv {
+        ignoreEmptyLines = true
+        hasHeaderRecord = true
+    }.assertDecode(
+        "\na,b\n\n\n\n",
         listOf(),
         ListSerializer(IntStringRecord.serializer())
     )
 
     @Test
-    fun testListOfIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n\r\n1,2\r\n\r\n3,4\r\n\r\n5,6,7\r\n",
+    fun testListOfIntList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n\n1,2\n\n3,4\n\n5,6,7\n",
         listOf(
             listOf(1, 2),
             listOf(3, 4),
@@ -106,24 +100,20 @@ class CsvEmptyLinesTest {
     )
 
     @Test
-    fun testEmptyListOfIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true
-        )
-    ).assertDecode(
-        "\r\n\r\n\r\n\r\n",
+    fun testEmptyListOfIntList() = Csv {
+        ignoreEmptyLines = true
+    }.assertDecode(
+        "\n\n\n\n",
         listOf(),
         ListSerializer(ListSerializer(Int.serializer()))
     )
 
     @Test
-    fun testNullRecordList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true,
-            nullString = "null"
-        )
-    ).assertDecode(
-        "\r\n\r\nnull\r\n\r\nnull\r\n\r\n",
+    fun testNullRecordList() = Csv {
+        ignoreEmptyLines = true
+        nullString = "null"
+    }.assertDecode(
+        "\n\nnull\n\nnull\n\n",
         listOf(
             NullRecord(null),
             NullRecord(null)
@@ -132,13 +122,11 @@ class CsvEmptyLinesTest {
     )
 
     @Test
-    fun testNullRecordListWithEmptyNullString() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = true,
-            nullString = ""
-        )
-    ).assertDecode(
-        "\r\n\r\n\r\n\r\n\r\n\r\n",
+    fun testNullRecordListWithEmptyNullString() = Csv {
+        ignoreEmptyLines = true
+        nullString = ""
+    }.assertDecode(
+        "\n\n\n\n\n\n",
         listOf(),
         ListSerializer(NullRecord.serializer())
     )

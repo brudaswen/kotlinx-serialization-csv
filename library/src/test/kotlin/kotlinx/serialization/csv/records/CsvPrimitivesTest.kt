@@ -92,7 +92,7 @@ class CsvPrimitivesTest {
 
     @Test
     fun testIntList() = Csv.assertEncodeAndDecode(
-        "-150\r\n150\r\n42",
+        "-150\n150\n42",
         listOf(-150, 150, 42),
         ListSerializer(Int.serializer())
     )

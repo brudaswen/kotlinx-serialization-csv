@@ -5,6 +5,8 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.UNKNOWN_NAME
 
 /**
  * CSV decoder for classes.
@@ -23,17 +25,17 @@ internal class ClassCsvDecoder(
     private var columnIndex = 0
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
-        reader.isDone -> CompositeDecoder.DECODE_DONE
-        elementIndex >= descriptor.elementsCount -> CompositeDecoder.DECODE_DONE
-        classHeaders != null && columnIndex >= classHeaders.size -> CompositeDecoder.DECODE_DONE
+        reader.isDone -> DECODE_DONE
+        elementIndex >= descriptor.elementsCount -> DECODE_DONE
+        classHeaders != null && columnIndex >= classHeaders.size -> DECODE_DONE
 
         classHeaders != null ->
             when (val result = classHeaders[columnIndex]) {
-                CompositeDecoder.UNKNOWN_NAME -> {
+                UNKNOWN_NAME -> {
                     ignoreColumn()
                     decodeElementIndex(descriptor)
                 }
-                null -> CompositeDecoder.UNKNOWN_NAME
+                null -> UNKNOWN_NAME
                 else -> result
             }
 
@@ -58,7 +60,7 @@ internal class ClassCsvDecoder(
     override fun endStructure(descriptor: SerialDescriptor) {
         super.endStructure(descriptor)
 
-        if (classHeaders != null && csv.configuration.ignoreUnknownColumns) {
+        if (classHeaders != null && csv.config.ignoreUnknownColumns) {
             while (columnIndex < classHeaders.size) {
                 ignoreColumn()
             }

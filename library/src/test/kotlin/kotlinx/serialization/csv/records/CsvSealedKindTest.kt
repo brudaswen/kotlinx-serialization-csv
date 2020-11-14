@@ -56,7 +56,7 @@ class CsvSealedKindTest {
           |kotlinx.serialization.csv.records.SealedRecord.Object,,,,
           |kotlinx.serialization.csv.records.SealedRecord.OtherObject,,,,
           |kotlinx.serialization.csv.records.SealedRecord.Class,42,testing,,
-        """.trimMargin().replace("\n", "\r\n"),
+        """.trimMargin(),
         listOf(
             SealedRecord.Object,
             SealedRecord.OtherObject,

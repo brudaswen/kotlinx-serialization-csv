@@ -5,6 +5,7 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 
 /**
  * Decodes list of multiple CSV records/lines.
@@ -24,7 +25,7 @@ internal class RecordListCsvDecoder(
         }
 
         readEmptyLines()
-        return if (reader.isDone) CompositeDecoder.DECODE_DONE else elementIndex
+        return if (reader.isDone) DECODE_DONE else elementIndex
     }
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
@@ -49,5 +50,24 @@ internal class RecordListCsvDecoder(
         readTrailingDelimiter()
         elementIndex++
         return value
+    }
+
+    private fun readEmptyLines() {
+        if (config.ignoreEmptyLines) {
+            reader.readEmptyLines()
+        } else {
+            // Last line in file is always allowed to be empty
+            readLastEmptyLine()
+        }
+    }
+
+    private fun readLastEmptyLine() {
+        reader.mark()
+        reader.readEndOfRecord()
+        if (reader.isDone) {
+            reader.unmark()
+        } else {
+            reader.reset()
+        }
     }
 }

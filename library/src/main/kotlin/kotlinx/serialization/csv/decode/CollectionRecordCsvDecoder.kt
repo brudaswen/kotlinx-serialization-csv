@@ -1,8 +1,9 @@
 package kotlinx.serialization.csv.decode
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 
 /**
  * Decode collection record.
@@ -11,6 +12,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
  * Therefore, the number of elements is determined by reading until the end of line and the size of the collection is
  * not required and consequently not expected as the first value.
  */
+@OptIn(ExperimentalSerializationApi::class)
 internal class CollectionRecordCsvDecoder(
     csv: Csv,
     reader: CsvReader,
@@ -23,7 +25,7 @@ internal class CollectionRecordCsvDecoder(
 
     override fun decodeElementIndex(descriptor: SerialDescriptor): Int = when {
         // TODO Check for END_OF_RECORD
-        reader.isDone || reader.recordNo != recordNo -> CompositeDecoder.DECODE_DONE
+        reader.isDone || reader.recordNo != recordNo -> DECODE_DONE
         else -> elementIndex
     }
 

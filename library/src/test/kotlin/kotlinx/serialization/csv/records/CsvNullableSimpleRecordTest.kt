@@ -4,7 +4,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertDecode
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
@@ -107,29 +106,41 @@ class CsvNullableSimpleRecordTest {
     )
 
     @Test
-    fun testIntList() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = false
-        )
-    ).assertEncodeAndDecode(
-        "-150\r\n\r\n150",
+    fun testIntList() = Csv {
+        ignoreEmptyLines = false
+    }.assertEncodeAndDecode(
+        "-150\n\n150",
         listOf(
-            IntRecord(-150), null,
+            IntRecord(-150),
+            null,
             IntRecord(150)
         ),
         ListSerializer(IntRecord.serializer().nullable)
     )
 
     @Test
-    fun testIntListWithLastLineEmpty() = Csv(
-        CsvConfiguration(
-            ignoreEmptyLines = false
-        )
-    ).assertDecode(
-        "-150\r\n\r\n150\r\n",
+    fun testIntListWithLastLineEmpty() = Csv {
+        ignoreEmptyLines = false
+    }.assertDecode(
+        "-150\n\n150\n",
         listOf(
-            IntRecord(-150), null,
-            IntRecord(150), null
+            IntRecord(-150),
+            null,
+            IntRecord(150)
+        ),
+        ListSerializer(IntRecord.serializer().nullable)
+    )
+
+    @Test
+    fun testIntListWithLastTwoLinesEmpty() = Csv {
+        ignoreEmptyLines = false
+    }.assertDecode(
+        "-150\n\n150\n\n",
+        listOf(
+            IntRecord(-150),
+            null,
+            IntRecord(150),
+            null
         ),
         ListSerializer(IntRecord.serializer().nullable)
     )

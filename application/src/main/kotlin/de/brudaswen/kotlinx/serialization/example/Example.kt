@@ -4,7 +4,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 
 @Serializable
 data class Person(val nickname: String, val name: String?, val appearance: Appearance)
@@ -17,7 +16,7 @@ enum class Gender { MALE, FEMALE }
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
-    val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
+    val csv = Csv { hasHeaderRecord = true }
 
     val records = listOf(
         Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
@@ -33,7 +32,7 @@ fun main() {
         nickname,appearance.gender,appearance.height,appearance.age,name
         Neo,MALE,1.86,37,Thomas A. Anderson
         Trinity,FEMALE,1.74,,
-    """.trimIndent().replace("\n", "\r\n")
+    """.trimIndent()
     val parsed = csv.decodeFromString(ListSerializer(Person.serializer()), input)
     println(parsed)
     // [

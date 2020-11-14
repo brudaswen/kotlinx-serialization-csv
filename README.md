@@ -32,7 +32,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 
 @Serializable
 data class Person(val nickname: String, val name: String?, val appearance: Appearance)
@@ -45,7 +44,7 @@ enum class Gender { MALE, FEMALE }
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
-    val csv = Csv(CsvConfiguration(hasHeaderRecord = true))
+    val csv = Csv { hasHeaderRecord = true }
 
     val records = listOf(
         Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
@@ -61,7 +60,7 @@ fun main() {
         nickname,appearance.gender,appearance.height,appearance.age,name
         Neo,MALE,1.86,37,Thomas A. Anderson
         Trinity,FEMALE,1.74,,
-    """.trimIndent().replace("\n", "\r\n")
+    """.trimIndent()
     val parsed = csv.decodeFromString(ListSerializer(Person.serializer()), input)
     println(parsed)
     // [
@@ -70,26 +69,25 @@ fun main() {
     // ]
 }
 ```
-
 ### Pre-defined CSV formats
-The library comes with multiple pre-defined formats that can be used out of the box.
+The library comes with multiple pre-defined Csv formats that can be used out of the box.
 
 | Config                 | Description |
 |---                     |---          |
-| `default`              | Standard Comma Separated Value format, as for `rfc4180` but allowing empty lines. *Format is unstable and may change in upcoming versions.* |
-| `rfc4180`              | Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180). |
-| `excel`                | Excel file format (using a comma as the value delimiter). |
+| `Csv.Default`          | Standard Comma Separated Value format, as for `Rfc4180` but using Unix newline (`\n`) as record separator and ignoring empty lines. *Format is unstable and may change in upcoming versions.* |
+| `Csv.Rfc4180`          | Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180). |
 
 ### Configuration
-CSV serialization and parsing options can be changed by providing a custom `CsvConfiguration`.
+CSV serialization and parsing options can be changed by configuring the `Csv` instance during
+initialization via the `Csv { }` builder function.
 
 | Option                 | Default Value  | Description |
 |---                     |---             | ---         |
 | `delimiter`            | `,`            | The delimiter character between columns. |
-| `recordSeparator`      | `\r\n`         | The record separator. |
+| `recordSeparator`      | `\n`           | The record separator. |
 | `quoteChar`            | `"`            | The quote character used to quote column values. |
 | `quoteMode`            | `MINIMAL`      | The quote mode used to decide if a column value should get quoted.<ul><li>`ALL`: Quotes *all* fields.</li><li>`ALL_NON_NULL`: Quotes all *non-null fields* and *fields which contain special characters*.</li><li>`ALL_NON_NUMERIC`: Quotes all *non-numeric fields* and *fields which contain special characters*.</li><li>`MINIMAL`: Quotes *fields which contain special characters*.</li><li>`NONE`: *Never* quotes fields (requires `CsvConfiguration.escapeChar` to be set).</li></ul> |
-| `escapeChar`           | `null` (`\\` for `QuoteMode.NONE`) | The escape character used to escape reserved characters in a column value. |
+| `escapeChar`           | `null`         | The escape character used to escape reserved characters in a column value. |
 | `nullString`           | *empty string* | The value to identify `null` values. |
 | `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing. |
 | `hasHeaderRecord`      | `false`        | First line is header record. |

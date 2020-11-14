@@ -3,7 +3,6 @@ package kotlinx.serialization.csv.records
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.CsvConfiguration
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
@@ -28,7 +27,7 @@ class CsvNestedRecordTest {
 
     @Test
     fun testNestedRecordList() = Csv.assertEncodeAndDecode(
-        "0,Alice,0.0,1.0,100,info\r\n1,Bob,10.0,20.0,50,info2",
+        "0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
         listOf(
             NestedRecord(
                 0,
@@ -55,12 +54,10 @@ class CsvNestedRecordTest {
     )
 
     @Test
-    fun testNestedRecordWithHeader() = Csv(
-        CsvConfiguration(
-            hasHeaderRecord = true
-        )
-    ).assertEncodeAndDecode(
-        "time,name,data.location.lat,data.location.lon,data.speed,data.info\r\n0,Alice,0.0,1.0,100,info",
+    fun testNestedRecordWithHeader() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info",
         NestedRecord(
             0,
             "Alice",
@@ -75,12 +72,10 @@ class CsvNestedRecordTest {
     )
 
     @Test
-    fun testNestedRecordListWithHeader() = Csv(
-        CsvConfiguration(
-            hasHeaderRecord = true
-        )
-    ).assertEncodeAndDecode(
-        "time,name,data.location.lat,data.location.lon,data.speed,data.info\r\n0,Alice,0.0,1.0,100,info\r\n1,Bob,10.0,20.0,50,info2",
+    fun testNestedRecordListWithHeader() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
         listOf(
             NestedRecord(
                 0,

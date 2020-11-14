@@ -1,64 +1,85 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.csv.CsvConfiguration
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
-class CsvConfigurationTest {
+class CsvBuilderTest {
 
     @Test
     fun `should fail if delimiter equals quoteChar`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(delimiter = '!', quoteChar = '!')
+            CsvBuilder().apply {
+                delimiter = '!'
+                quoteChar = '!'
+            }.build()
         }
     }
 
     @Test
     fun `should fail if delimiter equals escapeChar`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(delimiter = '!', escapeChar = '!')
+            CsvBuilder().apply {
+                delimiter = '!'
+                escapeChar = '!'
+            }.build()
         }
     }
 
     @Test
     fun `should fail if escapeChar not set`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(quoteMode = CsvConfiguration.QuoteMode.NONE, escapeChar = null)
+            CsvBuilder().apply {
+                quoteMode = QuoteMode.NONE
+                escapeChar = null
+            }.build()
         }
     }
 
     @Test
     fun `should fail if recordSeparator is empty`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(recordSeparator = "")
+            CsvBuilder().apply {
+                recordSeparator = ""
+            }.build()
         }
     }
 
     @Test
     fun `should fail if recordSeparator is too long`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(recordSeparator = "\r\n\n")
+            CsvBuilder().apply {
+                recordSeparator = "\r\n\n"
+            }.build()
         }
     }
 
     @Test
     fun `should fail if recordSeparator is delimiter`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(delimiter = ',', recordSeparator = ",")
+            CsvBuilder().apply {
+                delimiter = ','
+                recordSeparator = ","
+            }.build()
         }
     }
 
     @Test
     fun `should fail if recordSeparator is quoteChar`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(quoteChar = '"', recordSeparator = "\"")
+            CsvBuilder().apply {
+                quoteChar = '"'
+                recordSeparator = "\""
+            }.build()
         }
     }
 
     @Test
     fun `should fail if recordSeparator is escapeChar`() {
         assertThrows<IllegalArgumentException> {
-            CsvConfiguration(escapeChar = '\\', recordSeparator = "\\")
+            CsvBuilder().apply {
+                escapeChar = '\\'
+                recordSeparator = "\\"
+            }.build()
         }
     }
 }
