@@ -15,7 +15,7 @@ open classes should be avoided.
 ## Gradle Dependencies
 ```kotlin
 // Kotlin Serialization CSV
-implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:1.1.0")
+implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:2.0.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0")
