@@ -4,10 +4,12 @@ import kotlinx.serialization.*
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.decode.CsvReader
+import kotlinx.serialization.csv.decode.FetchSource
 import kotlinx.serialization.csv.decode.RootCsvDecoder
 import kotlinx.serialization.csv.decode.StringSource
 import kotlinx.serialization.csv.encode.RootCsvEncoder
 import kotlinx.serialization.modules.SerializersModule
+import java.io.Reader
 
 /**
  * The main entry point to work with CSV serialization.
@@ -38,6 +40,17 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
     }
 
     /**
+     * Serialize [value] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param value The [Serializable] object.
+     * @param appendable The output where the CSV will be written.
+     */
+    fun <T> encodeToAppendable(serializer: SerializationStrategy<T>, value: T, appendable: Appendable) {
+        RootCsvEncoder(this, appendable).encodeSerializableValue(serializer, value)
+    }
+
+    /**
      * Parse CSV [string] into [Serializable] object.
      *
      * @param deserializer The deserializer used to parse the given CSV string.
@@ -50,6 +63,23 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
 
         require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
         return result
+    }
+
+    /**
+     * Parse CSV from the given [reader] into [Serializable] object.
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     * @param reader The CSV reader to parse.
+     */
+    fun <T> decodeFromReader(deserializer: DeserializationStrategy<T>, reader: Reader): T {
+        return reader.use {
+            val csv = CsvReader(FetchSource(it), config)
+            val input = RootCsvDecoder(this, csv)
+            val result = input.decodeSerializableValue(deserializer)
+
+            require(csv.isDone) { "Reader has not consumed the whole input: $csv" }
+            result
+        }
     }
 
     internal class Impl(config: CsvConfig) : Csv(config)
