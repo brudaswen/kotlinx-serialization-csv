@@ -1,13 +1,19 @@
 package kotlinx.serialization.csv
 
 import kotlinx.serialization.*
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
+import kotlinx.serialization.csv.decode.*
 import kotlinx.serialization.csv.decode.CsvReader
-import kotlinx.serialization.csv.decode.FetchSource
+import kotlinx.serialization.csv.decode.RecordListCsvDecoder
 import kotlinx.serialization.csv.decode.RootCsvDecoder
 import kotlinx.serialization.csv.decode.StringSource
+import kotlinx.serialization.csv.encode.CsvWriter
+import kotlinx.serialization.csv.encode.RecordListCsvEncoder
 import kotlinx.serialization.csv.encode.RootCsvEncoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
+import kotlinx.serialization.encoding.encodeStructure
 import kotlinx.serialization.modules.SerializersModule
 import java.io.Reader
 
@@ -51,6 +57,42 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
     }
 
     /**
+     * Serialize [values] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param values The [Serializable] objects as a sequence.
+     * @param appendable The output where the CSV will be written.
+     */
+    fun <T> encodeSequenceToAppendable(serializer: KSerializer<T>, values: Sequence<T>, appendable: Appendable) {
+        val encoder = RecordListCsvEncoder(this, CsvWriter(appendable, config))
+        val listDescriptor = ListSerializer(serializer).descriptor
+        encoder.encodeStructure(listDescriptor) {
+            var index = 0
+            for (value in values) {
+                encodeSerializableElement(listDescriptor, index++, serializer, value)
+            }
+        }
+    }
+
+    /**
+     * Start serializing values into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param appendable The output where the CSV will be written.
+     * @return A function that emits a new item to the CSV.
+     */
+    @ExperimentalSerializationApi
+    fun <T> beginEncodingToAppendable(serializer: KSerializer<T>, appendable: Appendable): (T) -> Unit {
+        val encoder = RecordListCsvEncoder(this, CsvWriter(appendable, config))
+        val listDescriptor = ListSerializer(serializer).descriptor
+        encoder.beginStructure(listDescriptor)
+        var index = 0
+        return {
+            encoder.encodeSerializableElement(listDescriptor, index++, serializer, it)
+        }
+    }
+
+    /**
      * Parse CSV [string] into [Serializable] object.
      *
      * @param deserializer The deserializer used to parse the given CSV string.
@@ -79,6 +121,50 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
 
             require(csv.isDone) { "Reader has not consumed the whole input: $csv" }
             result
+        }
+    }
+
+    /**
+     * Parse CSV line-by-line from the given [reader] into a sequence.
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     * @param reader The CSV reader to parse.  This function *does not close the reader*.
+     * @return A sequence of each element decoded.
+     */
+    @ExperimentalSerializationApi
+    fun <T> decodeSequenceFromReader(deserializer: KSerializer<T>, reader: Reader): Sequence<T> {
+        val csv = CsvReader(FetchSource(reader), config)
+        val listDescriptor = ListSerializer(deserializer).descriptor
+        val input = RecordListCsvDecoder(this, csv)
+        val structure = input.beginStructure(listDescriptor)
+        var previousValue: T? = null
+
+        return generateSequence {
+            val decodedIndex = structure.decodeElementIndex(listDescriptor)
+            if (decodedIndex == DECODE_DONE) return@generateSequence null
+            val nextValue =
+                structure.decodeSerializableElement(listDescriptor, decodedIndex, deserializer, previousValue)
+            previousValue = nextValue
+            nextValue
+        }
+    }
+
+    /**
+     * Parse CSV from the given [reader] into a sequence of [Serializable] objects.
+     * Designed to be comparable to [Reader.useLines].
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     * @param reader The CSV reader to parse.
+     * @param handler The code to handle the sequence of incoming values.  The sequence will not be available after the
+     * function completes.
+     */
+    fun <T> decodeFromReaderUsingSequence(
+        deserializer: KSerializer<T>,
+        reader: Reader,
+        handler: (Sequence<T>) -> Unit,
+    ) {
+        reader.use {
+            handler(decodeSequenceFromReader(deserializer, reader))
         }
     }
 

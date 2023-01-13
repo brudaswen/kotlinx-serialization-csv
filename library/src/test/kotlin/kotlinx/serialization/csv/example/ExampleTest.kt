@@ -11,9 +11,13 @@ import kotlinx.serialization.csv.example.Tire.Side.LEFT
 import kotlinx.serialization.csv.example.Tire.Side.RIGHT
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.test.assertEncodeAndDecode
+import java.io.PipedReader
+import java.io.PipedWriter
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.Test
+import kotlin.test.assertEquals
+
 
 /**
  * Test complex [LocationRecord].
@@ -144,4 +148,41 @@ class ExampleTest {
         ),
         ListSerializer(VehicleFeaturesRecord.serializer().nullable)
     )
+
+    @Test
+    fun testStreaming() {
+        val csv = Csv {
+            serializersModule = SerializersModule {
+                polymorphic(Part::class, Tire::class, Tire.serializer())
+                polymorphic(Part::class, Oil::class, Oil.serializer())
+            }
+        }
+        val testData = listOf(
+            VehiclePartRecord(101, tesla, Tire(FRONT, LEFT, 245, 35, 21), 0.25),
+            VehiclePartRecord(102, tesla, Tire(FRONT, RIGHT, 245, 35, 21), 0.21),
+            VehiclePartRecord(103, tesla, Tire(REAR, LEFT, 265, 35, 21), 0.35),
+            VehiclePartRecord(104, tesla, Tire(REAR, RIGHT, 265, 35, 21), 0.32),
+            VehiclePartRecord(201, porsche, Oil(20, 50), 0.2),
+            VehiclePartRecord(202, porsche, Tire(FRONT, LEFT, 265, 35, 20), 0.2),
+            VehiclePartRecord(203, porsche, Tire(FRONT, RIGHT, 265, 35, 20), 0.2),
+            VehiclePartRecord(204, porsche, Tire(REAR, LEFT, 265, 35, 20), 0.2),
+            VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2)
+        )
+
+        val input = PipedReader()
+        val out = PipedWriter(input)
+        Thread(
+            Runnable {
+                csv.encodeSequenceToAppendable(VehiclePartRecord.serializer(), testData.asSequence(), out)
+                out.close()
+            }
+        ).start()
+        val result = ArrayList<VehiclePartRecord>()
+        csv.decodeFromReaderUsingSequence(VehiclePartRecord.serializer(), input) {
+            it.forEach {
+                result.add(it)
+            }
+        }
+        assertEquals(testData, result)
+    }
 }
