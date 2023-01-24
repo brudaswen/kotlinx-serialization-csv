@@ -29,6 +29,21 @@ class CsvReaderTest {
     }
 
     @Test
+    fun testByteOrderMarkSkip() {
+        val zwnbsp = "\uFEFF"
+        val csv = """
+            |${zwnbsp}1,a
+            |2,b
+        """.trimMargin()
+        val reader = CsvReader(StringSource(csv), CsvConfig.Default)
+
+        assertEquals("1", reader.readColumn())
+        assertEquals("a", reader.readColumn())
+        assertEquals("2", reader.readColumn())
+        assertEquals("b", reader.readColumn())
+    }
+
+    @Test
     fun testRecordNo() {
         val csv = """
             |1,a
