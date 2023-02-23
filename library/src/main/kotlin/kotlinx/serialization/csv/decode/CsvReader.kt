@@ -21,6 +21,11 @@ internal class CsvReader(private val source: Source, private val config: CsvConf
 
     private var marks = arrayListOf<Int>()
 
+    init {
+        // Skip Microsoft Excel's byte order marker, should it appear:
+        read("\uFEFF")
+    }
+
     /**
      * Read value in the next column.
      */
