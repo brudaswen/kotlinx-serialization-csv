@@ -64,14 +64,7 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
      * @param appendable The output where the CSV will be written.
      */
     fun <T> encodeSequenceToAppendable(serializer: KSerializer<T>, values: Sequence<T>, appendable: Appendable) {
-        val encoder = RecordListCsvEncoder(this, CsvWriter(appendable, config))
-        val listDescriptor = ListSerializer(serializer).descriptor
-        encoder.encodeStructure(listDescriptor) {
-            var index = 0
-            for (value in values) {
-                encodeSerializableElement(listDescriptor, index++, serializer, value)
-            }
-        }
+        values.forEach(beginEncodingToAppendable(serializer, appendable))
     }
 
     /**
@@ -84,11 +77,9 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
     @ExperimentalSerializationApi
     fun <T> beginEncodingToAppendable(serializer: KSerializer<T>, appendable: Appendable): (T) -> Unit {
         val encoder = RecordListCsvEncoder(this, CsvWriter(appendable, config))
-        val listDescriptor = ListSerializer(serializer).descriptor
-        encoder.beginStructure(listDescriptor)
         var index = 0
         return {
-            encoder.encodeSerializableElement(listDescriptor, index++, serializer, it)
+            encoder.encodeSerializableValue(serializer, it)
         }
     }
 
@@ -136,14 +127,13 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
         val csv = CsvReader(FetchSource(reader), config)
         val listDescriptor = ListSerializer(deserializer).descriptor
         val input = RecordListCsvDecoder(this, csv)
-        val structure = input.beginStructure(listDescriptor)
         var previousValue: T? = null
 
         return generateSequence {
-            val decodedIndex = structure.decodeElementIndex(listDescriptor)
+            val decodedIndex = input.decodeElementIndex(listDescriptor)
             if (decodedIndex == DECODE_DONE) return@generateSequence null
             val nextValue =
-                structure.decodeSerializableElement(listDescriptor, decodedIndex, deserializer, previousValue)
+                input.decodeSerializableElement(listDescriptor, decodedIndex, deserializer, previousValue)
             previousValue = nextValue
             nextValue
         }

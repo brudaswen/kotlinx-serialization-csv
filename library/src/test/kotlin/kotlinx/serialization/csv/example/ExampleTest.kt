@@ -185,4 +185,37 @@ class ExampleTest {
         }
         assertEquals(testData, result)
     }
+
+    @Test
+    fun testStreamingHeaders() {
+        val csv = Csv {
+            hasHeaderRecord = true
+        }
+        val testData = listOf(
+            Tire(FRONT, LEFT, 245, 35, 21),
+            Tire(FRONT, RIGHT, 245, 35, 21),
+            Tire(REAR, LEFT, 265, 35, 21),
+            Tire(REAR, RIGHT, 265, 35, 21),
+            Tire(FRONT, LEFT, 265, 35, 20),
+            Tire(FRONT, RIGHT, 265, 35, 20),
+            Tire(REAR, LEFT, 265, 35, 20),
+            Tire(REAR, RIGHT, 265, 35, 20)
+        )
+
+        val input = PipedReader()
+        val out = PipedWriter(input)
+        Thread(
+            Runnable {
+                csv.encodeSequenceToAppendable(Tire.serializer(), testData.asSequence(), out)
+                out.close()
+            }
+        ).start()
+        val result = ArrayList<Tire>()
+        csv.decodeFromReaderUsingSequence(Tire.serializer(), input) {
+            it.forEach {
+                result.add(it)
+            }
+        }
+        assertEquals(testData, result)
+    }
 }
