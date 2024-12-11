@@ -123,6 +123,7 @@ internal abstract class CsvEncoder(
             is PolymorphicKind.OPEN -> {
                 throw HeadersNotSupportedForSerialDescriptorException(descriptor)
             }
+            else -> throw Exception("not found")
         }
 
         for (i in 0 until descriptor.elementsCount) {

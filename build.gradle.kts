@@ -1,11 +1,11 @@
 plugins {
     base
-    kotlin("jvm") version "1.4.10" apply false
+    kotlin("jvm") version "2.1.0" apply false
     id("net.researchgate.release") version "2.8.1"
     id("io.codearte.nexus-staging") version "0.22.0"
 }
 
-val serializationVersion = "1.0.0"
+val serializationVersion = "2.1.0"
 
 allprojects {
     group = "de.brudaswen.kotlinx.serialization"
@@ -13,7 +13,6 @@ allprojects {
     extra["serializationVersion"] = serializationVersion
 
     repositories {
-        jcenter()
         mavenCentral()
     }
 }

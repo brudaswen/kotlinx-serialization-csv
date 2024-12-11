@@ -2,8 +2,8 @@ import java.time.Duration
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
-    id("org.jetbrains.dokka") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.1.0"
+    id("org.jetbrains.dokka") version "1.9.0"
     id("de.marcphilipp.nexus-publish") version "0.4.0"
     `maven-publish`
     signing
@@ -19,7 +19,7 @@ val testImplementation by configurations
 
 dependencies {
     api(kotlin("stdlib-jdk8"))
-    api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3")
 
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
@@ -141,8 +141,8 @@ signing {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        html.isEnabled = false
+        //xml.isEnabled = true
+        //html.isEnabled = false
     }
 }
 
