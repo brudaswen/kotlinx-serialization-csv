@@ -1,19 +1,17 @@
 plugins {
     base
-    kotlin("jvm") version "1.4.10" apply false
-    id("net.researchgate.release") version "2.8.1"
-    id("io.codearte.nexus-staging") version "0.22.0"
+    kotlin("jvm") version libs.versions.kotlin apply false
+    kotlin("plugin.serialization") version libs.versions.kotlin apply false
+    alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.nexus.publish) apply false
+    alias(libs.plugins.researchgate.release)
+    alias(libs.plugins.nexus.staging)
 }
-
-val serializationVersion = "1.0.0"
 
 allprojects {
     group = "de.brudaswen.kotlinx.serialization"
 
-    extra["serializationVersion"] = serializationVersion
-
     repositories {
-        jcenter()
         mavenCentral()
     }
 }
@@ -40,5 +38,5 @@ nexusStaging {
 }
 
 fun net.researchgate.release.ReleaseExtension.git(
-    configure: net.researchgate.release.GitAdapter.GitConfig.() -> Unit
+    configure: net.researchgate.release.GitAdapter.GitConfig.() -> Unit,
 ) = (getProperty("git") as net.researchgate.release.GitAdapter.GitConfig).configure()
