@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make `CsvConfig` public.
 - Support for streaming via Reader and Appendable (🏅 kudos to UnknownJoe796).
 - Handle Microsoft Excel's insistence on using a byte order marker (🏅 kudos to UnknownJoe796).
+- Asynchronous/Streaming support via `CsvRecordReader` and `CsvRecordWriter` (🏅 kudos to UnknownJoe796).
 
 ### Removed
 
