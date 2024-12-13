@@ -3,6 +3,7 @@ package kotlinx.serialization.csv.formats
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.configure
 import kotlinx.serialization.csv.records.Location
 import kotlinx.serialization.test.assertDecode
 import org.junit.jupiter.api.Test
@@ -31,7 +32,7 @@ class DefaultTest {
     )
 
     @Test
-    fun testCsvDefaultWithCustomConfig() = Csv(Csv.Default) {
+    fun testCsvDefaultWithCustomConfig() = Csv.configure {
         hasHeaderRecord = true
     }.assertDecode(
         "lat,lon\n0.0,1.0",

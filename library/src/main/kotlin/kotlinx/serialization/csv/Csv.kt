@@ -85,13 +85,19 @@ sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
 }
 
 /**
- * Creates an instance of [Csv] configured from the optionally given [Csv instance][from] and
- * adjusted with [action].
+ * Creates an instance of [Csv] with adjusted configuration defined by [action].
  */
 @ExperimentalSerializationApi
-fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv =
+fun Csv(action: CsvBuilder.() -> Unit): Csv =
+    Csv.configure(action)
+
+/**
+ * Creates a new instance of [Csv] based on the configuration of [this] and adjusted with [action].
+ */
+@ExperimentalSerializationApi
+fun Csv.configure(action: CsvBuilder.() -> Unit): Csv =
     Csv.Impl(
-        config = CsvBuilder(from.config).run {
+        config = CsvBuilder(config).run {
             action()
             build()
         },
