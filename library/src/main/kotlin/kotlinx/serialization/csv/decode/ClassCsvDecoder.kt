@@ -18,7 +18,7 @@ internal class ClassCsvDecoder(
     csv: Csv,
     reader: CsvReader,
     parent: CsvDecoder,
-    private val classHeaders: Headers?
+    private val classHeaders: Headers?,
 ) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
@@ -35,15 +35,17 @@ internal class ClassCsvDecoder(
                     ignoreColumn()
                     decodeElementIndex(descriptor)
                 }
+
                 null -> UNKNOWN_NAME
+
                 else -> result
             }
 
         else -> elementIndex
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
-        return when (descriptor.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
+        when (descriptor.kind) {
             StructureKind.CLASS ->
                 ClassCsvDecoder(
                     csv,
@@ -55,7 +57,6 @@ internal class ClassCsvDecoder(
             else ->
                 super.beginStructure(descriptor)
         }
-    }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         super.endStructure(descriptor)

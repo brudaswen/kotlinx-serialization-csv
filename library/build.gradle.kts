@@ -2,41 +2,23 @@ import java.time.Duration
 
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
-    id("org.jetbrains.dokka") version "1.4.10"
-    id("de.marcphilipp.nexus-publish") version "0.4.0"
+    kotlin("plugin.serialization")
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.nexus.publish)
     `maven-publish`
     signing
     jacoco
 }
 
-val serializationVersion = extra["serializationVersion"]
-
-val api by configurations
-val implementation by configurations
-val compileOnly by configurations
-val testImplementation by configurations
-
 dependencies {
-    api(kotlin("stdlib-jdk8"))
-    api("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
+    api(libs.kotlinx.serialization.core)
 
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
+    testImplementation(libs.junit.jupiter)
 }
 
-java {
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs = listOf(
-        "-Xuse-experimental=kotlin.Experimental"
-    )
+kotlin {
+    jvmToolchain(jdkVersion = 8)
 }
 
 tasks.named<Test>("test") {
@@ -141,8 +123,8 @@ signing {
 
 tasks.jacocoTestReport {
     reports {
-        xml.isEnabled = true
-        html.isEnabled = false
+        xml.required = true
+        html.required = false
     }
 }
 
