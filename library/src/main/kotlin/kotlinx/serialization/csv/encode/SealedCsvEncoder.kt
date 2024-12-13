@@ -18,11 +18,11 @@ internal class SealedCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
     parent: CsvEncoder,
-    private val sealedDesc: SerialDescriptor
+    private val sealedDesc: SerialDescriptor,
 ) : SimpleCsvEncoder(csv, writer, parent) {
 
     override fun beginStructure(
-        descriptor: SerialDescriptor
+        descriptor: SerialDescriptor,
     ): CompositeEncoder {
         val sealedChildren = sealedDesc.getElementDescriptor(1).elementDescriptors.toList()
         val index = sealedChildren.indexOf(descriptor)
@@ -33,6 +33,7 @@ internal class SealedCsvEncoder(
         return when (descriptor.kind) {
             is StructureKind.OBJECT ->
                 SealedObjectEncoder(csv, writer, this)
+
             else ->
                 super.beginStructure(descriptor)
         }
@@ -59,6 +60,6 @@ internal class SealedCsvEncoder(
     private class SealedObjectEncoder(
         csv: Csv,
         writer: CsvWriter,
-        parent: CsvEncoder
+        parent: CsvEncoder,
     ) : CsvEncoder(csv, writer, parent)
 }

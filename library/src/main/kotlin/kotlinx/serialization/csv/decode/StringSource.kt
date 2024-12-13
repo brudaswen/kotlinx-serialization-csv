@@ -42,7 +42,6 @@ internal class StringSource(private val content: String) : Source {
         position = marks.removeAt(marks.size - 1)
     }
 
-    override fun toString(): String {
-        return "StringSource(position=$position, content.length=${content.length})"
-    }
+    override fun toString(): String =
+        "StringSource(position=$position, content.length=${content.length})"
 }

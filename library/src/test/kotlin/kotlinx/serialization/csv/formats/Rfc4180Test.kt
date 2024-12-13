@@ -4,6 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
+import kotlinx.serialization.csv.configure
 import kotlinx.serialization.csv.records.Location
 import kotlinx.serialization.test.assertDecode
 import org.junit.jupiter.api.Test
@@ -23,7 +24,7 @@ class Rfc4180Test {
     )
 
     @Test
-    fun testRfc4180WithCustomConfig() = Csv(Csv.Rfc4180) {
+    fun testRfc4180WithCustomConfig() = Csv.Rfc4180.configure {
         hasHeaderRecord = true
     }.assertDecode(
         "lat,lon\r\n0.0,1.0",

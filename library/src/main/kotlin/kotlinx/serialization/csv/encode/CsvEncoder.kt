@@ -19,7 +19,7 @@ import kotlinx.serialization.modules.SerializersModule
 internal abstract class CsvEncoder(
     protected val csv: Csv,
     protected val writer: CsvWriter,
-    private val parent: CsvEncoder?
+    private val parent: CsvEncoder?,
 ) : AbstractEncoder() {
 
     override val serializersModule: SerializersModule = csv.serializersModule
@@ -36,28 +36,27 @@ internal abstract class CsvEncoder(
     }
 
     override fun beginStructure(
-        descriptor: SerialDescriptor
-    ): CompositeEncoder {
-        return when (descriptor.kind) {
+        descriptor: SerialDescriptor,
+    ): CompositeEncoder =
+        when (descriptor.kind) {
             StructureKind.LIST,
-            StructureKind.MAP ->
-                SimpleCsvEncoder(csv, writer, this)
+            StructureKind.MAP,
+                -> SimpleCsvEncoder(csv, writer, this)
 
-            StructureKind.CLASS ->
-                SimpleCsvEncoder(csv, writer, this)
+            StructureKind.CLASS,
+                -> SimpleCsvEncoder(csv, writer, this)
 
             StructureKind.OBJECT ->
                 ObjectCsvEncoder(csv, writer, this)
 
-            PolymorphicKind.SEALED ->
-                SealedCsvEncoder(csv, writer, this, descriptor)
+            PolymorphicKind.SEALED,
+                -> SealedCsvEncoder(csv, writer, this, descriptor)
 
-            PolymorphicKind.OPEN ->
-                SimpleCsvEncoder(csv, writer, this)
+            PolymorphicKind.OPEN,
+                -> SimpleCsvEncoder(csv, writer, this)
 
             else -> throw UnsupportedSerialDescriptorException(descriptor)
         }
-    }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         parent?.endChildStructure(descriptor)
@@ -120,10 +119,10 @@ internal abstract class CsvEncoder(
         when (descriptor.kind) {
             is StructureKind.LIST,
             is StructureKind.MAP,
-            is PolymorphicKind.OPEN -> {
-                throw HeadersNotSupportedForSerialDescriptorException(descriptor)
-            }
-            else -> throw Exception("not found")
+            is PolymorphicKind.OPEN,
+                -> throw HeadersNotSupportedForSerialDescriptorException(descriptor)
+
+            else -> Unit // Just continue
         }
 
         for (i in 0 until descriptor.elementsCount) {
@@ -144,6 +143,7 @@ internal abstract class CsvEncoder(
                     val headerSeparator = config.headerSeparator
                     printHeader("$name$headerSeparator", childDesc.getElementDescriptor(1))
                 }
+
                 childDesc.kind is StructureKind.OBJECT ->
                     Unit
 
@@ -165,7 +165,7 @@ internal abstract class CsvEncoder(
     protected open fun encodeColumn(
         value: String,
         isNumeric: Boolean = false,
-        isNull: Boolean = false
+        isNull: Boolean = false,
     ) {
         writer.printColumn(value, isNumeric, isNull)
     }

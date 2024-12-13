@@ -1,6 +1,5 @@
 package kotlinx.serialization.csv.config
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.modules.SerializersModule
 
@@ -66,7 +65,6 @@ class CsvBuilder internal constructor(conf: CsvConfig = CsvConfig.Default) {
      */
     var serializersModule: SerializersModule = conf.serializersModule
 
-    @OptIn(ExperimentalSerializationApi::class)
     internal fun build(): CsvConfig {
         require(delimiter != quoteChar) {
             "The quoteChar character and the delimiter cannot be the same ('$delimiter')."

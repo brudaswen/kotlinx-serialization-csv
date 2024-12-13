@@ -57,20 +57,20 @@ data class ComplexRecord(
     val h: String,
     val i: String?,
     val j: Unit,
-    val k: Enum
+    val k: Enum,
 )
 
 @Serializable
 data class SerialNameRecord(
     val first: Int,
-    @SerialName("second") val b: Int
+    @SerialName("second") val b: Int,
 )
 
 @Serializable
 data class NestedRecord(
     val time: Int,
     val name: String,
-    val data: Data
+    val data: Data,
 )
 
 @Serializable
@@ -81,17 +81,17 @@ data class Location(val lat: Double, val lon: Double)
 
 @Serializable
 object ObjectRecord {
-    @Suppress("unused")
+    @Suppress("unused", "ConstPropertyName")
     const val x = 42
 }
 
 @Serializable
 sealed class SealedRecord(val a: Int) {
     @Serializable
-    object Object : SealedRecord(1)
+    data object Object : SealedRecord(1)
 
     @Serializable
-    object OtherObject : SealedRecord(2)
+    data object OtherObject : SealedRecord(2)
 
     @Serializable
     data class Class(val x: String) : SealedRecord(42)

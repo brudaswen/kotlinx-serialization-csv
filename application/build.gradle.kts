@@ -1,15 +1,12 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.10"
+    kotlin("plugin.serialization")
 }
 
-val implementation by configurations
-
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":library"))
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+kotlin {
+    jvmToolchain(jdkVersion = 8)
 }

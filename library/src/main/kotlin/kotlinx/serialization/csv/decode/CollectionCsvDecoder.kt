@@ -14,7 +14,7 @@ import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 internal class CollectionCsvDecoder(
     csv: Csv,
     reader: CsvReader,
-    parent: CsvDecoder
+    parent: CsvDecoder,
 ) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
