@@ -25,7 +25,7 @@ import kotlinx.serialization.modules.SerializersModule
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  */
 @ExperimentalSerializationApi
-sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
+sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
 
     override val serializersModule: SerializersModule
         get() = config.serializersModule
@@ -89,10 +89,10 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
  * adjusted with [action].
  */
 @ExperimentalSerializationApi
-fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv {
-    val conf = CsvBuilder(from.config).run {
-        action()
-        build()
-    }
-    return Csv.Impl(conf)
-}
+fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv =
+    Csv.Impl(
+        config = CsvBuilder(from.config).run {
+            action()
+            build()
+        },
+    )

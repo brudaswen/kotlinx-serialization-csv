@@ -18,7 +18,7 @@ import kotlinx.serialization.modules.SerializersModule
  * @param ignoreUnknownColumns Ignore unknown columns when `hasHeaderRecord` is enabled (default: `false`).
  * @param hasTrailingDelimiter If records end with a trailing [delimiter] (default: `false`).
  */
-internal data class CsvConfig(
+data class CsvConfig(
     val delimiter: Char = ',',
     val recordSeparator: String = "\n",
     val quoteChar: Char = '"',
@@ -37,14 +37,16 @@ internal data class CsvConfig(
         /**
          * Standard *Comma Separated Value* format.
          */
-        val Default = CsvConfig()
+        val Default
+            get() = CsvConfig()
 
         /**
          * [RFC 4180](http://tools.ietf.org/html/rfc4180) *Comma Separated Value* format.
          */
-        val Rfc4180 = CsvConfig(
-            recordSeparator = "\r\n",
-            ignoreEmptyLines = false
-        )
+        val Rfc4180
+            get() = CsvConfig(
+                recordSeparator = "\r\n",
+                ignoreEmptyLines = false
+            )
     }
 }
