@@ -9,24 +9,27 @@
 Library to easily use *Kotlin Serialization* to serialize/parse CSV.
 
 All types of record classes are supported (primitives, classes, enums, nested classes, ...).
-However, CSV serialization works best if the column number if fixed. So, collections (lists, sets, maps) and 
+However, CSV serialization works best if the column number if fixed. So, collections (lists, sets, maps) and
 open classes should be avoided.
 
 ## Gradle Dependencies
+
 ```kotlin
 // Kotlin Serialization CSV
-implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:2.0.0")
+implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:2.1.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3")
 ```
 
 ## Usage
-First configure your project according to the 
+
+First configure your project according to the
 [documentation](https://github.com/Kotlin/kotlinx.serialization#setup)
 of the *Kotlin Serialization* library.
 
 ### CSV Example
+
 ```kotlin
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -69,37 +72,40 @@ fun main() {
     // ]
 }
 ```
+
 ### Pre-defined CSV formats
+
 The library comes with multiple pre-defined Csv formats that can be used out of the box.
 
-| Config                 | Description |
-|---                     |---          |
-| `Csv.Default`          | Standard Comma Separated Value format, as for `Rfc4180` but using Unix newline (`\n`) as record separator and ignoring empty lines. *Format is unstable and may change in upcoming versions.* |
-| `Csv.Rfc4180`          | Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180). |
+| Config        | Description                                                                                                                                                                                   |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Csv.Default` | Standard Comma Separated Value format, as for `Rfc4180` but using Unix newline (`\n`) as record separator and ignoring empty lines. *Format is unstable and may change in upcoming versions.* |
+| `Csv.Rfc4180` | Comma separated format as defined by [RFC 4180](http://tools.ietf.org/html/rfc4180).                                                                                                          |
 
 ### Configuration
+
 CSV serialization and parsing options can be changed by configuring the `Csv` instance during
 initialization via the `Csv { }` builder function.
 
-| Option                 | Default Value  | Description |
-|---                     |---             | ---         |
-| `delimiter`            | `,`            | The delimiter character between columns. |
-| `recordSeparator`      | `\n`           | The record separator. |
-| `quoteChar`            | `"`            | The quote character used to quote column values. |
+| Option                 | Default Value  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+|------------------------|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `delimiter`            | `,`            | The delimiter character between columns.                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `recordSeparator`      | `\n`           | The record separator.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `quoteChar`            | `"`            | The quote character used to quote column values.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `quoteMode`            | `MINIMAL`      | The quote mode used to decide if a column value should get quoted.<ul><li>`ALL`: Quotes *all* fields.</li><li>`ALL_NON_NULL`: Quotes all *non-null fields* and *fields which contain special characters*.</li><li>`ALL_NON_NUMERIC`: Quotes all *non-numeric fields* and *fields which contain special characters*.</li><li>`MINIMAL`: Quotes *fields which contain special characters*.</li><li>`NONE`: *Never* quotes fields (requires `CsvConfiguration.escapeChar` to be set).</li></ul> |
-| `escapeChar`           | `null`         | The escape character used to escape reserved characters in a column value. |
-| `nullString`           | *empty string* | The value to identify `null` values. |
-| `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing. |
-| `hasHeaderRecord`      | `false`        | First line is header record. |
-| `headerSeparator`      | `.`            | Character that is used to separate hierarchical header names. |
-| `ignoreUnknownColumns` | `false`        | Ignore unknown columns (only has effect when `hasHeaderRecord` is enabled). |
-| `hasTrailingDelimiter` | `false`        | If records end with a trailing `delimiter`. |
+| `escapeChar`           | `null`         | The escape character used to escape reserved characters in a column value.                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `nullString`           | *empty string* | The value to identify `null` values.                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `ignoreEmptyLines`     | `true`         | Ignore empty lines during parsing.                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `hasHeaderRecord`      | `false`        | First line is header record.                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `headerSeparator`      | `.`            | Character that is used to separate hierarchical header names.                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `ignoreUnknownColumns` | `false`        | Ignore unknown columns (only has effect when `hasHeaderRecord` is enabled).                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `hasTrailingDelimiter` | `false`        | If records end with a trailing `delimiter`.                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ## Requirements
 
 | Dependency             | Versions |
-|---                     |---       |
-| *Kotlin Serialization* | 1.0.0    |
+|------------------------|----------|
+| *Kotlin Serialization* | 2.1.0    |
 
 ## License
 
