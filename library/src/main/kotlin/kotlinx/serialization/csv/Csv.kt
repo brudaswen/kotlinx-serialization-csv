@@ -63,17 +63,6 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
     }
 
     /**
-     * Serialize [values] into CSV record(s).
-     *
-     * @param serializer The serializer used to serialize the given object.
-     * @param values The [Serializable] objects as a sequence.
-     * @param appendable The output where the CSV will be written.
-     */
-    fun <T> encodeSequenceToAppendable(serializer: KSerializer<T>, values: Sequence<T>, appendable: Appendable) {
-        values.forEach(beginEncodingToAppendable(serializer, appendable))
-    }
-
-    /**
      * Start serializing values into CSV record(s).
      *
      * @param serializer The serializer used to serialize the given object.
@@ -106,38 +95,6 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
      */
     fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
         FetchSource(input).decode(deserializer)
-
-    /**
-     * Serialize [value] into CSV record(s).
-     *
-     * @param serializer The serializer used to serialize the given object.
-     * @param value The [Serializable] object.
-     */
-    private fun <T> Appendable.encode(serializer: SerializationStrategy<T>, value: T) {
-        RootCsvEncoder(
-            csv = this@Csv,
-            output = this
-        ).encodeSerializableValue(serializer, value)
-    }
-
-    /**
-     * Parse CSV from [this] input into [Serializable] object.
-     *
-     * @param deserializer The deserializer used to parse the given CSV string.
-     */
-    private fun <T> Source.decode(deserializer: DeserializationStrategy<T>): T {
-        val reader = CsvReader(
-            source = this,
-            config = config
-        )
-
-        return RootCsvDecoder(
-            csv = this@Csv,
-            reader = reader,
-        ).decodeSerializableValue(deserializer).also {
-            require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
-        }
-    }
 
     /**
      * Parse CSV line-by-line from the given [reader] into a sequence.
@@ -179,6 +136,38 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
     ) {
         reader.use {
             handler(decodeSequenceFromReader(deserializer, reader))
+        }
+    }
+
+    /**
+     * Serialize [value] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param value The [Serializable] object.
+     */
+    private fun <T> Appendable.encode(serializer: SerializationStrategy<T>, value: T) {
+        RootCsvEncoder(
+            csv = this@Csv,
+            output = this
+        ).encodeSerializableValue(serializer, value)
+    }
+
+    /**
+     * Parse CSV from [this] input into [Serializable] object.
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     */
+    private fun <T> Source.decode(deserializer: DeserializationStrategy<T>): T {
+        val reader = CsvReader(
+            source = this,
+            config = config
+        )
+
+        return RootCsvDecoder(
+            csv = this@Csv,
+            reader = reader,
+        ).decodeSerializableValue(deserializer).also {
+            require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
         }
     }
 
