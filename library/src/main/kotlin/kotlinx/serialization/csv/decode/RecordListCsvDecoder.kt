@@ -13,7 +13,7 @@ import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 @OptIn(ExperimentalSerializationApi::class)
 internal class RecordListCsvDecoder(
     csv: Csv,
-    reader: CsvReader
+    reader: CsvReader,
 ) : CsvDecoder(csv, reader, null) {
 
     private var elementIndex = 0
@@ -28,16 +28,14 @@ internal class RecordListCsvDecoder(
         return if (reader.isDone) DECODE_DONE else elementIndex
     }
 
-    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
-        return when (descriptor.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
+        when (descriptor.kind) {
             StructureKind.LIST,
-            StructureKind.MAP ->
-                CollectionRecordCsvDecoder(csv, reader, this)
+            StructureKind.MAP,
+                -> CollectionRecordCsvDecoder(csv, reader, this)
 
-            else ->
-                super.beginStructure(descriptor)
+            else -> super.beginStructure(descriptor)
         }
-    }
 
     override fun endChildStructure(descriptor: SerialDescriptor) {
         elementIndex++

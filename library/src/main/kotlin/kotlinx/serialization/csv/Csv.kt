@@ -1,6 +1,11 @@
 package kotlinx.serialization.csv
 
-import kotlinx.serialization.*
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialFormat
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.StringFormat
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.decode.CsvReader
@@ -84,7 +89,6 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
  * adjusted with [action].
  */
 @ExperimentalSerializationApi
-@Suppress("FunctionName")
 fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv {
     val conf = CsvBuilder(from.config).run {
         action()

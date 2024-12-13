@@ -10,5 +10,5 @@ import kotlinx.serialization.csv.Csv
 internal open class SimpleCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
-    parent: CsvEncoder
+    parent: CsvEncoder,
 ) : CsvEncoder(csv, writer, parent)

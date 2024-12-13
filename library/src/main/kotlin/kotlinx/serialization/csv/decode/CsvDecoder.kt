@@ -21,7 +21,7 @@ import kotlin.collections.set
 internal abstract class CsvDecoder(
     protected val csv: Csv,
     protected val reader: CsvReader,
-    private val parent: CsvDecoder?
+    private val parent: CsvDecoder?,
 ) : AbstractDecoder() {
 
     override val serializersModule: SerializersModule
@@ -32,27 +32,26 @@ internal abstract class CsvDecoder(
 
     private var headers: Headers? = null
 
-    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
-        return when (descriptor.kind) {
+    override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
+        when (descriptor.kind) {
             StructureKind.LIST,
-            StructureKind.MAP ->
-                CollectionCsvDecoder(csv, reader, this)
+            StructureKind.MAP,
+                -> CollectionCsvDecoder(csv, reader, this)
 
-            StructureKind.CLASS ->
-                ClassCsvDecoder(csv, reader, this, headers)
+            StructureKind.CLASS,
+                -> ClassCsvDecoder(csv, reader, this, headers)
 
-            StructureKind.OBJECT ->
-                ObjectCsvDecoder(csv, reader, this)
+            StructureKind.OBJECT,
+                -> ObjectCsvDecoder(csv, reader, this)
 
-            PolymorphicKind.SEALED ->
-                SealedCsvDecoder(csv, reader, this, descriptor)
+            PolymorphicKind.SEALED,
+                -> SealedCsvDecoder(csv, reader, this, descriptor)
 
-            PolymorphicKind.OPEN ->
-                ClassCsvDecoder(csv, reader, this, headers)
+            PolymorphicKind.OPEN,
+                -> ClassCsvDecoder(csv, reader, this, headers)
 
             else -> throw UnsupportedSerialDescriptorException(descriptor)
         }
-    }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         parent?.endChildStructure(descriptor)
@@ -61,33 +60,19 @@ internal abstract class CsvDecoder(
     protected open fun endChildStructure(descriptor: SerialDescriptor) {
     }
 
-    override fun decodeByte(): Byte {
-        return decodeColumn().toByte()
-    }
+    override fun decodeByte(): Byte = decodeColumn().toByte()
 
-    override fun decodeShort(): Short {
-        return decodeColumn().toShort()
-    }
+    override fun decodeShort(): Short = decodeColumn().toShort()
 
-    override fun decodeInt(): Int {
-        return decodeColumn().toInt()
-    }
+    override fun decodeInt(): Int = decodeColumn().toInt()
 
-    override fun decodeLong(): Long {
-        return decodeColumn().toLong()
-    }
+    override fun decodeLong(): Long = decodeColumn().toLong()
 
-    override fun decodeFloat(): Float {
-        return decodeColumn().toFloat()
-    }
+    override fun decodeFloat(): Float = decodeColumn().toFloat()
 
-    override fun decodeDouble(): Double {
-        return decodeColumn().toDouble()
-    }
+    override fun decodeDouble(): Double = decodeColumn().toDouble()
 
-    override fun decodeBoolean(): Boolean {
-        return decodeColumn().toBoolean()
-    }
+    override fun decodeBoolean(): Boolean = decodeColumn().toBoolean()
 
     override fun decodeChar(): Char {
         val value = decodeColumn()
@@ -95,13 +80,9 @@ internal abstract class CsvDecoder(
         return value[0]
     }
 
-    override fun decodeString(): String {
-        return decodeColumn()
-    }
+    override fun decodeString(): String = decodeColumn()
 
-    override fun decodeNotNullMark(): Boolean {
-        return !reader.isNullToken()
-    }
+    override fun decodeNotNullMark(): Boolean = !reader.isNullToken()
 
     override fun decodeNull(): Nothing? {
         val value = decodeColumn()
@@ -109,9 +90,8 @@ internal abstract class CsvDecoder(
         return null
     }
 
-    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-        return enumDescriptor.getElementIndex(decodeColumn())
-    }
+    override fun decodeEnum(enumDescriptor: SerialDescriptor): Int =
+        enumDescriptor.getElementIndex(decodeColumn())
 
     protected open fun decodeColumn() = reader.readColumn()
 

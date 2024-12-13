@@ -19,7 +19,7 @@ internal class SealedCsvDecoder(
     csv: Csv,
     reader: CsvReader,
     parent: CsvDecoder,
-    private val sealedDesc: SerialDescriptor
+    private val sealedDesc: SerialDescriptor,
 ) : CsvDecoder(csv, reader, parent) {
 
     private var elementIndex = 0
@@ -39,6 +39,7 @@ internal class SealedCsvDecoder(
         return when (descriptor.kind) {
             is StructureKind.OBJECT ->
                 SealedObjectDecoder(csv, reader, this)
+
             else ->
                 super.beginStructure(descriptor)
         }
@@ -72,7 +73,7 @@ internal class SealedCsvDecoder(
     private class SealedObjectDecoder(
         csv: Csv,
         reader: CsvReader,
-        parent: CsvDecoder
+        parent: CsvDecoder,
     ) : CsvDecoder(csv, reader, parent) {
         override fun decodeElementIndex(descriptor: SerialDescriptor): Int =
             DECODE_DONE

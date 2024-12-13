@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 @Serializable
 data class LocationRecord(
@@ -17,7 +17,7 @@ data class LocationRecord(
     val position: Position,
     val driver: Person,
     val vehicle: Vehicle,
-    val vehicleData: VehicleData
+    val vehicleData: VehicleData,
 )
 
 @Serializable
@@ -25,14 +25,14 @@ data class VehiclePartRecord(
     val id: Long,
     val vehicle: Vehicle,
     val part: Part,
-    val wear: Double
+    val wear: Double,
 )
 
 @Serializable
 data class VehicleFeaturesRecord(
     val vehicle: Vehicle,
     val features: List<Feature>?,
-    val map: Map<Feature, Int>?
+    val map: Map<Feature, Int>?,
 )
 
 @Serializable
@@ -41,14 +41,14 @@ data class Person(
     val foreName: String,
     val lastName: String,
     val birthday: Long?,
-    @Transient val secret: String? = null
+    @Transient val secret: String? = null,
 )
 
 @Serializable
 data class Vehicle(
     val uuid: UUID,
     val type: VehicleType,
-    val brand: String
+    val brand: String,
 )
 
 @Serializable
@@ -62,31 +62,31 @@ enum class VehicleType {
 @Serializable
 data class Position(
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
 )
 
 @Serializable
 data class VehicleData(
     val speed: Double?,
-    val consumption: Consumption
+    val consumption: Consumption,
 )
 
 @Serializable
 sealed class Consumption {
     @Serializable
     @SerialName("Unknown")
-    object Unknown : Consumption()
+    data object Unknown : Consumption()
 
     @Serializable
     @SerialName("Combustion")
     data class Combustion(
-        val consumptionLiterPer100Km: Double
+        val consumptionLiterPer100Km: Double,
     ) : Consumption()
 
     @Serializable
     @SerialName("Electric")
     data class Electric(
-        val consumptionKWhPer100Km: Double
+        val consumptionKWhPer100Km: Double,
     ) : Consumption()
 }
 
@@ -99,7 +99,7 @@ data class Tire(
     private val side: Side,
     private val width: Int,
     private val aspectRatio: Int,
-    private val diameter: Int
+    private val diameter: Int,
 ) : Part {
     override fun toString() = "Tire[$width/${aspectRatio}R$diameter]"
 
@@ -111,7 +111,7 @@ data class Tire(
 @SerialName("Oil")
 data class Oil(
     private val viscosityCold: Int,
-    private val viscosityWarm: Int
+    private val viscosityWarm: Int,
 ) : Part {
     override fun toString() = "Oil[${viscosityCold}W$viscosityWarm]"
 }

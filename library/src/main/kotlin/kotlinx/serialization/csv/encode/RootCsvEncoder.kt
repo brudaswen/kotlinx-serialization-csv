@@ -16,25 +16,29 @@ import kotlinx.serialization.encoding.CompositeEncoder
 @OptIn(ExperimentalSerializationApi::class)
 internal class RootCsvEncoder(
     csv: Csv,
-    writer: CsvWriter
+    writer: CsvWriter,
 ) : CsvEncoder(csv, writer, null) {
 
-    internal constructor(csv: Csv, output: Appendable) :
-            this(csv, CsvWriter(output, csv.config))
+    internal constructor(
+        csv: Csv,
+        output: Appendable,
+    ) : this(
+        csv = csv,
+        writer = CsvWriter(output, csv.config)
+    )
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
-        collectionSize: Int
-    ): CompositeEncoder {
-        return if (descriptor.kind == StructureKind.LIST) {
+        collectionSize: Int,
+    ): CompositeEncoder =
+        if (descriptor.kind == StructureKind.LIST) {
             RecordListCsvEncoder(csv, writer)
         } else {
             super.beginCollection(descriptor, collectionSize)
         }
-    }
 
     override fun beginStructure(
-        descriptor: SerialDescriptor
+        descriptor: SerialDescriptor,
     ): CompositeEncoder {
         if (config.hasHeaderRecord && writer.isFirstRecord) {
             printHeaderRecord(descriptor)
