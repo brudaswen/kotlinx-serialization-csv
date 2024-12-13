@@ -9,7 +9,7 @@ import kotlinx.serialization.csv.config.QuoteMode
  * To write one CSV record, call [beginRecord], followed by multiple calls to [printColumn] and
  * finally call [endRecord] to finish the record.
  */
-internal class CsvWriter(private val sb: Appendable, private val config: CsvConfig) {
+internal class CsvWriter(private val output: Appendable, private val config: CsvConfig) {
 
     var isFirstRecord = true
     private var isFirstColumn = true
@@ -20,7 +20,7 @@ internal class CsvWriter(private val sb: Appendable, private val config: CsvConf
      */
     fun beginRecord() {
         if (!isFirstRecord) {
-            sb.append(config.recordSeparator)
+            output.append(config.recordSeparator)
         }
     }
 
@@ -64,19 +64,19 @@ internal class CsvWriter(private val sb: Appendable, private val config: CsvConf
                 escapeCharacters = "$escapeChar$delimiter$quoteChar$recordSeparator",
                 escapeChar = escapeChar
             )
-            sb.append(escapedValue)
+            output.append(escapedValue)
         } else if (mode == WriteMode.QUOTED || mode == WriteMode.ESCAPED) {
             val escapedValue = value.replace("$quoteChar", "$quoteChar$quoteChar")
-            sb.append(quoteChar).append(escapedValue).append(quoteChar)
+            output.append(quoteChar).append(escapedValue).append(quoteChar)
         } else {
-            sb.append(value)
+            output.append(value)
         }
     }
 
     /** End the current column (which writes the column delimiter). */
     private fun nextColumn() {
         if (!isFirstColumn) {
-            sb.append(config.delimiter)
+            output.append(config.delimiter)
         }
         isFirstColumn = false
     }
