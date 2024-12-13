@@ -11,10 +11,12 @@ import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.decode.CsvReader
 import kotlinx.serialization.csv.decode.FetchSource
 import kotlinx.serialization.csv.decode.RootCsvDecoder
+import kotlinx.serialization.csv.decode.Source
 import kotlinx.serialization.csv.decode.StringSource
 import kotlinx.serialization.csv.encode.RootCsvEncoder
 import kotlinx.serialization.modules.SerializersModule
 import java.io.Reader
+import java.io.StringWriter
 
 /**
  * The main entry point to work with CSV serialization.
@@ -27,7 +29,7 @@ import java.io.Reader
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  */
 @ExperimentalSerializationApi
-sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
+sealed class Csv(val config: CsvConfig) : StringFormat {
 
     override val serializersModule: SerializersModule
         get() = config.serializersModule
@@ -38,21 +40,20 @@ sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
      * @param serializer The serializer used to serialize the given object.
      * @param value The [Serializable] object.
      */
-    override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String {
-        val result = StringBuilder()
-        RootCsvEncoder(this, result).encodeSerializableValue(serializer, value)
-        return result.toString()
-    }
+    override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String =
+        StringWriter().apply {
+            encodeTo(serializer, value, this)
+        }.toString()
 
     /**
      * Serialize [value] into CSV record(s).
      *
      * @param serializer The serializer used to serialize the given object.
      * @param value The [Serializable] object.
-     * @param appendable The output where the CSV will be written.
+     * @param output The output where the CSV will be written.
      */
-    fun <T> encodeToAppendable(serializer: SerializationStrategy<T>, value: T, appendable: Appendable) {
-        RootCsvEncoder(this, appendable).encodeSerializableValue(serializer, value)
+    fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: Appendable) {
+        output.encode(serializer, value)
     }
 
     /**
@@ -61,29 +62,47 @@ sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
      * @param deserializer The deserializer used to parse the given CSV string.
      * @param string The CSV string to parse.
      */
-    override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T {
-        val reader = CsvReader(StringSource(string), config)
-        val input = RootCsvDecoder(this, reader)
-        val result = input.decodeSerializableValue(deserializer)
+    override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T =
+        StringSource(string).decode(deserializer)
 
-        require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
-        return result
+    /**
+     * Parse CSV from the given [input] into [Serializable] object.
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     * @param input The CSV input to parse.
+     */
+    fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
+        FetchSource(input).decode(deserializer)
+
+    /**
+     * Serialize [value] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param value The [Serializable] object.
+     */
+    private fun <T> Appendable.encode(serializer: SerializationStrategy<T>, value: T) {
+        RootCsvEncoder(
+            csv = this@Csv,
+            output = this
+        ).encodeSerializableValue(serializer, value)
     }
 
     /**
-     * Parse CSV from the given [reader] into [Serializable] object.
+     * Parse CSV from [this] input into [Serializable] object.
      *
      * @param deserializer The deserializer used to parse the given CSV string.
-     * @param reader The CSV reader to parse.
      */
-    fun <T> decodeFromReader(deserializer: DeserializationStrategy<T>, reader: Reader): T {
-        return reader.use {
-            val csv = CsvReader(FetchSource(it), config)
-            val input = RootCsvDecoder(this, csv)
-            val result = input.decodeSerializableValue(deserializer)
+    private fun <T> Source.decode(deserializer: DeserializationStrategy<T>): T {
+        val reader = CsvReader(
+            source = this,
+            config = config
+        )
 
-            require(csv.isDone) { "Reader has not consumed the whole input: $csv" }
-            result
+        return RootCsvDecoder(
+            csv = this@Csv,
+            reader = reader,
+        ).decodeSerializableValue(deserializer).also {
+            require(reader.isDone) { "Reader has not consumed the whole input: $reader" }
         }
     }
 

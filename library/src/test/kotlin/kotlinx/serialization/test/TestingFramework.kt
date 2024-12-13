@@ -2,10 +2,12 @@
  * Copyright 2017-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package kotlinx.serialization.test
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.StringFormat
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvDecodingException
 import java.io.StringReader
@@ -25,10 +27,10 @@ inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
     if (printResult) println("[Restored form] $restored")
     assertEquals(original, restored)
 
-    val string2 = buildString { encodeToAppendable(serializer, original, this) }
+    val string2 = buildString { encodeTo(serializer, original, this) }
     if (printResult) println("[Serialized form, stream] $string2")
     assertEquals(expected, string2)
-    val restored2 = decodeFromReader(serializer, StringReader(string2))
+    val restored2 = decodeFrom(serializer, StringReader(string2))
     if (printResult) println("[Restored form, stream] $restored2")
     assertEquals(original, restored2)
 
@@ -46,7 +48,7 @@ inline fun <reified T : Any> Csv.assertDecode(
     if (printResult) println("[Restored form] $restored")
     assertEquals(expected, restored)
 
-    val restored2 = decodeFromReader(serializer, StringReader(input))
+    val restored2 = decodeFrom(serializer, StringReader(input))
     if (printResult) println("[Restored form] $restored2")
     assertEquals(expected, restored2)
 }
