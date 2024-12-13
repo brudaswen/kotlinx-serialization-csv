@@ -15,6 +15,7 @@ dependencies {
 
     testImplementation(kotlin("test-junit5"))
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 kotlin {

@@ -1,5 +1,6 @@
 package kotlinx.serialization.csv.decode
 
+import java.io.EOFException
 import java.io.Reader
 
 internal class FetchSource(
@@ -20,17 +21,26 @@ internal class FetchSource(
     override var offset: Int = 0
         private set
 
-    private var next: Char? = getChar()
-    private fun nextChar(): Char {
-        val n = next ?: throw IllegalStateException("Out of characters")
-        next = getChar()
-        nextPosition++
-        return n
-    }
-
     private var queue = ArrayList<Char>(2048)
     private var marks = ArrayList<Int>(2048)
     private var queueOffset = 0
+
+    private var next: Char? = null
+        get() {
+            if (field == null && nextPosition == 0) {
+                // Reading first char has to happen lazily to avoid blocking read calls
+                // during the initialization of the FetchSource.
+                field = getChar()
+            }
+            return field
+        }
+
+    private fun nextChar(): Char {
+        val nextChar = next ?: throw EOFException("No more characters to read.")
+        next = getChar()
+        nextPosition++
+        return nextChar
+    }
 
     override fun canRead(): Boolean = offset <= nextPosition
 

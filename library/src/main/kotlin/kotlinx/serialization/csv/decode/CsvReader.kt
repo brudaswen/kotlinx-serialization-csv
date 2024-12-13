@@ -5,7 +5,17 @@ import kotlinx.serialization.csv.config.CsvConfig
 /**
  * Reader that parses CSV input.
  */
-internal class CsvReader(private val source: Source, private val config: CsvConfig) {
+internal class CsvReader(source: Source, private val config: CsvConfig) {
+
+    private val source: Source by lazy {
+        source.also {
+            // Skip Microsoft Excel's byte order marker, should it appear.
+            // This has to happen lazily to avoid blocking read calls during the initialization of the CsvReader.
+            if (source.peek() == '\uFEFF') {
+                source.read()
+            }
+        }
+    }
 
     val offset
         get() = source.offset
@@ -20,11 +30,6 @@ internal class CsvReader(private val source: Source, private val config: CsvConf
         get() = !source.canRead()
 
     private var marks = arrayListOf<Int>()
-
-    init {
-        // Skip Microsoft Excel's byte order marker, should it appear:
-        read("\uFEFF")
-    }
 
     /**
      * Read value in the next column.
