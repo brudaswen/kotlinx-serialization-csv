@@ -1,6 +1,11 @@
 package kotlinx.serialization.csv
 
-import kotlinx.serialization.*
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialFormat
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.StringFormat
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.decode.CsvReader
@@ -22,7 +27,7 @@ import java.io.Reader
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  */
 @ExperimentalSerializationApi
-sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
+sealed class Csv(val config: CsvConfig) : SerialFormat, StringFormat {
 
     override val serializersModule: SerializersModule
         get() = config.serializersModule
@@ -110,15 +115,20 @@ sealed class Csv(internal val config: CsvConfig) : SerialFormat, StringFormat {
 }
 
 /**
- * Creates an instance of [Csv] configured from the optionally given [Csv instance][from] and
- * adjusted with [action].
+ * Creates an instance of [Csv] with adjusted configuration defined by [action].
  */
 @ExperimentalSerializationApi
-@Suppress("FunctionName")
-fun Csv(from: Csv = Csv.Default, action: CsvBuilder.() -> Unit): Csv {
-    val conf = CsvBuilder(from.config).run {
-        action()
-        build()
-    }
-    return Csv.Impl(conf)
-}
+fun Csv(action: CsvBuilder.() -> Unit): Csv =
+    Csv.configure(action)
+
+/**
+ * Creates a new instance of [Csv] based on the configuration of [this] and adjusted with [action].
+ */
+@ExperimentalSerializationApi
+fun Csv.configure(action: CsvBuilder.() -> Unit): Csv =
+    Csv.Impl(
+        config = CsvBuilder(config).run {
+            action()
+            build()
+        },
+    )

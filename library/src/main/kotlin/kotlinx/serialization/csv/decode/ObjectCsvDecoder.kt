@@ -15,7 +15,7 @@ import kotlinx.serialization.encoding.CompositeDecoder.Companion.UNKNOWN_NAME
 internal class ObjectCsvDecoder(
     csv: Csv,
     reader: CsvReader,
-    parent: CsvDecoder
+    parent: CsvDecoder,
 ) : CsvDecoder(csv, reader, parent) {
 
     override fun decodeSequentially(): Boolean = true

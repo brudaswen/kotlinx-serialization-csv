@@ -14,7 +14,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 internal class ObjectCsvEncoder(
     csv: Csv,
     writer: CsvWriter,
-    parent: CsvEncoder
+    parent: CsvEncoder,
 ) : SimpleCsvEncoder(csv, writer, parent) {
 
     override fun endStructure(descriptor: SerialDescriptor) {

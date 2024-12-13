@@ -11,11 +11,11 @@ import kotlinx.serialization.encoding.CompositeEncoder
 @OptIn(ExperimentalSerializationApi::class)
 internal class RecordListCsvEncoder(
     csv: Csv,
-    writer: CsvWriter
+    writer: CsvWriter,
 ) : CsvEncoder(csv, writer, null) {
 
     override fun beginStructure(
-        descriptor: SerialDescriptor
+        descriptor: SerialDescriptor,
     ): CompositeEncoder {
         // For complex records: Begin a new record and end it in [endChildStructure]
         if (config.hasHeaderRecord && writer.isFirstRecord) {
