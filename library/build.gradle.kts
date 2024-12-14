@@ -18,6 +18,10 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
+java {
+    withSourcesJar()
+}
+
 kotlin {
     jvmToolchain(jdkVersion = 8)
 }
