@@ -3,6 +3,7 @@ import java.time.Duration
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    alias(libs.plugins.kotest.multiplatform)
     alias(libs.plugins.dokka)
     alias(libs.plugins.nexus.publish)
     `maven-publish`
@@ -14,7 +15,8 @@ dependencies {
     api(libs.kotlinx.serialization.core)
 
     testImplementation(kotlin("test-junit5"))
-    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotest.engine)
+    testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
