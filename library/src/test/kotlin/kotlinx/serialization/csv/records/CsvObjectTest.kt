@@ -1,11 +1,11 @@
 package kotlinx.serialization.csv.records
 
+import io.kotest.assertions.throwables.shouldThrow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.test.assertEncodeAndDecode
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 
 /**
@@ -43,7 +43,7 @@ class CsvObjectTest {
 
     @Test
     fun testInvalidObject() {
-        assertThrows<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             Csv.decodeFromString(
                 ObjectRecord.serializer(),
                 "kotlinx.serialization.csv.records.InvalidName"
