@@ -7,7 +7,7 @@ import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.configure
 import kotlinx.serialization.csv.records.Location
 import kotlinx.serialization.test.assertDecode
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 
 @OptIn(ExperimentalSerializationApi::class)
 class Rfc4180Test {

@@ -1,6 +1,6 @@
 [versions]
 dokka = "1.9.20"
-junit-jupiter = "5.11.0"
+kotest = "5.0.2"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.9.0"
 kotlinx-serialization-core = "1.7.3"
@@ -9,11 +9,13 @@ nexus-staging = "0.30.0"
 researchgate-release = "3.0.2"
 
 [libraries]
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+kotest-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization-core" }
 
 [plugins]
+kotest-multiplatform = { id = "io.kotest.multiplatform", version.ref = "kotest" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 nexus-publish = { id = "de.marcphilipp.nexus-publish", version.ref = "nexus-publish" }
 nexus-staging = { id = "io.codearte.nexus-staging", version.ref = "nexus-staging" }
