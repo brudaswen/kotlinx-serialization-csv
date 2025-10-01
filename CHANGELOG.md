@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2025-10-01
+
+### Changed
+
+- Update to Kotlin 2.2.20.
+- Update to Kotlinx-Serialization 1.9.0.
+
 ## [2.1.0] - 2024-12-13
 
 ### Changed
