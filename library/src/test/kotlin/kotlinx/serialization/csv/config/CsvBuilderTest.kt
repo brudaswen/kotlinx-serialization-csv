@@ -1,13 +1,13 @@
 package kotlinx.serialization.csv.config
 
-import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
+import kotlin.test.assertFailsWith
 
 class CsvBuilderTest {
 
     @Test
     fun `should fail if delimiter equals quoteChar`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 delimiter = '!'
                 quoteChar = '!'
@@ -17,7 +17,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if delimiter equals escapeChar`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 delimiter = '!'
                 escapeChar = '!'
@@ -27,7 +27,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if escapeChar not set`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 quoteMode = QuoteMode.NONE
                 escapeChar = null
@@ -37,7 +37,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if recordSeparator is empty`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 recordSeparator = ""
             }.build()
@@ -46,7 +46,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if recordSeparator is too long`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 recordSeparator = "\r\n\n"
             }.build()
@@ -55,7 +55,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if recordSeparator is delimiter`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 delimiter = ','
                 recordSeparator = ","
@@ -65,7 +65,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if recordSeparator is quoteChar`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 quoteChar = '"'
                 recordSeparator = "\""
@@ -75,7 +75,7 @@ class CsvBuilderTest {
 
     @Test
     fun `should fail if recordSeparator is escapeChar`() {
-        assertThrows<IllegalArgumentException> {
+        assertFailsWith<IllegalArgumentException> {
             CsvBuilder().apply {
                 escapeChar = '\\'
                 recordSeparator = "\\"
