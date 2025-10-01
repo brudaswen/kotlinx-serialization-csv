@@ -22,10 +22,6 @@ java {
     withSourcesJar()
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
 tasks.withType<GenerateModuleMetadata> {
     enabled = !isSnapshot()
 }
