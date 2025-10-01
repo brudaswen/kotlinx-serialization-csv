@@ -37,25 +37,24 @@ val dokkaJavadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaGeneratePublicationJavadoc)
 }
 
-val publishRelease = tasks.register("publishRelease") {
+tasks.register("publishRelease") {
     description = "Publish to Maven Central (iff this is a release version)."
+
+    dependsOn("publishToSonatype", "closeAndReleaseRepository")
 }
 
-val publishSnapshot = tasks.register("publishSnapshot") {
+tasks.register("publishSnapshot") {
     description = "Publish to Maven Central (iff this is a snapshot version)."
+
+    dependsOn("publishToSonatype")
 }
 
 tasks.whenTaskAdded {
     if (name == "publishToSonatype") {
         val publishToSonatype = this
         if (!isSnapshot()) {
-            publishRelease.configure { dependsOn(publishToSonatype) }
-
             val closeAndReleaseRepository = rootProject.tasks.getByName("closeAndReleaseRepository")
             closeAndReleaseRepository.mustRunAfter(publishToSonatype)
-            publishRelease.configure { dependsOn(closeAndReleaseRepository) }
-        } else {
-            publishSnapshot.configure { dependsOn(publishToSonatype) }
         }
     }
 }
