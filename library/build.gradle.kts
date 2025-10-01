@@ -1,10 +1,7 @@
-import java.time.Duration
-
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    alias(libs.plugins.dokka)
-    alias(libs.plugins.nexus.publish)
+    alias(libs.plugins.dokka.javadoc)
     `maven-publish`
     signing
     jacoco
@@ -13,20 +10,19 @@ plugins {
 dependencies {
     api(libs.kotlinx.serialization.core)
 
-    testImplementation(kotlin("test-junit5"))
-    testImplementation(libs.junit.jupiter)
+    testImplementation(kotlin("test"))
     testImplementation(libs.kotlinx.coroutines.test)
+}
+
+kotlin {
+    jvmToolchain(8)
 }
 
 java {
     withSourcesJar()
 }
 
-kotlin {
-    jvmToolchain(jdkVersion = 8)
-}
-
-tasks.named<Test>("test") {
+tasks.test {
     useJUnitPlatform()
 }
 
@@ -34,18 +30,18 @@ tasks.withType<GenerateModuleMetadata> {
     enabled = !isSnapshot()
 }
 
-val dokkaJavadocJar by tasks.creating(Jar::class) {
+val dokkaJavadocJar by tasks.registering(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
-    from(tasks.dokkaJavadoc)
+    from(tasks.dokkaGeneratePublicationJavadoc)
 }
 
-val publishRelease = tasks.create("publishRelease") {
+val publishRelease = tasks.register("publishRelease") {
     description = "Publish to Maven Central (iff this is a release version)."
 }
 
-val publishSnapshot = tasks.create("publishSnapshot") {
+val publishSnapshot = tasks.register("publishSnapshot") {
     description = "Publish to Maven Central (iff this is a snapshot version)."
 }
 
@@ -53,13 +49,13 @@ tasks.whenTaskAdded {
     if (name == "publishToSonatype") {
         val publishToSonatype = this
         if (!isSnapshot()) {
-            publishRelease.dependsOn(publishToSonatype)
+            publishRelease.configure { dependsOn(publishToSonatype) }
 
             val closeAndReleaseRepository = rootProject.tasks.getByName("closeAndReleaseRepository")
             closeAndReleaseRepository.mustRunAfter(publishToSonatype)
-            publishRelease.dependsOn(closeAndReleaseRepository)
+            publishRelease.configure { dependsOn(closeAndReleaseRepository) }
         } else {
-            publishSnapshot.dependsOn(publishToSonatype)
+            publishSnapshot.configure { dependsOn(publishToSonatype) }
         }
     }
 }
@@ -104,18 +100,6 @@ publishing {
     }
 }
 
-nexusPublishing {
-    repositories {
-        sonatype()
-    }
-
-    clientTimeout.set(Duration.ofMinutes(30))
-    val useSnapshot: String? by project
-    if (useSnapshot != null) {
-        useStaging.set(useSnapshot?.toBoolean()?.not())
-    }
-}
-
 signing {
     setRequired { !isSnapshot() }
 
@@ -138,5 +122,3 @@ tasks.check {
 }
 
 fun isSnapshot() = version.toString().endsWith("-SNAPSHOT")
-
-fun url(path: String) = uri(path).toURL()
