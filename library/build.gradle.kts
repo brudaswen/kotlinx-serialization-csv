@@ -41,14 +41,22 @@ tasks.register("publishRelease") {
     group = "publishing"
     description = "Publish to Maven Central (iff this is a release version)."
 
-    dependsOn("publishToSonatype", "closeAndReleaseStagingRepositories")
+    onlyIf { !isSnapshot() }
+
+    if (!isSnapshot()) {
+        dependsOn("publishToSonatype", "closeAndReleaseStagingRepositories")
+    }
 }
 
 tasks.register("publishSnapshot") {
     group = "publishing"
     description = "Publish to Maven Central (iff this is a snapshot version)."
 
-    dependsOn("publishToSonatype")
+    onlyIf { isSnapshot() }
+
+    if (isSnapshot()) {
+        dependsOn("publishToSonatype")
+    }
 }
 
 publishing {
