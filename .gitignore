@@ -7,3 +7,4 @@ out
 target
 local.properties
 .kotlin
+.DS_Store

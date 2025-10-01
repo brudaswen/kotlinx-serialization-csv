@@ -19,7 +19,7 @@ open classes should be avoided.
 implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:2.1.0")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.3")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.9.0")
 ```
 
 ## Usage
@@ -105,7 +105,7 @@ initialization via the `Csv { }` builder function.
 
 | Dependency             | Versions |
 |------------------------|----------|
-| *Kotlin Serialization* | 2.1.0    |
+| *Kotlin Serialization* | 1.9.0    |
 
 ## License
 

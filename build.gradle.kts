@@ -1,11 +1,12 @@
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.toJavaDuration
+
 plugins {
-    base
     kotlin("jvm") version libs.versions.kotlin apply false
     kotlin("plugin.serialization") version libs.versions.kotlin apply false
-    alias(libs.plugins.dokka) apply false
-    alias(libs.plugins.nexus.publish) apply false
-    alias(libs.plugins.researchgate.release)
+    alias(libs.plugins.nexus.publish)
     alias(libs.plugins.nexus.staging)
+    alias(libs.plugins.researchgate.release)
 }
 
 allprojects {
@@ -37,6 +38,15 @@ nexusStaging {
     delayBetweenRetriesInMillis = 10_000
 }
 
-fun net.researchgate.release.ReleaseExtension.git(
-    configure: net.researchgate.release.GitAdapter.GitConfig.() -> Unit,
-) = (getProperty("git") as net.researchgate.release.GitAdapter.GitConfig).configure()
+nexusPublishing {
+    repositories {
+        sonatype()
+    }
+
+    clientTimeout = 30.minutes.toJavaDuration()
+
+    val useSnapshot: String? by project
+    if (useSnapshot != null) {
+        useStaging.set(useSnapshot?.toBoolean()?.not())
+    }
+}
