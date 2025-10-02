@@ -1,14 +1,12 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
-@file:UseSerializers(UUIDSerializer::class, LocalDateTimeSerializer::class)
 
 package kotlinx.serialization.csv.example
 
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.UseSerializers
-import java.time.LocalDateTime
-import java.util.UUID
+import kotlin.uuid.Uuid
 
 @Serializable
 data class LocationRecord(
@@ -46,7 +44,7 @@ data class Person(
 
 @Serializable
 data class Vehicle(
-    val uuid: UUID,
+    val uuid: Uuid,
     val type: VehicleType,
     val brand: String,
 )

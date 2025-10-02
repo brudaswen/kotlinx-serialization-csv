@@ -21,7 +21,8 @@ class CsvSealedKindTest {
         serializer = SealedRecord.serializer(),
     )
 
-    @Ignore("For now, serialization library does not provide the required information to write multiple columns")
+    // For now, serialization library does not provide the required information to write multiple columns
+    @Ignore
     @Test
     fun testSealedNullable() = Csv.assertEncodeAndDecode(
         expected = ",,",

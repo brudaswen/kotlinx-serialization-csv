@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
@@ -23,11 +24,10 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.test.assertEncodeAndDecode
 import java.io.PipedReader
 import java.io.PipedWriter
-import java.time.LocalDateTime
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.uuid.Uuid
 
 /**
  * Test complex [LocationRecord].
@@ -41,19 +41,19 @@ class ExampleTest {
 
     // Vehicles
     private val tesla = Vehicle(
-        uuid = UUID.fromString("f9682dcb-30f7-4e88-915e-60e3b2758da7"),
+        uuid = Uuid.parse("f9682dcb-30f7-4e88-915e-60e3b2758da7"),
         type = VehicleType.CAR,
         brand = "Tesla",
     )
 
     private val porsche = Vehicle(
-        uuid = UUID.fromString("5e1afd88-97a2-4373-a83c-44a49c552abd"),
+        uuid = Uuid.parse("5e1afd88-97a2-4373-a83c-44a49c552abd"),
         type = VehicleType.CAR,
         brand = "Porsche",
     )
 
     private val harley = Vehicle(
-        uuid = UUID.fromString("c038c27b-a3fd-4e35-b6ac-ab06d747e16c"),
+        uuid = Uuid.parse("c038c27b-a3fd-4e35-b6ac-ab06d747e16c"),
         type = VehicleType.BIKE,
         brand = "Harley",
     )
@@ -71,7 +71,7 @@ class ExampleTest {
         original = listOf(
             LocationRecord(
                 id = 0,
-                date = LocalDateTime.of(2020, 2, 1, 13, 33),
+                date = LocalDateTime(2020, 2, 1, 13, 33),
                 position = Position(0.0, 0.0),
                 driver = jonSmith,
                 vehicle = tesla,
@@ -79,7 +79,7 @@ class ExampleTest {
             ),
             LocationRecord(
                 id = 1,
-                date = LocalDateTime.of(2020, 2, 1, 13, 37),
+                date = LocalDateTime(2020, 2, 1, 13, 37),
                 position = Position(0.1, 0.1),
                 driver = jonSmith,
                 vehicle = tesla,
@@ -87,7 +87,7 @@ class ExampleTest {
             ),
             LocationRecord(
                 id = 9_000,
-                date = LocalDateTime.of(2020, 2, 5, 7, 59),
+                date = LocalDateTime(2020, 2, 5, 7, 59),
                 position = Position(48.137154, 11.576124),
                 driver = janeDoe,
                 vehicle = harley,
