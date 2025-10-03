@@ -5,7 +5,9 @@ private const val EOF = -1
 /**
  * Character stream generated from a [String].
  */
-internal class StringSource(private val content: String) : Source {
+internal class StringSource(
+    private val content: String,
+) : Source {
 
     override val offset: Int
         get() = position

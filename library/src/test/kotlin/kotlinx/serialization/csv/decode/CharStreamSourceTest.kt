@@ -7,24 +7,24 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class FetchSourceTest {
+class CharStreamSourceTest {
 
     @Test
     fun testCanRead() {
-        val source = FetchSource("")
+        val source = CharStreamSource("")
         assertTrue(source.canRead())
     }
 
     @Test
     fun testNotCanRead() {
-        val source = FetchSource("")
+        val source = CharStreamSource("")
         source.read()
         assertFalse(source.canRead())
     }
 
     @Test
     fun testRead() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.read())
         assertEquals('b', source.read())
         assertEquals('c', source.read())
@@ -33,19 +33,19 @@ class FetchSourceTest {
 
     @Test
     fun testReadEof() {
-        val source = FetchSource("")
+        val source = CharStreamSource("")
         assertNull(source.read())
     }
 
     @Test
     fun testPeek() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.peek())
     }
 
     @Test
     fun testPeekMultipleTimes() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.peek())
         assertEquals('a', source.peek())
         assertEquals('a', source.peek())
@@ -53,13 +53,13 @@ class FetchSourceTest {
 
     @Test
     fun testPeekEof() {
-        val source = FetchSource("")
+        val source = CharStreamSource("")
         assertNull(source.peek())
     }
 
     @Test
     fun testMarkUnmark() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -69,7 +69,7 @@ class FetchSourceTest {
 
     @Test
     fun testMarkMarkUnmarkReset() {
-        val source = FetchSource("0123456789")
+        val source = CharStreamSource("0123456789")
         assertEquals('0', source.read())
         source.mark()
         assertEquals('1', source.read())
@@ -83,7 +83,7 @@ class FetchSourceTest {
 
     @Test
     fun testMarkReset() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -93,7 +93,7 @@ class FetchSourceTest {
 
     @Test
     fun testMarkResetMultiple() {
-        val source = FetchSource("abcdef")
+        val source = CharStreamSource("abcdef")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -107,7 +107,7 @@ class FetchSourceTest {
 
     @Test
     fun testMarkPeekRead() {
-        val source = FetchSource("abc")
+        val source = CharStreamSource("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.peek())
@@ -125,5 +125,8 @@ class FetchSourceTest {
 }
 
 @Suppress("TestFunctionName")
-private fun FetchSource(string: String): FetchSource =
-    FetchSource(StringReader(string))
+private fun CharStreamSource(
+    string: String,
+): CharStreamSource = CharStreamSource(
+    reader = StringReader(string)
+)

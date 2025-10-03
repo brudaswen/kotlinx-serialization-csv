@@ -9,7 +9,10 @@ import kotlinx.serialization.csv.config.QuoteMode
  * To write one CSV record, call [beginRecord], followed by multiple calls to [printColumn] and
  * finally call [endRecord] to finish the record.
  */
-internal class CsvWriter(private val output: Appendable, private val config: CsvConfig) {
+internal class CsvWriter(
+    private val output: Appendable,
+    private val config: CsvConfig,
+) {
 
     var isFirstRecord = true
     private var isFirstColumn = true
@@ -116,6 +119,6 @@ internal class CsvWriter(private val output: Appendable, private val config: Csv
         ESCAPED,
 
         /** Write plain value without any quoting or escaping. */
-        PLAIN
+        PLAIN,
     }
 }

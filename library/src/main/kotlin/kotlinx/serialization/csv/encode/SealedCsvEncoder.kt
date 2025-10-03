@@ -48,7 +48,7 @@ internal class SealedCsvEncoder(
     }
 
     private fun printEmptyColumns(descriptor: SerialDescriptor) {
-        for (innerDesc in descriptor.elementDescriptors.toList()) {
+        repeat(descriptor.elementDescriptors.count()) {
             encodeNull()
         }
     }

@@ -3,67 +3,69 @@ package kotlinx.serialization.csv.config
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.modules.SerializersModule
 
-public class CsvBuilder internal constructor(conf: CsvConfig = CsvConfig.Default) {
+public class CsvBuilder internal constructor(
+    config: CsvConfig = CsvConfig.Default,
+) {
 
     /**
      * The delimiter character between columns (default: `,`).
      */
-    public var delimiter: Char = conf.delimiter
+    public var delimiter: Char = config.delimiter
 
     /**
      * The record separator (default: `\n`).
      */
-    public var recordSeparator: String = conf.recordSeparator
+    public var recordSeparator: String = config.recordSeparator
 
     /**
      * The quote character used to quote column values (default: `"`).
      */
-    public var quoteChar: Char = conf.quoteChar
+    public var quoteChar: Char = config.quoteChar
 
     /**
      * The quote mode used to decide if a column value should get quoted (default: [QuoteMode.MINIMAL]).
      */
-    public var quoteMode: QuoteMode = conf.quoteMode
+    public var quoteMode: QuoteMode = config.quoteMode
 
     /**
      * The escape character used to escape reserved characters in a column value.
      */
-    public var escapeChar: Char? = conf.escapeChar
+    public var escapeChar: Char? = config.escapeChar
 
     /**
      * The value to identify `null` values (default: empty string).
      */
-    public var nullString: String = conf.nullString
+    public var nullString: String = config.nullString
 
     /**
      * Ignore empty lines during parsing (default: `true`).
      */
-    public var ignoreEmptyLines: Boolean = conf.ignoreEmptyLines
+    public var ignoreEmptyLines: Boolean = config.ignoreEmptyLines
 
     /**
      * First line is header record (default: `false`).
      */
-    public var hasHeaderRecord: Boolean = conf.hasHeaderRecord
+    public var hasHeaderRecord: Boolean = config.hasHeaderRecord
 
     /**
      * Character that is used to separate hierarchical header names (default: `.`).
      */
-    public var headerSeparator: Char = conf.headerSeparator
+    public var headerSeparator: Char = config.headerSeparator
 
     /**
      * Ignore unknown columns when `hasHeaderRecord` is enabled (default: `false`).
      */
-    public var ignoreUnknownColumns: Boolean = conf.ignoreUnknownColumns
+    public var ignoreUnknownColumns: Boolean = config.ignoreUnknownColumns
 
     /**
      * If records end with a trailing [delimiter] (default: `false`).
      */
-    public var hasTrailingDelimiter: Boolean = conf.hasTrailingDelimiter
+    public var hasTrailingDelimiter: Boolean = config.hasTrailingDelimiter
 
     /**
      * Module with contextual and polymorphic serializers to be used in the resulting [Csv] instance.
      */
-    public var serializersModule: SerializersModule = conf.serializersModule
+    public var serializersModule: SerializersModule = config.serializersModule
 
     internal fun build(): CsvConfig {
         require(delimiter != quoteChar) {
@@ -98,18 +100,18 @@ public class CsvBuilder internal constructor(conf: CsvConfig = CsvConfig.Default
         }
 
         return CsvConfig(
-            delimiter,
-            recordSeparator,
-            quoteChar,
-            quoteMode,
-            escapeChar,
-            nullString,
-            ignoreEmptyLines,
-            hasHeaderRecord,
-            headerSeparator,
-            ignoreUnknownColumns,
-            hasTrailingDelimiter,
-            serializersModule,
+            delimiter = delimiter,
+            recordSeparator = recordSeparator,
+            quoteChar = quoteChar,
+            quoteMode = quoteMode,
+            escapeChar = escapeChar,
+            nullString = nullString,
+            ignoreEmptyLines = ignoreEmptyLines,
+            hasHeaderRecord = hasHeaderRecord,
+            headerSeparator = headerSeparator,
+            ignoreUnknownColumns = ignoreUnknownColumns,
+            hasTrailingDelimiter = hasTrailingDelimiter,
+            serializersModule = serializersModule,
         )
     }
 }

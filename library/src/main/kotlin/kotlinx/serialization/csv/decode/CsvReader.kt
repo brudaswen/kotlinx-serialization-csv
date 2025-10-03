@@ -5,7 +5,10 @@ import kotlinx.serialization.csv.config.CsvConfig
 /**
  * Reader that parses CSV input.
  */
-internal class CsvReader(source: Source, private val config: CsvConfig) {
+internal class CsvReader(
+    source: Source,
+    private val config: CsvConfig,
+) {
 
     private val source: Source by lazy {
         source.also {
@@ -63,7 +66,7 @@ internal class CsvReader(source: Source, private val config: CsvConfig) {
             }
 
             // Append current char
-            value.append(char.toChar())
+            value.append(char)
         }
 
         return value.toString()
@@ -97,7 +100,7 @@ internal class CsvReader(source: Source, private val config: CsvConfig) {
             }
 
             // Append current char
-            value.append(char.toChar())
+            value.append(char)
         }
 
         return value.toString()

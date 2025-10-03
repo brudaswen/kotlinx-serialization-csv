@@ -61,7 +61,7 @@ internal class SealedCsvDecoder(
     }
 
     private fun readEmptyColumns(descriptor: SerialDescriptor) {
-        for (innerDesc in descriptor.elementDescriptors.toList()) {
+        repeat(descriptor.elementDescriptors.count()) {
             decodeNull()
         }
     }

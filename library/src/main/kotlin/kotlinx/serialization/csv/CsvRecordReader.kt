@@ -3,8 +3,8 @@ package kotlinx.serialization.csv
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.csv.decode.CharStreamSource
 import kotlinx.serialization.csv.decode.CsvReader
-import kotlinx.serialization.csv.decode.FetchSource
 import kotlinx.serialization.csv.decode.RecordListCsvDecoder
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 import java.io.Reader
@@ -26,10 +26,13 @@ public interface CsvRecordReader<T : Any> : Iterator<T> {
  * @param input The CSV reader to parse. This function *does not close the reader*.
  */
 @ExperimentalSerializationApi
-public fun <T : Any> Csv.recordReader(deserializer: KSerializer<T>, input: Reader): CsvRecordReader<T> {
+public fun <T : Any> Csv.recordReader(
+    deserializer: KSerializer<T>,
+    input: Reader,
+): CsvRecordReader<T> {
     val decoder = RecordListCsvDecoder(
         csv = this,
-        reader = CsvReader(FetchSource(input), config)
+        reader = CsvReader(CharStreamSource(input), config)
     )
     val listDescriptor = ListSerializer(deserializer).descriptor
     var previousValue: T? = null
@@ -40,7 +43,12 @@ public fun <T : Any> Csv.recordReader(deserializer: KSerializer<T>, input: Reade
 
         override fun next(): T {
             val index = decoder.decodeElementIndex(listDescriptor)
-            return decoder.decodeSerializableElement(listDescriptor, index, deserializer, previousValue).also {
+            return decoder.decodeSerializableElement(
+                listDescriptor,
+                index,
+                deserializer,
+                previousValue
+            ).also {
                 previousValue = it
             }
         }
