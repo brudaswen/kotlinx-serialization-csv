@@ -26,7 +26,7 @@ public interface Source {
      * Return the next [Char] from the stream without actually reading it.
      * @return The next [Char] or `null` if stream reached EOF.
      */
-    public  fun peek(): Char?
+    public fun peek(): Char?
 
     /**
      * Mark the current position in the stream. Calling [reset] afterwards resets the stream to this marked position.

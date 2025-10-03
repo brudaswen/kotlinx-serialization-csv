@@ -17,29 +17,38 @@ internal open class CsvException(message: String) : SerializationException(messa
 internal class CsvEncodingException(message: String) : CsvException(message)
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun UnsupportedSerialDescriptorException(descriptor: SerialDescriptor) =
-    CsvEncodingException(
-        "CSV does not support '${descriptor.kind}'."
-    )
+internal fun UnsupportedSerialDescriptorException(
+    descriptor: SerialDescriptor,
+) = CsvEncodingException(
+    message = "CSV does not support '${descriptor.kind}'."
+)
 
 @OptIn(ExperimentalSerializationApi::class)
-internal fun HeadersNotSupportedForSerialDescriptorException(descriptor: SerialDescriptor) =
-    CsvEncodingException(
-        "CSV headers are not supported for variable sized type '${descriptor.kind}'."
-    )
+internal fun HeadersNotSupportedForSerialDescriptorException(
+    descriptor: SerialDescriptor,
+) = CsvEncodingException(
+    message = "CSV headers are not supported for variable sized type '${descriptor.kind}'."
+)
 
 /**
  * Thrown when [Csv] has failed to parse the given CSV string or deserialize it to a target class.
  */
 internal class CsvDecodingException(message: String) : CsvException(message)
 
-internal fun CsvDecodingException(offset: Int?, message: String) =
-    CsvDecodingException(if (offset != null) "Unexpected CSV token at offset $offset: $message" else message)
+internal fun CsvDecodingException(
+    offset: Int?,
+    message: String,
+) = CsvDecodingException(
+    message = if (offset != null) "Unexpected CSV token at offset $offset: $message" else message
+)
 
-internal fun UnknownColumnHeaderException(offset: Int, header: String) = CsvDecodingException(
-    offset,
-    """
-    |Encountered unknown column header '$header'.
-    |Use 'ignoreUnknownColumns = true' in 'Csv {}' builder to ignore unknown columns.
-    |""".trimMargin()
+internal fun UnknownColumnHeaderException(
+    offset: Int,
+    header: String,
+) = CsvDecodingException(
+    offset = offset,
+    message = """
+        |Encountered unknown column header '$header'.
+        |Use 'ignoreUnknownColumns = true' in 'Csv {}' builder to ignore unknown columns.
+        |""".trimMargin()
 )

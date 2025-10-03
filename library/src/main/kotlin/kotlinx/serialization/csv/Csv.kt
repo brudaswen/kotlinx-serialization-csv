@@ -8,8 +8,8 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.StringFormat
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
+import kotlinx.serialization.csv.decode.CharStreamSource
 import kotlinx.serialization.csv.decode.CsvReader
-import kotlinx.serialization.csv.decode.FetchSource
 import kotlinx.serialization.csv.decode.RootCsvDecoder
 import kotlinx.serialization.csv.decode.Source
 import kotlinx.serialization.csv.decode.StringSource
@@ -74,7 +74,7 @@ public sealed class Csv(
      * @param input The CSV input to parse.
      */
     public fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
-        FetchSource(input).decode(deserializer)
+        CharStreamSource(input).decode(deserializer)
 
     /**
      * Serialize [value] into CSV record(s).
@@ -139,17 +139,19 @@ public sealed class Csv(
  * Creates an instance of [Csv] with adjusted configuration defined by [action].
  */
 @ExperimentalSerializationApi
-public fun Csv(action: CsvBuilder.() -> Unit): Csv =
-    Csv.configure(action)
+public fun Csv(
+    action: CsvBuilder.() -> Unit,
+): Csv = Csv.configure(action)
 
 /**
  * Creates a new instance of [Csv] based on the configuration of [this] and adjusted with [action].
  */
 @ExperimentalSerializationApi
-public fun Csv.configure(action: CsvBuilder.() -> Unit): Csv =
-    Csv.Impl(
-        config = CsvBuilder(config).run {
-            action()
-            build()
-        },
-    )
+public fun Csv.configure(
+    action: CsvBuilder.() -> Unit,
+): Csv = Csv.Impl(
+    config = CsvBuilder(config).run {
+        action()
+        build()
+    },
+)

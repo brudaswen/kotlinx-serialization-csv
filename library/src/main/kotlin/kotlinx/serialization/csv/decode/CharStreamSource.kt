@@ -3,14 +3,14 @@ package kotlinx.serialization.csv.decode
 import java.io.EOFException
 import java.io.Reader
 
-internal class FetchSource(
-    private val getChar: () -> Char?,
+internal class CharStreamSource(
+    private val readChar: () -> Char?,
 ) : Source {
 
     constructor(
         reader: Reader,
     ) : this(
-        getChar = {
+        readChar = {
             reader.read().let {
                 if (it == -1) null else it.toChar()
             }
@@ -29,15 +29,15 @@ internal class FetchSource(
         get() {
             if (field == null && nextPosition == 0) {
                 // Reading first char has to happen lazily to avoid blocking read calls
-                // during the initialization of the FetchSource.
-                field = getChar()
+                // during the initialization of this source.
+                field = readChar()
             }
             return field
         }
 
     private fun nextChar(): Char {
         val nextChar = next ?: throw EOFException("No more characters to read.")
-        next = getChar()
+        next = readChar()
         nextPosition++
         return nextChar
     }
