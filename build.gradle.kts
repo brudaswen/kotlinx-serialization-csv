@@ -10,10 +10,6 @@ plugins {
 
 allprojects {
     group = "de.brudaswen.kotlinx.serialization"
-
-    repositories {
-        mavenCentral()
-    }
 }
 
 // Use `./gradlew release` to create a tagged release commit
