@@ -39,3 +39,27 @@ nexusPublishing {
         }
     }
 }
+
+tasks.register("publishRelease") {
+    group = "publishing"
+    description = "Publish to Maven Central (iff this is a release version)."
+
+    onlyIf { !isSnapshot() }
+
+    if (!isSnapshot()) {
+        dependsOn("publishToSonatype", "closeAndReleaseStagingRepositories")
+    }
+}
+
+tasks.register("publishSnapshot") {
+    group = "publishing"
+    description = "Publish to Maven Central (iff this is a snapshot version)."
+
+    onlyIf { isSnapshot() }
+
+    if (isSnapshot()) {
+        dependsOn("publishToSonatype")
+    }
+}
+
+fun isSnapshot() = version.toString().endsWith("-SNAPSHOT")

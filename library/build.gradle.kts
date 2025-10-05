@@ -33,28 +33,6 @@ val dokkaJavadocJar by tasks.registering(Jar::class) {
     from(tasks.dokkaGeneratePublicationJavadoc)
 }
 
-tasks.register("publishRelease") {
-    group = "publishing"
-    description = "Publish to Maven Central (iff this is a release version)."
-
-    onlyIf { !isSnapshot() }
-
-    if (!isSnapshot()) {
-        dependsOn("publishToSonatype", "closeAndReleaseStagingRepositories")
-    }
-}
-
-tasks.register("publishSnapshot") {
-    group = "publishing"
-    description = "Publish to Maven Central (iff this is a snapshot version)."
-
-    onlyIf { isSnapshot() }
-
-    if (isSnapshot()) {
-        dependsOn("publishToSonatype")
-    }
-}
-
 publishing {
     publications {
         create<MavenPublication>("library") {
