@@ -2,6 +2,7 @@ package kotlinx.serialization.csv.records
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 @Serializable
 data class ByteRecord(val a: Byte)
@@ -74,6 +75,13 @@ data class NestedRecord(
     val name: String,
     val data: Data,
 )
+
+@JvmInline
+@Serializable
+value class Id(val value: Int)
+
+@Serializable
+data class IdRecord(val id: Id, val name: String)
 
 @Serializable
 data class Data(val location: Location, val speed: Int, val info: String)

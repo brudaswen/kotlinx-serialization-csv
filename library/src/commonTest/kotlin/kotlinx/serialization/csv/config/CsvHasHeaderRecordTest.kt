@@ -4,6 +4,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.Data
+import kotlinx.serialization.csv.records.Id
+import kotlinx.serialization.csv.records.IdRecord
 import kotlinx.serialization.csv.records.IntRecord
 import kotlinx.serialization.csv.records.IntStringRecord
 import kotlinx.serialization.csv.records.Location
@@ -158,5 +160,23 @@ class CsvHasHeaderRecordTest {
             ),
         ),
         serializer = ListSerializer(NestedRecord.serializer()),
+    )
+
+    @Test
+    fun testValueClassWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "value\n42",
+        original = Id(42),
+        serializer = Id.serializer(),
+    )
+
+    @Test
+    fun testNestedValueClassWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "id,name\n42,Alice",
+        original = IdRecord(Id(42), "Alice"),
+        serializer = IdRecord.serializer(),
     )
 }
