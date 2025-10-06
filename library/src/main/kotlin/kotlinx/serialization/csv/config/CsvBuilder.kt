@@ -3,67 +3,67 @@ package kotlinx.serialization.csv.config
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.modules.SerializersModule
 
-class CsvBuilder internal constructor(conf: CsvConfig = CsvConfig.Default) {
+public class CsvBuilder internal constructor(conf: CsvConfig = CsvConfig.Default) {
 
     /**
      * The delimiter character between columns (default: `,`).
      */
-    var delimiter: Char = conf.delimiter
+    public var delimiter: Char = conf.delimiter
 
     /**
      * The record separator (default: `\n`).
      */
-    var recordSeparator: String = conf.recordSeparator
+    public var recordSeparator: String = conf.recordSeparator
 
     /**
      * The quote character used to quote column values (default: `"`).
      */
-    var quoteChar: Char = conf.quoteChar
+    public var quoteChar: Char = conf.quoteChar
 
     /**
      * The quote mode used to decide if a column value should get quoted (default: [QuoteMode.MINIMAL]).
      */
-    var quoteMode: QuoteMode = conf.quoteMode
+    public var quoteMode: QuoteMode = conf.quoteMode
 
     /**
      * The escape character used to escape reserved characters in a column value.
      */
-    var escapeChar: Char? = conf.escapeChar
+    public var escapeChar: Char? = conf.escapeChar
 
     /**
      * The value to identify `null` values (default: empty string).
      */
-    var nullString: String = conf.nullString
+    public var nullString: String = conf.nullString
 
     /**
      * Ignore empty lines during parsing (default: `true`).
      */
-    var ignoreEmptyLines: Boolean = conf.ignoreEmptyLines
+    public var ignoreEmptyLines: Boolean = conf.ignoreEmptyLines
 
     /**
      * First line is header record (default: `false`).
      */
-    var hasHeaderRecord: Boolean = conf.hasHeaderRecord
+    public var hasHeaderRecord: Boolean = conf.hasHeaderRecord
 
     /**
      * Character that is used to separate hierarchical header names (default: `.`).
      */
-    var headerSeparator: Char = conf.headerSeparator
+    public var headerSeparator: Char = conf.headerSeparator
 
     /**
      * Ignore unknown columns when `hasHeaderRecord` is enabled (default: `false`).
      */
-    var ignoreUnknownColumns: Boolean = conf.ignoreUnknownColumns
+    public var ignoreUnknownColumns: Boolean = conf.ignoreUnknownColumns
 
     /**
      * If records end with a trailing [delimiter] (default: `false`).
      */
-    var hasTrailingDelimiter: Boolean = conf.hasTrailingDelimiter
+    public var hasTrailingDelimiter: Boolean = conf.hasTrailingDelimiter
 
     /**
      * Module with contextual and polymorphic serializers to be used in the resulting [Csv] instance.
      */
-    var serializersModule: SerializersModule = conf.serializersModule
+    public var serializersModule: SerializersModule = conf.serializersModule
 
     internal fun build(): CsvConfig {
         require(delimiter != quoteChar) {

@@ -1,7 +1,7 @@
 package kotlinx.serialization.csv.config
 
 /** Defines quoting behavior when printing. */
-enum class QuoteMode {
+public enum class QuoteMode {
     /**
      * Quotes *all* fields.
      */
