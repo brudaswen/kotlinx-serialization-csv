@@ -70,25 +70,31 @@ class ExampleTest {
         """.trimMargin(),
         original = listOf(
             LocationRecord(
-                id = 0, date = LocalDateTime.of(2020, 2, 1, 13, 33),
+                id = 0,
+                date = LocalDateTime.of(2020, 2, 1, 13, 33),
                 position = Position(0.0, 0.0),
-                driver = jonSmith, vehicle = tesla,
+                driver = jonSmith,
+                vehicle = tesla,
                 vehicleData = VehicleData(null, Consumption.Unknown),
             ),
             LocationRecord(
-                id = 1, date = LocalDateTime.of(2020, 2, 1, 13, 37),
+                id = 1,
+                date = LocalDateTime.of(2020, 2, 1, 13, 37),
                 position = Position(0.1, 0.1),
-                driver = jonSmith, vehicle = tesla,
+                driver = jonSmith,
+                vehicle = tesla,
                 vehicleData = VehicleData(27.7778, Consumption.Electric(18.1)),
             ),
             LocationRecord(
-                id = 9_000, date = LocalDateTime.of(2020, 2, 5, 7, 59),
+                id = 9_000,
+                date = LocalDateTime.of(2020, 2, 5, 7, 59),
                 position = Position(48.137154, 11.576124),
-                driver = janeDoe, vehicle = harley,
+                driver = janeDoe,
+                vehicle = harley,
                 vehicleData = VehicleData(20.0, Consumption.Combustion(7.9)),
-            )
+            ),
         ),
-        serializer = ListSerializer(LocationRecord.serializer())
+        serializer = ListSerializer(LocationRecord.serializer()),
     )
 
     @Test
@@ -118,9 +124,9 @@ class ExampleTest {
             VehiclePartRecord(202, porsche, Tire(FRONT, LEFT, 265, 35, 20), 0.2),
             VehiclePartRecord(203, porsche, Tire(FRONT, RIGHT, 265, 35, 20), 0.2),
             VehiclePartRecord(204, porsche, Tire(REAR, LEFT, 265, 35, 20), 0.2),
-            VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2)
+            VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2),
         ),
-        serializer = ListSerializer(VehiclePartRecord.serializer())
+        serializer = ListSerializer(VehiclePartRecord.serializer()),
     )
 
     @Test
@@ -145,9 +151,9 @@ class ExampleTest {
                 vehicle = tesla,
                 features = listOf(ELECTRIC, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON),
                 map = mapOf(ELECTRIC to 0, XENON to 1),
-            )
+            ),
         ),
-        serializer = ListSerializer(VehicleFeaturesRecord.serializer())
+        serializer = ListSerializer(VehicleFeaturesRecord.serializer()),
     )
 
     @Test
@@ -174,9 +180,9 @@ class ExampleTest {
                 vehicle = tesla,
                 features = listOf(ELECTRIC, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON),
                 map = mapOf(ELECTRIC to 0, XENON to 1),
-            )
+            ),
         ),
-        serializer = ListSerializer(VehicleFeaturesRecord.serializer().nullable)
+        serializer = ListSerializer(VehicleFeaturesRecord.serializer().nullable),
     )
 
     @Test
@@ -196,7 +202,7 @@ class ExampleTest {
             VehiclePartRecord(202, porsche, Tire(FRONT, LEFT, 265, 35, 20), 0.2),
             VehiclePartRecord(203, porsche, Tire(FRONT, RIGHT, 265, 35, 20), 0.2),
             VehiclePartRecord(204, porsche, Tire(REAR, LEFT, 265, 35, 20), 0.2),
-            VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2)
+            VehiclePartRecord(205, porsche, Tire(REAR, RIGHT, 265, 35, 20), 0.2),
         )
 
         val input = PipedReader()
@@ -236,7 +242,7 @@ class ExampleTest {
             Tire(FRONT, LEFT, 265, 35, 20),
             Tire(FRONT, RIGHT, 265, 35, 20),
             Tire(REAR, LEFT, 265, 35, 20),
-            Tire(REAR, RIGHT, 265, 35, 20)
+            Tire(REAR, RIGHT, 265, 35, 20),
         )
 
         val source = PipedReader()

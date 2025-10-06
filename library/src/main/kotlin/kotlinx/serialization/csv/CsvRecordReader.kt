@@ -32,14 +32,13 @@ public fun <T : Any> Csv.recordReader(
 ): CsvRecordReader<T> {
     val decoder = RecordListCsvDecoder(
         csv = this,
-        reader = CsvReader(CharStreamSource(input), config)
+        reader = CsvReader(CharStreamSource(input), config),
     )
     val listDescriptor = ListSerializer(deserializer).descriptor
     var previousValue: T? = null
 
     return object : CsvRecordReader<T> {
-        override fun hasNext(): Boolean =
-            decoder.decodeElementIndex(listDescriptor) != DECODE_DONE
+        override fun hasNext(): Boolean = decoder.decodeElementIndex(listDescriptor) != DECODE_DONE
 
         override fun next(): T {
             val index = decoder.decodeElementIndex(listDescriptor)
@@ -47,7 +46,7 @@ public fun <T : Any> Csv.recordReader(
                 listDescriptor,
                 index,
                 deserializer,
-                previousValue
+                previousValue,
             ).also {
                 previousValue = it
             }

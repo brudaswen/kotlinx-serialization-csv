@@ -46,16 +46,16 @@ internal class ClassCsvDecoder(
 
     override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder =
         when (descriptor.kind) {
-            StructureKind.CLASS ->
-                ClassCsvDecoder(
-                    csv,
-                    reader,
-                    this,
-                    classHeaders?.getSubHeaders(decodeElementIndex(descriptor))
-                )
+            StructureKind.CLASS -> ClassCsvDecoder(
+                csv = csv,
+                reader = reader,
+                parent = this,
+                classHeaders = classHeaders?.getSubHeaders(
+                    position = decodeElementIndex(descriptor),
+                ),
+            )
 
-            else ->
-                super.beginStructure(descriptor)
+            else -> super.beginStructure(descriptor)
         }
 
     override fun endStructure(descriptor: SerialDescriptor) {

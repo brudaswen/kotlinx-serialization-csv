@@ -72,14 +72,11 @@ internal class CharStreamSource(
         }
     }
 
-    override fun peek(): Char? =
-        if (offset > nextPosition) {
-            null
-        } else if (offset == nextPosition) {
-            next
-        } else {
-            queue[offset - queueOffset]
-        }
+    override fun peek(): Char? = when {
+        offset > nextPosition -> null
+        offset == nextPosition -> next
+        else -> queue[offset - queueOffset]
+    }
 
     override fun mark() {
         marks.add(offset)

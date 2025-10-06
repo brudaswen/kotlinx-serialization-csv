@@ -18,19 +18,17 @@ internal class StringSource(
 
     override fun canRead() = position != EOF
 
-    override fun read() =
-        peek().also {
-            when (position) {
-                in content.indices -> position++
-                else -> position = EOF
-            }
-        }
-
-    override fun peek() =
+    override fun read() = peek().also {
         when (position) {
-            in content.indices -> content[position]
-            else -> null
+            in content.indices -> position++
+            else -> position = EOF
         }
+    }
+
+    override fun peek() = when (position) {
+        in content.indices -> content[position]
+        else -> null
+    }
 
     override fun mark() {
         marks.add(position)

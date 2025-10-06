@@ -15,104 +15,104 @@ class CsvDelimiterTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
+        expected = "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
+        original = ComplexRecord(
+            a = -150,
+            b = -1,
+            c = 42,
+            d = Long.MAX_VALUE,
+            e = -2f,
+            f = 24.24,
+            g = true,
+            h = "testing",
+            i = null,
+            j = Unit,
+            k = Enum.FIRST,
         ),
-        ComplexRecord.serializer()
+        serializer = ComplexRecord.serializer(),
     )
 
     @Test
     fun testComma() = Csv {
         delimiter = ','
     }.assertEncodeAndDecode(
-        "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
+        expected = "-150,-1,42,9223372036854775807,-2.0,24.24,true,testing,,kotlin.Unit,FIRST",
+        original = ComplexRecord(
+            a = -150,
+            b = -1,
+            c = 42,
+            d = Long.MAX_VALUE,
+            e = -2f,
+            f = 24.24,
+            g = true,
+            h = "testing",
+            i = null,
+            j = Unit,
+            k = Enum.FIRST,
         ),
-        ComplexRecord.serializer()
+        serializer = ComplexRecord.serializer(),
     )
 
     @Test
     fun testColon() = Csv {
         delimiter = ';'
     }.assertEncodeAndDecode(
-        "-150;-1;42;9223372036854775807;-2.0;24.24;true;testing;;kotlin.Unit;FIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
+        expected = "-150;-1;42;9223372036854775807;-2.0;24.24;true;testing;;kotlin.Unit;FIRST",
+        original = ComplexRecord(
+            a = -150,
+            b = -1,
+            c = 42,
+            d = Long.MAX_VALUE,
+            e = -2f,
+            f = 24.24,
+            g = true,
+            h = "testing",
+            i = null,
+            j = Unit,
+            k = Enum.FIRST,
         ),
-        ComplexRecord.serializer()
+        serializer = ComplexRecord.serializer(),
     )
 
     @Test
     fun testDot() = Csv {
         delimiter = '.'
     }.assertEncodeAndDecode(
-        "-150.-1.42.9223372036854775807.\"-2.0\".\"24.24\".true.testing..\"kotlin.Unit\".FIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
+        expected = "-150.-1.42.9223372036854775807.\"-2.0\".\"24.24\".true.testing..\"kotlin.Unit\".FIRST",
+        original = ComplexRecord(
+            a = -150,
+            b = -1,
+            c = 42,
+            d = Long.MAX_VALUE,
+            e = -2f,
+            f = 24.24,
+            g = true,
+            h = "testing",
+            i = null,
+            j = Unit,
+            k = Enum.FIRST,
         ),
-        ComplexRecord.serializer()
+        serializer = ComplexRecord.serializer(),
     )
 
     @Test
     fun testTab() = Csv {
         delimiter = '\t'
     }.assertEncodeAndDecode(
-        "-150\t-1\t42\t9223372036854775807\t-2.0\t24.24\ttrue\ttesting\t\tkotlin.Unit\tFIRST",
-        ComplexRecord(
-            -150,
-            -1,
-            42,
-            Long.MAX_VALUE,
-            -2f,
-            24.24,
-            true,
-            "testing",
-            null,
-            Unit,
-            Enum.FIRST
+        expected = "-150\t-1\t42\t9223372036854775807\t-2.0\t24.24\ttrue\ttesting\t\tkotlin.Unit\tFIRST",
+        original = ComplexRecord(
+            a = -150,
+            b = -1,
+            c = 42,
+            d = Long.MAX_VALUE,
+            e = -2f,
+            f = 24.24,
+            g = true,
+            h = "testing",
+            i = null,
+            j = Unit,
+            k = Enum.FIRST,
         ),
-        ComplexRecord.serializer()
+        serializer = ComplexRecord.serializer(),
     )
 }

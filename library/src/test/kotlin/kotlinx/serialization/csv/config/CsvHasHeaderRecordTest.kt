@@ -3,7 +3,12 @@ package kotlinx.serialization.csv.config
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.records.*
+import kotlinx.serialization.csv.records.Data
+import kotlinx.serialization.csv.records.IntRecord
+import kotlinx.serialization.csv.records.IntStringRecord
+import kotlinx.serialization.csv.records.Location
+import kotlinx.serialization.csv.records.NestedRecord
+import kotlinx.serialization.csv.records.SerialNameRecord
 import kotlinx.serialization.test.assertDecode
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
@@ -13,139 +18,145 @@ class CsvHasHeaderRecordTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "1",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "1",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testWithoutHeaderRecords() = Csv {
         hasHeaderRecord = false
     }.assertEncodeAndDecode(
-        "1",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "1",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testWithHeaderRecords() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "a\n1",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "a\n1",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testListWithoutHeaderRecords() = Csv {
         hasHeaderRecord = false
     }.assertEncodeAndDecode(
-        "1\n2\n3",
-        listOf(
+        expected = "1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testListWithHeaderRecords() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "a\n1\n2\n3",
-        listOf(
+        expected = "a\n1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testMultipleColumns() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "a,b\n1,testing",
-        IntStringRecord(1, "testing"),
-        IntStringRecord.serializer()
+        expected = "a,b\n1,testing",
+        original = IntStringRecord(1, "testing"),
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
     fun testSerialName() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "first,second\n1,2",
-        SerialNameRecord(1, 2),
-        SerialNameRecord.serializer()
+        expected = "first,second\n1,2",
+        original = SerialNameRecord(1, 2),
+        serializer = SerialNameRecord.serializer(),
     )
 
     @Test
     fun testMultipleColumnsReordered() = Csv {
         hasHeaderRecord = true
     }.assertDecode(
-        "b,a\ntesting,1",
-        IntStringRecord(1, "testing"),
-        IntStringRecord.serializer()
+        input = "b,a\ntesting,1",
+        expected = IntStringRecord(1, "testing"),
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
     fun testListMultipleColumnsReordered() = Csv {
         hasHeaderRecord = true
     }.assertDecode(
-        "b,a\ntesting,1\nbar,2",
-        listOf(
+        input = "b,a\ntesting,1\nbar,2",
+        expected = listOf(
             IntStringRecord(1, "testing"),
-            IntStringRecord(2, "bar")
+            IntStringRecord(2, "bar"),
         ),
-        ListSerializer(IntStringRecord.serializer())
+        serializer = ListSerializer(IntStringRecord.serializer()),
     )
 
     @Test
     fun testNestedRecordWithHeaderReordered() = Csv {
         hasHeaderRecord = true
     }.assertDecode(
-        "time,data.location.lon,data.location.lat,data.info,data.speed,name\n0,1.0,0.0,info,100,Alice",
-        NestedRecord(
-            0,
-            "Alice",
-            Data(
-                Location(
-                    0.0,
-                    1.0
-                ), 100, "info"
-            )
+        input = "time,data.location.lon,data.location.lat,data.info,data.speed,name\n0,1.0,0.0,info,100,Alice",
+        expected = NestedRecord(
+            time = 0,
+            name = "Alice",
+            data = Data(
+                location = Location(
+                    lat = 0.0,
+                    lon = 1.0,
+                ),
+                speed = 100,
+                info = "info",
+            ),
         ),
-        NestedRecord.serializer()
+        serializer = NestedRecord.serializer(),
     )
 
     @Test
     fun testNestedRecordListWithHeaderReordered() = Csv {
         hasHeaderRecord = true
     }.assertDecode(
-        "time,name,data.location.lon,data.location.lat,data.speed,data.info\n0,Alice,1.0,0.0,100,info\n1,Bob,20.0,10.0,50,info2",
-        listOf(
+        input = "time,name,data.location.lon,data.location.lat,data.speed,data.info\n0,Alice,1.0,0.0,100,info\n1,Bob,20.0,10.0,50,info2",
+        expected = listOf(
             NestedRecord(
-                0,
-                "Alice",
-                Data(
-                    Location(
-                        0.0,
-                        1.0
-                    ), 100, "info"
-                )
+                time = 0,
+                name = "Alice",
+                data = Data(
+                    location = Location(
+                        lat = 0.0,
+                        lon = 1.0,
+                    ),
+                    speed = 100,
+                    info = "info",
+                ),
             ),
             NestedRecord(
-                1,
-                "Bob",
-                Data(
-                    Location(
-                        10.0,
-                        20.0
-                    ), 50, "info2"
-                )
-            )
+                time = 1,
+                name = "Bob",
+                data = Data(
+                    location = Location(
+                        lat = 10.0,
+                        lon = 20.0,
+                    ),
+                    speed = 50,
+                    info = "info2",
+                ),
+            ),
         ),
-        ListSerializer(NestedRecord.serializer())
+        serializer = ListSerializer(NestedRecord.serializer()),
     )
 }

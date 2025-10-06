@@ -16,7 +16,6 @@ import kotlinx.serialization.csv.decode.StringSource
 import kotlinx.serialization.csv.encode.RootCsvEncoder
 import kotlinx.serialization.modules.SerializersModule
 import java.io.Reader
-import java.io.StringWriter
 
 /**
  * The main entry point to work with CSV serialization.
@@ -43,9 +42,9 @@ public sealed class Csv(
      * @param value The [Serializable] object.
      */
     override fun <T> encodeToString(serializer: SerializationStrategy<T>, value: T): String =
-        StringWriter().apply {
+        buildString {
             encodeTo(serializer, value, this)
-        }.toString()
+        }
 
     /**
      * Serialize [value] into CSV record(s).
@@ -85,7 +84,7 @@ public sealed class Csv(
     private fun <T> Appendable.encode(serializer: SerializationStrategy<T>, value: T) {
         RootCsvEncoder(
             csv = this@Csv,
-            output = this
+            output = this,
         ).encodeSerializableValue(serializer, value)
     }
 
@@ -97,7 +96,7 @@ public sealed class Csv(
     private fun <T> Source.decode(deserializer: DeserializationStrategy<T>): T {
         val reader = CsvReader(
             source = this,
-            config = config
+            config = config,
         )
 
         return RootCsvDecoder(

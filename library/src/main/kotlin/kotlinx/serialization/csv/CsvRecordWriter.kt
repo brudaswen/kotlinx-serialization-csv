@@ -28,7 +28,7 @@ public fun <T : Any> Csv.recordWriter(
 ): CsvRecordWriter<T> {
     val encoder = RecordListCsvEncoder(
         csv = this,
-        writer = CsvWriter(output, config)
+        writer = CsvWriter(output, config),
     )
 
     return CsvRecordWriter {

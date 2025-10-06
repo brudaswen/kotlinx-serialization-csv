@@ -46,7 +46,7 @@ public data class CsvConfig(
         public val Rfc4180: CsvConfig
             get() = CsvConfig(
                 recordSeparator = "\r\n",
-                ignoreEmptyLines = false
+                ignoreEmptyLines = false,
             )
     }
 }

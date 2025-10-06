@@ -12,7 +12,6 @@ import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.UNKNOWN_NAME
 import kotlinx.serialization.modules.SerializersModule
-import kotlin.collections.set
 
 /**
  * Default CSV decoder.
@@ -36,19 +35,19 @@ internal abstract class CsvDecoder(
         when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP,
-                -> CollectionCsvDecoder(csv, reader, this)
+            -> CollectionCsvDecoder(csv, reader, this)
 
             StructureKind.CLASS,
-                -> ClassCsvDecoder(csv, reader, this, headers)
+            -> ClassCsvDecoder(csv, reader, this, headers)
 
             StructureKind.OBJECT,
-                -> ObjectCsvDecoder(csv, reader, this)
+            -> ObjectCsvDecoder(csv, reader, this)
 
             PolymorphicKind.SEALED,
-                -> SealedCsvDecoder(csv, reader, this, descriptor)
+            -> SealedCsvDecoder(csv, reader, this, descriptor)
 
             PolymorphicKind.OPEN,
-                -> ClassCsvDecoder(csv, reader, this, headers)
+            -> ClassCsvDecoder(csv, reader, this, headers)
 
             else -> throw UnsupportedSerialDescriptorException(descriptor)
         }
@@ -162,15 +161,13 @@ internal abstract class CsvDecoder(
         val size
             get() = map.size
 
-        operator fun get(position: Int) =
-            map[position]
+        operator fun get(position: Int) = map[position]
 
         operator fun set(key: Int, value: Int) {
             map[key] = value
         }
 
-        fun getSubHeaders(position: Int) =
-            subHeaders.getOrElse(position) { null }
+        fun getSubHeaders(position: Int) = subHeaders.getOrElse(position) { null }
 
         operator fun set(key: Int, value: Headers) {
             subHeaders[key] = value

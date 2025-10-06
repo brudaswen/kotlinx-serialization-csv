@@ -28,5 +28,5 @@ public enum class QuoteMode {
     /**
      * *Never* quotes fields (requires [CsvConfig.escapeChar] to be set).
      */
-    NONE
+    NONE,
 }

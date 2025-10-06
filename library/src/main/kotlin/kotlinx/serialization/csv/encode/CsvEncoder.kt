@@ -22,10 +22,10 @@ internal abstract class CsvEncoder(
     private val parent: CsvEncoder?,
 ) : AbstractEncoder() {
 
-    override val serializersModule: SerializersModule = csv.serializersModule
-
     protected val config
         get() = csv.config
+
+    override val serializersModule: SerializersModule = csv.serializersModule
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
@@ -37,26 +37,25 @@ internal abstract class CsvEncoder(
 
     override fun beginStructure(
         descriptor: SerialDescriptor,
-    ): CompositeEncoder =
-        when (descriptor.kind) {
-            StructureKind.LIST,
-            StructureKind.MAP,
-                -> SimpleCsvEncoder(csv, writer, this)
+    ): CompositeEncoder = when (descriptor.kind) {
+        StructureKind.LIST,
+        StructureKind.MAP,
+        -> SimpleCsvEncoder(csv, writer, this)
 
-            StructureKind.CLASS,
-                -> SimpleCsvEncoder(csv, writer, this)
+        StructureKind.CLASS,
+        -> SimpleCsvEncoder(csv, writer, this)
 
-            StructureKind.OBJECT ->
-                ObjectCsvEncoder(csv, writer, this)
+        StructureKind.OBJECT ->
+            ObjectCsvEncoder(csv, writer, this)
 
-            PolymorphicKind.SEALED,
-                -> SealedCsvEncoder(csv, writer, this, descriptor)
+        PolymorphicKind.SEALED,
+        -> SealedCsvEncoder(csv, writer, this, descriptor)
 
-            PolymorphicKind.OPEN,
-                -> SimpleCsvEncoder(csv, writer, this)
+        PolymorphicKind.OPEN,
+        -> SimpleCsvEncoder(csv, writer, this)
 
-            else -> throw UnsupportedSerialDescriptorException(descriptor)
-        }
+        else -> throw UnsupportedSerialDescriptorException(descriptor)
+    }
 
     override fun endStructure(descriptor: SerialDescriptor) {
         parent?.endChildStructure(descriptor)
@@ -120,7 +119,7 @@ internal abstract class CsvEncoder(
             is StructureKind.LIST,
             is StructureKind.MAP,
             is PolymorphicKind.OPEN,
-                -> throw HeadersNotSupportedForSerialDescriptorException(descriptor)
+            -> throw HeadersNotSupportedForSerialDescriptorException(descriptor)
 
             else -> Unit // Just continue
         }

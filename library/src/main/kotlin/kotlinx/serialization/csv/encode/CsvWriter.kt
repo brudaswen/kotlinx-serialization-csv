@@ -65,7 +65,7 @@ internal class CsvWriter(
         if (mode == WriteMode.ESCAPED && escapeChar != null) {
             val escapedValue = value.escape(
                 escapeCharacters = "$escapeChar$delimiter$quoteChar$recordSeparator",
-                escapeChar = escapeChar
+                escapeChar = escapeChar,
             )
             output.append(escapedValue)
         } else if (mode == WriteMode.QUOTED || mode == WriteMode.ESCAPED) {
@@ -86,29 +86,27 @@ internal class CsvWriter(
 
     /** Check if given [value] contains reserved chars that require quoting. */
     private fun requiresQuoting(value: String): Boolean {
-        val chars = with(config) { "${delimiter}${quoteChar}${recordSeparator}" }
+        val chars = with(config) { "$delimiter$quoteChar$recordSeparator" }
         return value.contains("[${Regex.escape(chars)}]".toRegex())
     }
 
     /** Escape all [escapeCharacters] in this [String] using [escapeChar]. */
     private fun String.escape(escapeCharacters: String, escapeChar: Char) =
         fold(StringBuilder()) { builder, char ->
-            if (escapeCharacters.contains(char)) {
-                builder.append(char.escape(escapeChar))
-            } else {
-                builder.append(char)
+            when {
+                escapeCharacters.contains(char) -> builder.append(char.escape(escapeChar))
+                else -> builder.append(char)
             }
         }.toString()
 
     /** Escape this [Char] using [escapeChar]. */
-    private fun Char.escape(escapeChar: Char): String =
-        when (this) {
-            '\t' -> "${escapeChar}t"
-            '\r' -> "${escapeChar}r"
-            '\n' -> "${escapeChar}n"
-            '\b' -> "${escapeChar}b"
-            else -> "${escapeChar}$this"
-        }
+    private fun Char.escape(escapeChar: Char): String = when (this) {
+        '\t' -> "${escapeChar}t"
+        '\r' -> "${escapeChar}r"
+        '\n' -> "${escapeChar}n"
+        '\b' -> "${escapeChar}b"
+        else -> "${escapeChar}$this"
+    }
 
     /** Mode for writing values that defines if quoting or escaping should be used. */
     private enum class WriteMode {

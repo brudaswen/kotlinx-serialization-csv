@@ -19,17 +19,17 @@ internal class CsvIgnoreUnknownColumnsTest {
         hasHeaderRecord = true
         ignoreUnknownColumns = true
     }.assertDecode(
-        "a,b,IGNORED\n1,testing,ignored",
-        IntStringRecord(1, "testing"),
-        IntStringRecord.serializer()
+        input = "a,b,IGNORED\n1,testing,ignored",
+        expected = IntStringRecord(1, "testing"),
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
     fun testMultipleColumns_failure() = Csv {
         hasHeaderRecord = true
     }.assertDecodeFails(
-        "a,b,IGNORED\n1,testing,ignored",
-        IntStringRecord.serializer()
+        input = "a,b,IGNORED\n1,testing,ignored",
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
@@ -37,17 +37,17 @@ internal class CsvIgnoreUnknownColumnsTest {
         hasHeaderRecord = true
         ignoreUnknownColumns = true
     }.assertDecode(
-        "IGNORED,b,a\nignored,testing,1",
-        IntStringRecord(1, "testing"),
-        IntStringRecord.serializer()
+        input = "IGNORED,b,a\nignored,testing,1",
+        expected = IntStringRecord(1, "testing"),
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
     fun testMultipleColumnsReordered_failure() = Csv {
         hasHeaderRecord = true
     }.assertDecodeFails(
-        "IGNORED,b,a\nignored,testing,1",
-        IntStringRecord.serializer()
+        input = "IGNORED,b,a\nignored,testing,1",
+        serializer = IntStringRecord.serializer(),
     )
 
     @Test
@@ -55,22 +55,24 @@ internal class CsvIgnoreUnknownColumnsTest {
         hasHeaderRecord = true
         ignoreUnknownColumns = true
     }.assertDecode(
-        """IGNORED,time,name,data.location.lon,data.location.IGNORED,data.location.lat,data.speed,data.info,IGNORED
-          |IGNORED,0,Alice,1.0,IGNORED,0.0,100,info,IGNORED
-          |IGNORED,1,Bob,20.0,IGNORED,10.0,50,info2,IGNORED
-          |""".trimMargin(),
-        listOf(
+        input = """
+            |IGNORED,time,name,data.location.lon,data.location.IGNORED,data.location.lat,data.speed,data.info,IGNORED
+            |IGNORED,0,Alice,1.0,IGNORED,0.0,100,info,IGNORED
+            |IGNORED,1,Bob,20.0,IGNORED,10.0,50,info2,IGNORED
+            |
+        """.trimMargin(),
+        expected = listOf(
             NestedRecord(
                 time = 0,
                 name = "Alice",
                 data = Data(
                     location = Location(
                         lat = 0.0,
-                        lon = 1.0
+                        lon = 1.0,
                     ),
                     speed = 100,
-                    info = "info"
-                )
+                    info = "info",
+                ),
             ),
             NestedRecord(
                 time = 1,
@@ -78,13 +80,13 @@ internal class CsvIgnoreUnknownColumnsTest {
                 data = Data(
                     location = Location(
                         lat = 10.0,
-                        lon = 20.0
+                        lon = 20.0,
                     ),
                     speed = 50,
-                    info = "info2"
-                )
-            )
+                    info = "info2",
+                ),
+            ),
         ),
-        ListSerializer(NestedRecord.serializer())
+        serializer = ListSerializer(NestedRecord.serializer()),
     )
 }

@@ -129,14 +129,13 @@ internal class CsvReader(
      * `t`, `r`, `n` and `b` will get converted to `\t` (tab), `\r` (carriage return),
      * `\n` (line feed) and `\b (backspace)`.
      */
-    private fun readEscaped(): Char? =
-        when (val char = source.read()) {
-            't' -> '\t'
-            'r' -> '\r'
-            'n' -> '\n'
-            'b' -> '\b'
-            else -> char
-        }
+    private fun readEscaped(): Char? = when (val char = source.read()) {
+        't' -> '\t'
+        'r' -> '\r'
+        'n' -> '\n'
+        'b' -> '\b'
+        else -> char
+    }
 
     /** Read empty lines from the stream. */
     fun readEmptyLines() {

@@ -15,85 +15,85 @@ class CsvPrimitivesTest {
 
     @Test
     fun testByte() = Csv.assertEncodeAndDecode(
-        "-123",
-        -123,
-        Byte.serializer()
+        expected = "-123",
+        original = -123,
+        serializer = Byte.serializer(),
     )
 
     @Test
     fun testShort() = Csv.assertEncodeAndDecode(
-        "-150",
-        -150,
-        Short.serializer()
+        expected = "-150",
+        original = -150,
+        serializer = Short.serializer(),
     )
 
     @Test
     fun testInt() = Csv.assertEncodeAndDecode(
-        "-150",
-        -150,
-        Int.serializer()
+        expected = "-150",
+        original = -150,
+        serializer = Int.serializer(),
     )
 
     @Test
     fun testLong() = Csv.assertEncodeAndDecode(
-        "-150",
-        -150,
-        Long.serializer()
+        expected = "-150",
+        original = -150,
+        serializer = Long.serializer(),
     )
 
     @Test
     fun testFloat() = Csv.assertEncodeAndDecode(
-        "-150.0",
-        -150f,
-        Float.serializer()
+        expected = "-150.0",
+        original = -150f,
+        serializer = Float.serializer(),
     )
 
     @Test
     fun testDouble() = Csv.assertEncodeAndDecode(
-        "-150.0",
-        -150.0,
-        Double.serializer()
+        expected = "-150.0",
+        original = -150.0,
+        serializer = Double.serializer(),
     )
 
     @Test
     fun testBooleanTrue() = Csv.assertEncodeAndDecode(
-        "true",
-        true,
-        Boolean.serializer()
+        expected = "true",
+        original = true,
+        serializer = Boolean.serializer(),
     )
 
     @Test
     fun testBooleanFalse() = Csv.assertEncodeAndDecode(
-        "false",
-        false,
-        Boolean.serializer()
+        expected = "false",
+        original = false,
+        serializer = Boolean.serializer(),
     )
 
     @Test
     fun testChar() = Csv.assertEncodeAndDecode(
-        "a",
-        'a',
-        Char.serializer()
+        expected = "a",
+        original = 'a',
+        serializer = Char.serializer(),
     )
 
     @Test
     fun testString() = Csv.assertEncodeAndDecode(
-        "testing",
-        "testing",
-        String.serializer()
+        expected = "testing",
+        original = "testing",
+        serializer = String.serializer(),
     )
 
     @Test
     fun testUnit() = Csv.assertEncodeAndDecode(
-        "kotlin.Unit",
-        Unit,
-        Unit.serializer()
+        expected = "kotlin.Unit",
+        original = Unit,
+        serializer = Unit.serializer(),
     )
 
     @Test
     fun testIntList() = Csv.assertEncodeAndDecode(
-        "-150\n150\n42",
-        listOf(-150, 150, 42),
-        ListSerializer(Int.serializer())
+        expected = "-150\n150\n42",
+        original = listOf(-150, 150, 42),
+        serializer = ListSerializer(Int.serializer()),
     )
 }
