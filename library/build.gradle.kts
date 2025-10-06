@@ -1,7 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaBasePlugin
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    alias(libs.plugins.dokka.javadoc)
+    alias(libs.plugins.dokka)
     alias(libs.plugins.ktlint)
     `maven-publish`
     signing
@@ -46,11 +48,11 @@ tasks.withType<GenerateModuleMetadata> {
     enabled = !isSnapshot()
 }
 
-val dokkaJavadocJar by tasks.registering(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
+val dokkaHtmlJar by tasks.registering(Jar::class) {
+    group = DokkaBasePlugin.TASK_GROUP
     description = "Assembles Kotlin docs with Dokka"
     archiveClassifier.set("javadoc")
-    from(tasks.dokkaGeneratePublicationJavadoc)
+    from(tasks.dokkaGeneratePublicationHtml)
 }
 
 publishing {
@@ -88,7 +90,7 @@ publishing {
             }
 
             from(components["kotlin"])
-            artifact(dokkaJavadocJar)
+            artifact(dokkaHtmlJar)
         }
     }
 }
