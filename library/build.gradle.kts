@@ -1,21 +1,29 @@
 plugins {
-    kotlin("jvm")
+    kotlin("multiplatform")
     kotlin("plugin.serialization")
     alias(libs.plugins.dokka.javadoc)
     alias(libs.plugins.ktlint)
     `maven-publish`
     signing
-    jacoco
+    alias(libs.plugins.kover)
 }
 
 dependencies {
-    api(libs.kotlinx.serialization.core)
+    commonMainApi(libs.kotlinx.serialization.core)
+    commonMainApi("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
 
-    testImplementation(kotlin("test"))
-    testImplementation(libs.kotlinx.coroutines.test)
+    commonTestImplementation(kotlin("test"))
+    commonTestImplementation(libs.kotlinx.coroutines.test)
+    commonTestImplementation("org.jetbrains.kotlinx:kotlinx-io-bytestring:0.8.0")
+    commonTestImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
 
 kotlin {
+    jvm()
+    iosArm64()
+    iosSimulatorArm64()
+    macosArm64()
+
     jvmToolchain(8)
 
     explicitApi()
@@ -23,6 +31,10 @@ kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
     abiValidation {
         enabled = true
+    }
+
+    compilerOptions {
+        optIn.add("kotlin.uuid.ExperimentalUuidApi")
     }
 }
 
@@ -75,7 +87,7 @@ publishing {
                 }
             }
 
-            from(components["java"])
+            from(components["kotlin"])
             artifact(dokkaJavadocJar)
         }
     }
@@ -91,15 +103,14 @@ signing {
     sign(publishing.publications["library"])
 }
 
-tasks.jacocoTestReport {
+kover {
     reports {
-        xml.required = true
-        html.required = false
+        total {
+            xml {
+                onCheck = true
+            }
+        }
     }
-}
-
-tasks.check {
-    dependsOn(tasks.jacocoTestReport)
 }
 
 fun isSnapshot() = version.toString().endsWith("-SNAPSHOT")

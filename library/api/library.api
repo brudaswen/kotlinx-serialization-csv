@@ -1,9 +1,12 @@
 public abstract class kotlinx/serialization/csv/Csv : kotlinx/serialization/StringFormat {
 	public static final field Default Lkotlinx/serialization/csv/Csv$Default;
 	public synthetic fun <init> (Lkotlinx/serialization/csv/config/CsvConfig;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun decodeFrom (Lkotlinx/serialization/DeserializationStrategy;Ljava/io/Reader;)Ljava/lang/Object;
+	public final fun decodeFrom (Lkotlinx/serialization/DeserializationStrategy;Lkotlinx/io/Source;)Ljava/lang/Object;
+	public final fun decodeFrom (Lkotlinx/serialization/DeserializationStrategy;Lkotlinx/serialization/csv/source/CsvSource;)Ljava/lang/Object;
 	public fun decodeFromString (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;)Ljava/lang/Object;
 	public final fun encodeTo (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Ljava/lang/Appendable;)V
+	public final fun encodeTo (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/io/Sink;)V
+	public final fun encodeTo (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/csv/sink/CsvSink;)V
 	public fun encodeToString (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Ljava/lang/String;
 	public fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
 }
@@ -26,7 +29,7 @@ public final class kotlinx/serialization/csv/CsvRecordReader$DefaultImpls {
 }
 
 public final class kotlinx/serialization/csv/CsvRecordReaderKt {
-	public static final fun recordReader (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/io/Reader;)Lkotlinx/serialization/csv/CsvRecordReader;
+	public static final fun recordReader (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/csv/source/CsvSource;)Lkotlinx/serialization/csv/CsvRecordReader;
 }
 
 public abstract interface class kotlinx/serialization/csv/CsvRecordWriter {
@@ -34,7 +37,13 @@ public abstract interface class kotlinx/serialization/csv/CsvRecordWriter {
 }
 
 public final class kotlinx/serialization/csv/CsvRecordWriterKt {
-	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/lang/Appendable;)Lkotlinx/serialization/csv/CsvRecordWriter;
+	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/csv/sink/CsvSink;)Lkotlinx/serialization/csv/CsvRecordWriter;
+}
+
+public final class kotlinx/serialization/csv/Csv_jvmKt {
+	public static final fun decodeFrom (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/DeserializationStrategy;Ljava/io/InputStream;)Ljava/lang/Object;
+	public static final fun decodeFrom (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/DeserializationStrategy;Ljava/io/Reader;)Ljava/lang/Object;
+	public static final fun encodeTo (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Ljava/io/OutputStream;)V
 }
 
 public final class kotlinx/serialization/csv/config/CsvBuilder {
@@ -117,7 +126,21 @@ public final class kotlinx/serialization/csv/config/QuoteMode : java/lang/Enum {
 	public static fun values ()[Lkotlinx/serialization/csv/config/QuoteMode;
 }
 
-public abstract interface class kotlinx/serialization/csv/decode/Source {
+public abstract interface class kotlinx/serialization/csv/sink/CsvSink {
+	public abstract fun append (C)Lkotlinx/serialization/csv/sink/CsvSink;
+	public abstract fun append (Ljava/lang/String;)Lkotlinx/serialization/csv/sink/CsvSink;
+}
+
+public final class kotlinx/serialization/csv/sink/CsvSinkKt {
+	public static final fun CsvSink (Ljava/lang/Appendable;)Lkotlinx/serialization/csv/sink/CsvSink;
+	public static final fun CsvSink (Lkotlinx/io/Sink;)Lkotlinx/serialization/csv/sink/CsvSink;
+}
+
+public final class kotlinx/serialization/csv/sink/CsvSink_jvmKt {
+	public static final fun CsvSink (Ljava/io/OutputStream;)Lkotlinx/serialization/csv/sink/CsvSink;
+}
+
+public abstract interface class kotlinx/serialization/csv/source/CsvSource {
 	public abstract fun canRead ()Z
 	public abstract fun getOffset ()I
 	public abstract fun mark ()V
@@ -125,5 +148,15 @@ public abstract interface class kotlinx/serialization/csv/decode/Source {
 	public abstract fun read ()Ljava/lang/Character;
 	public abstract fun reset ()V
 	public abstract fun unmark ()V
+}
+
+public final class kotlinx/serialization/csv/source/CsvSourceKt {
+	public static final fun CsvSource (Ljava/lang/String;)Lkotlinx/serialization/csv/source/CsvSource;
+	public static final fun CsvSource (Lkotlinx/io/Source;)Lkotlinx/serialization/csv/source/CsvSource;
+}
+
+public final class kotlinx/serialization/csv/source/CsvSource_jvmKt {
+	public static final fun CsvSource (Ljava/io/InputStream;)Lkotlinx/serialization/csv/source/CsvSource;
+	public static final fun CsvSource (Ljava/io/Reader;)Lkotlinx/serialization/csv/source/CsvSource;
 }
 
