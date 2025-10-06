@@ -17,6 +17,9 @@ jobs:
         distribution: 'zulu'
         java-version: 17
 
+    - name: Binary compatibility validation
+      run: ./gradlew checkLegacyAbi
+
     - name: Build with Gradle
       run: ./gradlew build
 
