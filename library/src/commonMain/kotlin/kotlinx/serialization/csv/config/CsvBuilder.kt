@@ -63,6 +63,11 @@ public class CsvBuilder internal constructor(
     public var hasTrailingDelimiter: Boolean = config.hasTrailingDelimiter
 
     /**
+     * Use short value class header name (default: `false`).
+     */
+    public var shortValueClassHeaderName: Boolean = config.shortValueClassHeaderName
+
+    /**
      * Module with contextual and polymorphic serializers to be used in the resulting [Csv] instance.
      */
     public var serializersModule: SerializersModule = config.serializersModule
@@ -111,6 +116,7 @@ public class CsvBuilder internal constructor(
             headerSeparator = headerSeparator,
             ignoreUnknownColumns = ignoreUnknownColumns,
             hasTrailingDelimiter = hasTrailingDelimiter,
+            shortValueClassHeaderName = shortValueClassHeaderName,
             serializersModule = serializersModule,
         )
     }

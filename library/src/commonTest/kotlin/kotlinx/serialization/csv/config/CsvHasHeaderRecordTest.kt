@@ -2,8 +2,10 @@ package kotlinx.serialization.csv.config
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.Data
+import kotlinx.serialization.csv.records.EnumClass
 import kotlinx.serialization.csv.records.Id
 import kotlinx.serialization.csv.records.IdRecord
 import kotlinx.serialization.csv.records.IntRecord
@@ -163,6 +165,96 @@ class CsvHasHeaderRecordTest {
     )
 
     @Test
+    fun testByteWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Byte\n42",
+        original = 42,
+        serializer = Byte.serializer(),
+    )
+
+    @Test
+    fun testShortWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Short\n42",
+        original = 42,
+        serializer = Short.serializer(),
+    )
+
+    @Test
+    fun testIntWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Int\n42",
+        original = 42,
+        serializer = Int.serializer(),
+    )
+
+    @Test
+    fun testLongWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Long\n42",
+        original = 42,
+        serializer = Long.serializer(),
+    )
+
+    @Test
+    fun testFloatWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Float\n42.0",
+        original = 42f,
+        serializer = Float.serializer(),
+    )
+
+    @Test
+    fun testDoubleWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Double\n42.0",
+        original = 42.0,
+        serializer = Double.serializer(),
+    )
+
+    @Test
+    fun testBooleanWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Boolean\ntrue",
+        original = true,
+        serializer = Boolean.serializer(),
+    )
+
+    @Test
+    fun testCharWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "Char\na",
+        original = 'a',
+        serializer = Char.serializer(),
+    )
+
+    @Test
+    fun testStringWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "String\nvalue",
+        original = "value",
+        serializer = String.serializer(),
+    )
+
+    @Test
+    fun testEnumWithHeaderRecords() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "EnumClass\nFIRST",
+        original = EnumClass.FIRST,
+        serializer = EnumClass.serializer(),
+    )
+
+    @Test
     fun testValueClassWithHeaderRecords() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
@@ -174,6 +266,16 @@ class CsvHasHeaderRecordTest {
     @Test
     fun testNestedValueClassWithHeaderRecords() = Csv {
         hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "id.value,name\n42,Alice",
+        original = IdRecord(Id(42), "Alice"),
+        serializer = IdRecord.serializer(),
+    )
+
+    @Test
+    fun testNestedValueClassWithHeaderRecordsAndShortValueClassHeaderName() = Csv {
+        hasHeaderRecord = true
+        shortValueClassHeaderName = true
     }.assertEncodeAndDecode(
         expected = "id,name\n42,Alice",
         original = IdRecord(Id(42), "Alice"),

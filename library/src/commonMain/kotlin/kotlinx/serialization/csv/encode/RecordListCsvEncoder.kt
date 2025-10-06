@@ -18,9 +18,7 @@ internal class RecordListCsvEncoder(
         descriptor: SerialDescriptor,
     ): CompositeEncoder {
         // For complex records: Begin a new record and end it in [endChildStructure]
-        if (config.hasHeaderRecord && writer.isFirstRecord) {
-            printHeaderRecord(descriptor)
-        }
+        printHeaderRecord(descriptor)
         writer.beginRecord()
         return super.beginStructure(descriptor)
     }
