@@ -18,6 +18,11 @@ kotlin {
     jvmToolchain(8)
 
     explicitApi()
+
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled = true
+    }
 }
 
 java {
