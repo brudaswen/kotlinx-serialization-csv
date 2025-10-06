@@ -1,6 +1,8 @@
 package kotlinx.serialization.csv.decode
 
-import java.io.StringReader
+import kotlinx.io.Buffer
+import kotlinx.io.writeString
+import kotlinx.serialization.csv.source.CsvSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -11,20 +13,20 @@ class CharStreamSourceTest {
 
     @Test
     fun testCanRead() {
-        val source = CharStreamSource("")
+        val source = csvSourceFromCharStream("")
         assertTrue(source.canRead())
     }
 
     @Test
     fun testNotCanRead() {
-        val source = CharStreamSource("")
+        val source = csvSourceFromCharStream("")
         source.read()
         assertFalse(source.canRead())
     }
 
     @Test
     fun testRead() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.read())
         assertEquals('b', source.read())
         assertEquals('c', source.read())
@@ -33,19 +35,19 @@ class CharStreamSourceTest {
 
     @Test
     fun testReadEof() {
-        val source = CharStreamSource("")
+        val source = csvSourceFromCharStream("")
         assertNull(source.read())
     }
 
     @Test
     fun testPeek() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.peek())
     }
 
     @Test
     fun testPeekMultipleTimes() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.peek())
         assertEquals('a', source.peek())
         assertEquals('a', source.peek())
@@ -53,13 +55,13 @@ class CharStreamSourceTest {
 
     @Test
     fun testPeekEof() {
-        val source = CharStreamSource("")
+        val source = csvSourceFromCharStream("")
         assertNull(source.peek())
     }
 
     @Test
     fun testMarkUnmark() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -69,7 +71,7 @@ class CharStreamSourceTest {
 
     @Test
     fun testMarkMarkUnmarkReset() {
-        val source = CharStreamSource("0123456789")
+        val source = csvSourceFromCharStream("0123456789")
         assertEquals('0', source.read())
         source.mark()
         assertEquals('1', source.read())
@@ -83,7 +85,7 @@ class CharStreamSourceTest {
 
     @Test
     fun testMarkReset() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -93,7 +95,7 @@ class CharStreamSourceTest {
 
     @Test
     fun testMarkResetMultiple() {
-        val source = CharStreamSource("abcdef")
+        val source = csvSourceFromCharStream("abcdef")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.read())
@@ -107,7 +109,7 @@ class CharStreamSourceTest {
 
     @Test
     fun testMarkPeekRead() {
-        val source = CharStreamSource("abc")
+        val source = csvSourceFromCharStream("abc")
         assertEquals('a', source.read())
         source.mark()
         assertEquals('b', source.peek())
@@ -124,9 +126,10 @@ class CharStreamSourceTest {
     }
 }
 
-@Suppress("TestFunctionName")
-private fun CharStreamSource(
+private fun csvSourceFromCharStream(
     string: String,
-): CharStreamSource = CharStreamSource(
-    reader = StringReader(string),
+): CsvSource = CsvSource(
+    input = Buffer().apply {
+        writeString(string)
+    },
 )

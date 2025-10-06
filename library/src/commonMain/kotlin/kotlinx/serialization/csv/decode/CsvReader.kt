@@ -1,16 +1,17 @@
 package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.csv.config.CsvConfig
+import kotlinx.serialization.csv.source.CsvSource
 
 /**
  * Reader that parses CSV input.
  */
 internal class CsvReader(
-    source: Source,
+    source: CsvSource,
     private val config: CsvConfig,
 ) {
 
-    private val source: Source by lazy {
+    private val source: CsvSource by lazy {
         source.also {
             // Skip Microsoft Excel's byte order marker, should it appear.
             // This has to happen lazily to avoid blocking read calls during the initialization of the CsvReader.

@@ -1,21 +1,10 @@
-package kotlinx.serialization.csv.decode
+package kotlinx.serialization.csv.source
 
-import java.io.EOFException
-import java.io.Reader
+import kotlinx.io.EOFException
 
 internal class CharStreamSource(
     private val readChar: () -> Char?,
-) : Source {
-
-    constructor(
-        reader: Reader,
-    ) : this(
-        readChar = {
-            reader.read().let {
-                if (it == -1) null else it.toChar()
-            }
-        },
-    )
+) : CsvSource {
 
     private var nextPosition = 0
     override var offset: Int = 0

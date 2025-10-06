@@ -1,9 +1,12 @@
-package kotlinx.serialization.csv.decode
+package kotlinx.serialization.csv.source
+
+import kotlinx.io.EOFException
+import kotlinx.io.Source
 
 /**
  * Stream that allow to read [Char]s from.
  */
-public interface Source {
+public interface CsvSource {
 
     /**
      * Current read offset in the source.
@@ -45,3 +48,25 @@ public interface Source {
      */
     public fun reset()
 }
+
+/**
+ * Create [CsvSource] that reads from [String].
+ */
+public fun CsvSource(
+    input: String,
+): CsvSource = StringSource(input)
+
+/**
+ * Create [CsvSource] that reads from [Source].
+ */
+public fun CsvSource(
+    input: Source,
+): CsvSource = CharStreamSource(
+    readChar = {
+        try {
+            input.readByte().toInt().toChar()
+        } catch (_: EOFException) {
+            null
+        }
+    },
+)

@@ -2,6 +2,7 @@ package kotlinx.serialization.csv.encode
 
 import kotlinx.serialization.csv.config.CsvConfig
 import kotlinx.serialization.csv.config.QuoteMode
+import kotlinx.serialization.csv.sink.CsvSink
 
 /**
  * Writer to generate CSV output.
@@ -10,7 +11,7 @@ import kotlinx.serialization.csv.config.QuoteMode
  * finally call [endRecord] to finish the record.
  */
 internal class CsvWriter(
-    private val output: Appendable,
+    private val sink: CsvSink,
     private val config: CsvConfig,
 ) {
 
@@ -23,7 +24,7 @@ internal class CsvWriter(
      */
     fun beginRecord() {
         if (!isFirstRecord) {
-            output.append(config.recordSeparator)
+            sink.append(config.recordSeparator)
         }
     }
 
@@ -67,19 +68,19 @@ internal class CsvWriter(
                 escapeCharacters = "$escapeChar$delimiter$quoteChar$recordSeparator",
                 escapeChar = escapeChar,
             )
-            output.append(escapedValue)
+            sink.append(escapedValue)
         } else if (mode == WriteMode.QUOTED || mode == WriteMode.ESCAPED) {
             val escapedValue = value.replace("$quoteChar", "$quoteChar$quoteChar")
-            output.append(quoteChar).append(escapedValue).append(quoteChar)
+            sink.append(quoteChar).append(escapedValue).append(quoteChar)
         } else {
-            output.append(value)
+            sink.append(value)
         }
     }
 
     /** End the current column (which writes the column delimiter). */
     private fun nextColumn() {
         if (!isFirstColumn) {
-            output.append(config.delimiter)
+            sink.append(config.delimiter)
         }
         isFirstColumn = false
     }

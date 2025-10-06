@@ -1,6 +1,7 @@
 package kotlinx.serialization.csv.decode
 
 import kotlinx.serialization.csv.config.CsvConfig
+import kotlinx.serialization.csv.source.StringSource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

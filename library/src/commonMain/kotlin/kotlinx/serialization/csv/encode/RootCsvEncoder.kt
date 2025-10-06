@@ -19,14 +19,6 @@ internal class RootCsvEncoder(
     writer: CsvWriter,
 ) : CsvEncoder(csv, writer, null) {
 
-    internal constructor(
-        csv: Csv,
-        output: Appendable,
-    ) : this(
-        csv = csv,
-        writer = CsvWriter(output, csv.config),
-    )
-
     override fun beginCollection(
         descriptor: SerialDescriptor,
         collectionSize: Int,

@@ -10,7 +10,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.CsvDecodingException
-import java.io.StringReader
+import kotlinx.serialization.csv.source.CsvSource
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -30,7 +30,7 @@ inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
     val string2 = buildString { encodeTo(serializer, original, this) }
     if (printResult) println("[Serialized form, stream] $string2")
     assertEquals(expected, string2)
-    val restored2 = decodeFrom(serializer, StringReader(string2))
+    val restored2 = decodeFrom(serializer, CsvSource(string2))
     if (printResult) println("[Restored form, stream] $restored2")
     assertEquals(original, restored2)
 
@@ -48,7 +48,7 @@ inline fun <reified T : Any> Csv.assertDecode(
     if (printResult) println("[Restored form] $restored")
     assertEquals(expected, restored)
 
-    val restored2 = decodeFrom(serializer, StringReader(input))
+    val restored2 = decodeFrom(serializer, CsvSource(input))
     if (printResult) println("[Restored form] $restored2")
     assertEquals(expected, restored2)
 }

@@ -1,5 +1,7 @@
 package kotlinx.serialization.csv
 
+import kotlinx.io.Sink
+import kotlinx.io.Source
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialFormat
@@ -8,14 +10,13 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.StringFormat
 import kotlinx.serialization.csv.config.CsvBuilder
 import kotlinx.serialization.csv.config.CsvConfig
-import kotlinx.serialization.csv.decode.CharStreamSource
 import kotlinx.serialization.csv.decode.CsvReader
 import kotlinx.serialization.csv.decode.RootCsvDecoder
-import kotlinx.serialization.csv.decode.Source
-import kotlinx.serialization.csv.decode.StringSource
+import kotlinx.serialization.csv.encode.CsvWriter
 import kotlinx.serialization.csv.encode.RootCsvEncoder
+import kotlinx.serialization.csv.sink.CsvSink
+import kotlinx.serialization.csv.source.CsvSource
 import kotlinx.serialization.modules.SerializersModule
-import java.io.Reader
 
 /**
  * The main entry point to work with CSV serialization.
@@ -54,6 +55,28 @@ public sealed class Csv(
      * @param output The output where the CSV will be written.
      */
     public fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: Appendable) {
+        encodeTo(serializer, value, CsvSink(output))
+    }
+
+    /**
+     * Serialize [value] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param value The [Serializable] object.
+     * @param output The output where the CSV will be written.
+     */
+    public fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: Sink) {
+        encodeTo(serializer, value, CsvSink(output))
+    }
+
+    /**
+     * Serialize [value] into CSV record(s).
+     *
+     * @param serializer The serializer used to serialize the given object.
+     * @param value The [Serializable] object.
+     * @param output The output where the CSV will be written.
+     */
+    public fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: CsvSink) {
         output.encode(serializer, value)
     }
 
@@ -64,7 +87,7 @@ public sealed class Csv(
      * @param string The CSV string to parse.
      */
     override fun <T> decodeFromString(deserializer: DeserializationStrategy<T>, string: String): T =
-        StringSource(string).decode(deserializer)
+        decodeFrom(deserializer, CsvSource(string))
 
     /**
      * Parse CSV from the given [input] into [Serializable] object.
@@ -72,8 +95,17 @@ public sealed class Csv(
      * @param deserializer The deserializer used to parse the given CSV string.
      * @param input The CSV input to parse.
      */
-    public fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
-        CharStreamSource(input).decode(deserializer)
+    public fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Source): T =
+        decodeFrom(deserializer, CsvSource(input))
+
+    /**
+     * Parse CSV from the given [input] into [Serializable] object.
+     *
+     * @param deserializer The deserializer used to parse the given CSV string.
+     * @param input The CSV input to parse.
+     */
+    public fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: CsvSource): T =
+        input.decode(deserializer)
 
     /**
      * Serialize [value] into CSV record(s).
@@ -81,10 +113,13 @@ public sealed class Csv(
      * @param serializer The serializer used to serialize the given object.
      * @param value The [Serializable] object.
      */
-    private fun <T> Appendable.encode(serializer: SerializationStrategy<T>, value: T) {
+    private fun <T> CsvSink.encode(serializer: SerializationStrategy<T>, value: T) {
         RootCsvEncoder(
             csv = this@Csv,
-            output = this,
+            writer = CsvWriter(
+                sink = this,
+                config = this@Csv.config,
+            ),
         ).encodeSerializableValue(serializer, value)
     }
 
@@ -93,7 +128,7 @@ public sealed class Csv(
      *
      * @param deserializer The deserializer used to parse the given CSV string.
      */
-    private fun <T> Source.decode(deserializer: DeserializationStrategy<T>): T {
+    private fun <T> CsvSource.decode(deserializer: DeserializationStrategy<T>): T {
         val reader = CsvReader(
             source = this,
             config = config,

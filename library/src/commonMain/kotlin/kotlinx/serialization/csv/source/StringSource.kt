@@ -1,4 +1,4 @@
-package kotlinx.serialization.csv.decode
+package kotlinx.serialization.csv.source
 
 private const val EOF = -1
 
@@ -7,7 +7,7 @@ private const val EOF = -1
  */
 internal class StringSource(
     private val content: String,
-) : Source {
+) : CsvSource {
 
     override val offset: Int
         get() = position
