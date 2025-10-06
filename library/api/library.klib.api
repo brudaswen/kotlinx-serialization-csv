@@ -1,0 +1,165 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, macosArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <de.brudaswen.kotlinx.serialization:library>
+final enum class kotlinx.serialization.csv.config/QuoteMode : kotlin/Enum<kotlinx.serialization.csv.config/QuoteMode> { // kotlinx.serialization.csv.config/QuoteMode|null[0]
+    enum entry ALL // kotlinx.serialization.csv.config/QuoteMode.ALL|null[0]
+    enum entry ALL_NON_NULL // kotlinx.serialization.csv.config/QuoteMode.ALL_NON_NULL|null[0]
+    enum entry ALL_NON_NUMERIC // kotlinx.serialization.csv.config/QuoteMode.ALL_NON_NUMERIC|null[0]
+    enum entry MINIMAL // kotlinx.serialization.csv.config/QuoteMode.MINIMAL|null[0]
+    enum entry NONE // kotlinx.serialization.csv.config/QuoteMode.NONE|null[0]
+
+    final val entries // kotlinx.serialization.csv.config/QuoteMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<kotlinx.serialization.csv.config/QuoteMode> // kotlinx.serialization.csv.config/QuoteMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): kotlinx.serialization.csv.config/QuoteMode // kotlinx.serialization.csv.config/QuoteMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<kotlinx.serialization.csv.config/QuoteMode> // kotlinx.serialization.csv.config/QuoteMode.values|values#static(){}[0]
+}
+
+abstract fun interface <#A: kotlin/Any> kotlinx.serialization.csv/CsvRecordWriter { // kotlinx.serialization.csv/CsvRecordWriter|null[0]
+    abstract fun write(#A) // kotlinx.serialization.csv/CsvRecordWriter.write|write(1:0){}[0]
+}
+
+abstract interface <#A: kotlin/Any> kotlinx.serialization.csv/CsvRecordReader : kotlin.collections/Iterator<#A> { // kotlinx.serialization.csv/CsvRecordReader|null[0]
+    open fun read(): #A? // kotlinx.serialization.csv/CsvRecordReader.read|read(){}[0]
+}
+
+abstract interface kotlinx.serialization.csv.sink/CsvSink { // kotlinx.serialization.csv.sink/CsvSink|null[0]
+    abstract fun append(kotlin/Char): kotlinx.serialization.csv.sink/CsvSink // kotlinx.serialization.csv.sink/CsvSink.append|append(kotlin.Char){}[0]
+    abstract fun append(kotlin/String): kotlinx.serialization.csv.sink/CsvSink // kotlinx.serialization.csv.sink/CsvSink.append|append(kotlin.String){}[0]
+}
+
+abstract interface kotlinx.serialization.csv.source/CsvSource { // kotlinx.serialization.csv.source/CsvSource|null[0]
+    abstract val offset // kotlinx.serialization.csv.source/CsvSource.offset|{}offset[0]
+        abstract fun <get-offset>(): kotlin/Int // kotlinx.serialization.csv.source/CsvSource.offset.<get-offset>|<get-offset>(){}[0]
+
+    abstract fun canRead(): kotlin/Boolean // kotlinx.serialization.csv.source/CsvSource.canRead|canRead(){}[0]
+    abstract fun mark() // kotlinx.serialization.csv.source/CsvSource.mark|mark(){}[0]
+    abstract fun peek(): kotlin/Char? // kotlinx.serialization.csv.source/CsvSource.peek|peek(){}[0]
+    abstract fun read(): kotlin/Char? // kotlinx.serialization.csv.source/CsvSource.read|read(){}[0]
+    abstract fun reset() // kotlinx.serialization.csv.source/CsvSource.reset|reset(){}[0]
+    abstract fun unmark() // kotlinx.serialization.csv.source/CsvSource.unmark|unmark(){}[0]
+}
+
+final class kotlinx.serialization.csv.config/CsvBuilder { // kotlinx.serialization.csv.config/CsvBuilder|null[0]
+    final var delimiter // kotlinx.serialization.csv.config/CsvBuilder.delimiter|{}delimiter[0]
+        final fun <get-delimiter>(): kotlin/Char // kotlinx.serialization.csv.config/CsvBuilder.delimiter.<get-delimiter>|<get-delimiter>(){}[0]
+        final fun <set-delimiter>(kotlin/Char) // kotlinx.serialization.csv.config/CsvBuilder.delimiter.<set-delimiter>|<set-delimiter>(kotlin.Char){}[0]
+    final var escapeChar // kotlinx.serialization.csv.config/CsvBuilder.escapeChar|{}escapeChar[0]
+        final fun <get-escapeChar>(): kotlin/Char? // kotlinx.serialization.csv.config/CsvBuilder.escapeChar.<get-escapeChar>|<get-escapeChar>(){}[0]
+        final fun <set-escapeChar>(kotlin/Char?) // kotlinx.serialization.csv.config/CsvBuilder.escapeChar.<set-escapeChar>|<set-escapeChar>(kotlin.Char?){}[0]
+    final var hasHeaderRecord // kotlinx.serialization.csv.config/CsvBuilder.hasHeaderRecord|{}hasHeaderRecord[0]
+        final fun <get-hasHeaderRecord>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvBuilder.hasHeaderRecord.<get-hasHeaderRecord>|<get-hasHeaderRecord>(){}[0]
+        final fun <set-hasHeaderRecord>(kotlin/Boolean) // kotlinx.serialization.csv.config/CsvBuilder.hasHeaderRecord.<set-hasHeaderRecord>|<set-hasHeaderRecord>(kotlin.Boolean){}[0]
+    final var hasTrailingDelimiter // kotlinx.serialization.csv.config/CsvBuilder.hasTrailingDelimiter|{}hasTrailingDelimiter[0]
+        final fun <get-hasTrailingDelimiter>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvBuilder.hasTrailingDelimiter.<get-hasTrailingDelimiter>|<get-hasTrailingDelimiter>(){}[0]
+        final fun <set-hasTrailingDelimiter>(kotlin/Boolean) // kotlinx.serialization.csv.config/CsvBuilder.hasTrailingDelimiter.<set-hasTrailingDelimiter>|<set-hasTrailingDelimiter>(kotlin.Boolean){}[0]
+    final var headerSeparator // kotlinx.serialization.csv.config/CsvBuilder.headerSeparator|{}headerSeparator[0]
+        final fun <get-headerSeparator>(): kotlin/Char // kotlinx.serialization.csv.config/CsvBuilder.headerSeparator.<get-headerSeparator>|<get-headerSeparator>(){}[0]
+        final fun <set-headerSeparator>(kotlin/Char) // kotlinx.serialization.csv.config/CsvBuilder.headerSeparator.<set-headerSeparator>|<set-headerSeparator>(kotlin.Char){}[0]
+    final var ignoreEmptyLines // kotlinx.serialization.csv.config/CsvBuilder.ignoreEmptyLines|{}ignoreEmptyLines[0]
+        final fun <get-ignoreEmptyLines>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvBuilder.ignoreEmptyLines.<get-ignoreEmptyLines>|<get-ignoreEmptyLines>(){}[0]
+        final fun <set-ignoreEmptyLines>(kotlin/Boolean) // kotlinx.serialization.csv.config/CsvBuilder.ignoreEmptyLines.<set-ignoreEmptyLines>|<set-ignoreEmptyLines>(kotlin.Boolean){}[0]
+    final var ignoreUnknownColumns // kotlinx.serialization.csv.config/CsvBuilder.ignoreUnknownColumns|{}ignoreUnknownColumns[0]
+        final fun <get-ignoreUnknownColumns>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvBuilder.ignoreUnknownColumns.<get-ignoreUnknownColumns>|<get-ignoreUnknownColumns>(){}[0]
+        final fun <set-ignoreUnknownColumns>(kotlin/Boolean) // kotlinx.serialization.csv.config/CsvBuilder.ignoreUnknownColumns.<set-ignoreUnknownColumns>|<set-ignoreUnknownColumns>(kotlin.Boolean){}[0]
+    final var nullString // kotlinx.serialization.csv.config/CsvBuilder.nullString|{}nullString[0]
+        final fun <get-nullString>(): kotlin/String // kotlinx.serialization.csv.config/CsvBuilder.nullString.<get-nullString>|<get-nullString>(){}[0]
+        final fun <set-nullString>(kotlin/String) // kotlinx.serialization.csv.config/CsvBuilder.nullString.<set-nullString>|<set-nullString>(kotlin.String){}[0]
+    final var quoteChar // kotlinx.serialization.csv.config/CsvBuilder.quoteChar|{}quoteChar[0]
+        final fun <get-quoteChar>(): kotlin/Char // kotlinx.serialization.csv.config/CsvBuilder.quoteChar.<get-quoteChar>|<get-quoteChar>(){}[0]
+        final fun <set-quoteChar>(kotlin/Char) // kotlinx.serialization.csv.config/CsvBuilder.quoteChar.<set-quoteChar>|<set-quoteChar>(kotlin.Char){}[0]
+    final var quoteMode // kotlinx.serialization.csv.config/CsvBuilder.quoteMode|{}quoteMode[0]
+        final fun <get-quoteMode>(): kotlinx.serialization.csv.config/QuoteMode // kotlinx.serialization.csv.config/CsvBuilder.quoteMode.<get-quoteMode>|<get-quoteMode>(){}[0]
+        final fun <set-quoteMode>(kotlinx.serialization.csv.config/QuoteMode) // kotlinx.serialization.csv.config/CsvBuilder.quoteMode.<set-quoteMode>|<set-quoteMode>(kotlinx.serialization.csv.config.QuoteMode){}[0]
+    final var recordSeparator // kotlinx.serialization.csv.config/CsvBuilder.recordSeparator|{}recordSeparator[0]
+        final fun <get-recordSeparator>(): kotlin/String // kotlinx.serialization.csv.config/CsvBuilder.recordSeparator.<get-recordSeparator>|<get-recordSeparator>(){}[0]
+        final fun <set-recordSeparator>(kotlin/String) // kotlinx.serialization.csv.config/CsvBuilder.recordSeparator.<set-recordSeparator>|<set-recordSeparator>(kotlin.String){}[0]
+    final var serializersModule // kotlinx.serialization.csv.config/CsvBuilder.serializersModule|{}serializersModule[0]
+        final fun <get-serializersModule>(): kotlinx.serialization.modules/SerializersModule // kotlinx.serialization.csv.config/CsvBuilder.serializersModule.<get-serializersModule>|<get-serializersModule>(){}[0]
+        final fun <set-serializersModule>(kotlinx.serialization.modules/SerializersModule) // kotlinx.serialization.csv.config/CsvBuilder.serializersModule.<set-serializersModule>|<set-serializersModule>(kotlinx.serialization.modules.SerializersModule){}[0]
+}
+
+final class kotlinx.serialization.csv.config/CsvConfig { // kotlinx.serialization.csv.config/CsvConfig|null[0]
+    constructor <init>(kotlin/Char = ..., kotlin/String = ..., kotlin/Char = ..., kotlinx.serialization.csv.config/QuoteMode = ..., kotlin/Char? = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Char = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlinx.serialization.modules/SerializersModule = ...) // kotlinx.serialization.csv.config/CsvConfig.<init>|<init>(kotlin.Char;kotlin.String;kotlin.Char;kotlinx.serialization.csv.config.QuoteMode;kotlin.Char?;kotlin.String;kotlin.Boolean;kotlin.Boolean;kotlin.Char;kotlin.Boolean;kotlin.Boolean;kotlinx.serialization.modules.SerializersModule){}[0]
+
+    final val delimiter // kotlinx.serialization.csv.config/CsvConfig.delimiter|{}delimiter[0]
+        final fun <get-delimiter>(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.delimiter.<get-delimiter>|<get-delimiter>(){}[0]
+    final val escapeChar // kotlinx.serialization.csv.config/CsvConfig.escapeChar|{}escapeChar[0]
+        final fun <get-escapeChar>(): kotlin/Char? // kotlinx.serialization.csv.config/CsvConfig.escapeChar.<get-escapeChar>|<get-escapeChar>(){}[0]
+    final val hasHeaderRecord // kotlinx.serialization.csv.config/CsvConfig.hasHeaderRecord|{}hasHeaderRecord[0]
+        final fun <get-hasHeaderRecord>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.hasHeaderRecord.<get-hasHeaderRecord>|<get-hasHeaderRecord>(){}[0]
+    final val hasTrailingDelimiter // kotlinx.serialization.csv.config/CsvConfig.hasTrailingDelimiter|{}hasTrailingDelimiter[0]
+        final fun <get-hasTrailingDelimiter>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.hasTrailingDelimiter.<get-hasTrailingDelimiter>|<get-hasTrailingDelimiter>(){}[0]
+    final val headerSeparator // kotlinx.serialization.csv.config/CsvConfig.headerSeparator|{}headerSeparator[0]
+        final fun <get-headerSeparator>(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.headerSeparator.<get-headerSeparator>|<get-headerSeparator>(){}[0]
+    final val ignoreEmptyLines // kotlinx.serialization.csv.config/CsvConfig.ignoreEmptyLines|{}ignoreEmptyLines[0]
+        final fun <get-ignoreEmptyLines>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.ignoreEmptyLines.<get-ignoreEmptyLines>|<get-ignoreEmptyLines>(){}[0]
+    final val ignoreUnknownColumns // kotlinx.serialization.csv.config/CsvConfig.ignoreUnknownColumns|{}ignoreUnknownColumns[0]
+        final fun <get-ignoreUnknownColumns>(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.ignoreUnknownColumns.<get-ignoreUnknownColumns>|<get-ignoreUnknownColumns>(){}[0]
+    final val nullString // kotlinx.serialization.csv.config/CsvConfig.nullString|{}nullString[0]
+        final fun <get-nullString>(): kotlin/String // kotlinx.serialization.csv.config/CsvConfig.nullString.<get-nullString>|<get-nullString>(){}[0]
+    final val quoteChar // kotlinx.serialization.csv.config/CsvConfig.quoteChar|{}quoteChar[0]
+        final fun <get-quoteChar>(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.quoteChar.<get-quoteChar>|<get-quoteChar>(){}[0]
+    final val quoteMode // kotlinx.serialization.csv.config/CsvConfig.quoteMode|{}quoteMode[0]
+        final fun <get-quoteMode>(): kotlinx.serialization.csv.config/QuoteMode // kotlinx.serialization.csv.config/CsvConfig.quoteMode.<get-quoteMode>|<get-quoteMode>(){}[0]
+    final val recordSeparator // kotlinx.serialization.csv.config/CsvConfig.recordSeparator|{}recordSeparator[0]
+        final fun <get-recordSeparator>(): kotlin/String // kotlinx.serialization.csv.config/CsvConfig.recordSeparator.<get-recordSeparator>|<get-recordSeparator>(){}[0]
+    final val serializersModule // kotlinx.serialization.csv.config/CsvConfig.serializersModule|{}serializersModule[0]
+        final fun <get-serializersModule>(): kotlinx.serialization.modules/SerializersModule // kotlinx.serialization.csv.config/CsvConfig.serializersModule.<get-serializersModule>|<get-serializersModule>(){}[0]
+
+    final fun component1(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.component1|component1(){}[0]
+    final fun component10(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.component10|component10(){}[0]
+    final fun component11(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.component11|component11(){}[0]
+    final fun component12(): kotlinx.serialization.modules/SerializersModule // kotlinx.serialization.csv.config/CsvConfig.component12|component12(){}[0]
+    final fun component2(): kotlin/String // kotlinx.serialization.csv.config/CsvConfig.component2|component2(){}[0]
+    final fun component3(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.component3|component3(){}[0]
+    final fun component4(): kotlinx.serialization.csv.config/QuoteMode // kotlinx.serialization.csv.config/CsvConfig.component4|component4(){}[0]
+    final fun component5(): kotlin/Char? // kotlinx.serialization.csv.config/CsvConfig.component5|component5(){}[0]
+    final fun component6(): kotlin/String // kotlinx.serialization.csv.config/CsvConfig.component6|component6(){}[0]
+    final fun component7(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.component7|component7(){}[0]
+    final fun component8(): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.component8|component8(){}[0]
+    final fun component9(): kotlin/Char // kotlinx.serialization.csv.config/CsvConfig.component9|component9(){}[0]
+    final fun copy(kotlin/Char = ..., kotlin/String = ..., kotlin/Char = ..., kotlinx.serialization.csv.config/QuoteMode = ..., kotlin/Char? = ..., kotlin/String = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlin/Char = ..., kotlin/Boolean = ..., kotlin/Boolean = ..., kotlinx.serialization.modules/SerializersModule = ...): kotlinx.serialization.csv.config/CsvConfig // kotlinx.serialization.csv.config/CsvConfig.copy|copy(kotlin.Char;kotlin.String;kotlin.Char;kotlinx.serialization.csv.config.QuoteMode;kotlin.Char?;kotlin.String;kotlin.Boolean;kotlin.Boolean;kotlin.Char;kotlin.Boolean;kotlin.Boolean;kotlinx.serialization.modules.SerializersModule){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // kotlinx.serialization.csv.config/CsvConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // kotlinx.serialization.csv.config/CsvConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // kotlinx.serialization.csv.config/CsvConfig.toString|toString(){}[0]
+
+    final object Companion { // kotlinx.serialization.csv.config/CsvConfig.Companion|null[0]
+        final val Default // kotlinx.serialization.csv.config/CsvConfig.Companion.Default|{}Default[0]
+            final fun <get-Default>(): kotlinx.serialization.csv.config/CsvConfig // kotlinx.serialization.csv.config/CsvConfig.Companion.Default.<get-Default>|<get-Default>(){}[0]
+        final val Rfc4180 // kotlinx.serialization.csv.config/CsvConfig.Companion.Rfc4180|{}Rfc4180[0]
+            final fun <get-Rfc4180>(): kotlinx.serialization.csv.config/CsvConfig // kotlinx.serialization.csv.config/CsvConfig.Companion.Rfc4180.<get-Rfc4180>|<get-Rfc4180>(){}[0]
+    }
+}
+
+sealed class kotlinx.serialization.csv/Csv : kotlinx.serialization/StringFormat { // kotlinx.serialization.csv/Csv|null[0]
+    open val serializersModule // kotlinx.serialization.csv/Csv.serializersModule|{}serializersModule[0]
+        open fun <get-serializersModule>(): kotlinx.serialization.modules/SerializersModule // kotlinx.serialization.csv/Csv.serializersModule.<get-serializersModule>|<get-serializersModule>(){}[0]
+
+    final fun <#A1: kotlin/Any?> decodeFrom(kotlinx.serialization/DeserializationStrategy<#A1>, kotlinx.io/Source): #A1 // kotlinx.serialization.csv/Csv.decodeFrom|decodeFrom(kotlinx.serialization.DeserializationStrategy<0:0>;kotlinx.io.Source){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> decodeFrom(kotlinx.serialization/DeserializationStrategy<#A1>, kotlinx.serialization.csv.source/CsvSource): #A1 // kotlinx.serialization.csv/Csv.decodeFrom|decodeFrom(kotlinx.serialization.DeserializationStrategy<0:0>;kotlinx.serialization.csv.source.CsvSource){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> encodeTo(kotlinx.serialization/SerializationStrategy<#A1>, #A1, kotlin.text/Appendable) // kotlinx.serialization.csv/Csv.encodeTo|encodeTo(kotlinx.serialization.SerializationStrategy<0:0>;0:0;kotlin.text.Appendable){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> encodeTo(kotlinx.serialization/SerializationStrategy<#A1>, #A1, kotlinx.io/Sink) // kotlinx.serialization.csv/Csv.encodeTo|encodeTo(kotlinx.serialization.SerializationStrategy<0:0>;0:0;kotlinx.io.Sink){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> encodeTo(kotlinx.serialization/SerializationStrategy<#A1>, #A1, kotlinx.serialization.csv.sink/CsvSink) // kotlinx.serialization.csv/Csv.encodeTo|encodeTo(kotlinx.serialization.SerializationStrategy<0:0>;0:0;kotlinx.serialization.csv.sink.CsvSink){0§<kotlin.Any?>}[0]
+    open fun <#A1: kotlin/Any?> decodeFromString(kotlinx.serialization/DeserializationStrategy<#A1>, kotlin/String): #A1 // kotlinx.serialization.csv/Csv.decodeFromString|decodeFromString(kotlinx.serialization.DeserializationStrategy<0:0>;kotlin.String){0§<kotlin.Any?>}[0]
+    open fun <#A1: kotlin/Any?> encodeToString(kotlinx.serialization/SerializationStrategy<#A1>, #A1): kotlin/String // kotlinx.serialization.csv/Csv.encodeToString|encodeToString(kotlinx.serialization.SerializationStrategy<0:0>;0:0){0§<kotlin.Any?>}[0]
+
+    final object Default : kotlinx.serialization.csv/Csv { // kotlinx.serialization.csv/Csv.Default|null[0]
+        final val Rfc4180 // kotlinx.serialization.csv/Csv.Default.Rfc4180|{}Rfc4180[0]
+            final fun <get-Rfc4180>(): kotlinx.serialization.csv/Csv // kotlinx.serialization.csv/Csv.Default.Rfc4180.<get-Rfc4180>|<get-Rfc4180>(){}[0]
+    }
+}
+
+final fun (kotlinx.serialization.csv/Csv).kotlinx.serialization.csv/configure(kotlin/Function1<kotlinx.serialization.csv.config/CsvBuilder, kotlin/Unit>): kotlinx.serialization.csv/Csv // kotlinx.serialization.csv/configure|configure@kotlinx.serialization.csv.Csv(kotlin.Function1<kotlinx.serialization.csv.config.CsvBuilder,kotlin.Unit>){}[0]
+final fun <#A: kotlin/Any> (kotlinx.serialization.csv/Csv).kotlinx.serialization.csv/recordReader(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.csv.source/CsvSource): kotlinx.serialization.csv/CsvRecordReader<#A> // kotlinx.serialization.csv/recordReader|recordReader@kotlinx.serialization.csv.Csv(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.csv.source.CsvSource){0§<kotlin.Any>}[0]
+final fun <#A: kotlin/Any> (kotlinx.serialization.csv/Csv).kotlinx.serialization.csv/recordWriter(kotlinx.serialization/KSerializer<#A>, kotlinx.serialization.csv.sink/CsvSink): kotlinx.serialization.csv/CsvRecordWriter<#A> // kotlinx.serialization.csv/recordWriter|recordWriter@kotlinx.serialization.csv.Csv(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.csv.sink.CsvSink){0§<kotlin.Any>}[0]
+final fun kotlinx.serialization.csv.sink/CsvSink(kotlin.text/Appendable): kotlinx.serialization.csv.sink/CsvSink // kotlinx.serialization.csv.sink/CsvSink|CsvSink(kotlin.text.Appendable){}[0]
+final fun kotlinx.serialization.csv.sink/CsvSink(kotlinx.io/Sink): kotlinx.serialization.csv.sink/CsvSink // kotlinx.serialization.csv.sink/CsvSink|CsvSink(kotlinx.io.Sink){}[0]
+final fun kotlinx.serialization.csv.source/CsvSource(kotlin/String): kotlinx.serialization.csv.source/CsvSource // kotlinx.serialization.csv.source/CsvSource|CsvSource(kotlin.String){}[0]
+final fun kotlinx.serialization.csv.source/CsvSource(kotlinx.io/Source): kotlinx.serialization.csv.source/CsvSource // kotlinx.serialization.csv.source/CsvSource|CsvSource(kotlinx.io.Source){}[0]
+final fun kotlinx.serialization.csv/Csv(kotlin/Function1<kotlinx.serialization.csv.config/CsvBuilder, kotlin/Unit>): kotlinx.serialization.csv/Csv // kotlinx.serialization.csv/Csv|Csv(kotlin.Function1<kotlinx.serialization.csv.config.CsvBuilder,kotlin.Unit>){}[0]
