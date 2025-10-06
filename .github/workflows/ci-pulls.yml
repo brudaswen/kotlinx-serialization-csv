@@ -24,6 +24,6 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: library/build/reports/jacoco/test/jacocoTestReport.xml
+        files: library/build/reports/jacoco/test/jacocoTestReport.xml
         flags: unittests
         fail_ci_if_error: true
