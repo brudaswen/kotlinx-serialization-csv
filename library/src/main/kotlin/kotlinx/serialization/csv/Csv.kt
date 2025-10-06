@@ -29,7 +29,9 @@ import java.io.StringWriter
  * Then constructed instance can be used either as regular [SerialFormat] or [StringFormat].
  */
 @ExperimentalSerializationApi
-sealed class Csv(val config: CsvConfig) : StringFormat {
+public sealed class Csv(
+    internal val config: CsvConfig,
+) : StringFormat {
 
     override val serializersModule: SerializersModule
         get() = config.serializersModule
@@ -52,7 +54,7 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
      * @param value The [Serializable] object.
      * @param output The output where the CSV will be written.
      */
-    fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: Appendable) {
+    public fun <T> encodeTo(serializer: SerializationStrategy<T>, value: T, output: Appendable) {
         output.encode(serializer, value)
     }
 
@@ -71,7 +73,7 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
      * @param deserializer The deserializer used to parse the given CSV string.
      * @param input The CSV input to parse.
      */
-    fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
+    public fun <T> decodeFrom(deserializer: DeserializationStrategy<T>, input: Reader): T =
         FetchSource(input).decode(deserializer)
 
     /**
@@ -117,7 +119,7 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
      * - [CsvConfig.recordSeparator] = `"\n"`
      * - [CsvConfig.ignoreEmptyLines] = `true`
      */
-    companion object Default : Csv(CsvConfig.Default) {
+    public companion object Default : Csv(CsvConfig.Default) {
 
         /**
          * [RFC 4180](http://tools.ietf.org/html/rfc4180) *Comma Separated Value* format.
@@ -128,7 +130,7 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
          * - [CsvConfig.recordSeparator] = `"\r\n"`
          * - [CsvConfig.ignoreEmptyLines] = `false`
          */
-        val Rfc4180: Csv
+        public val Rfc4180: Csv
             get() = Impl(CsvConfig.Rfc4180)
     }
 }
@@ -137,14 +139,14 @@ sealed class Csv(val config: CsvConfig) : StringFormat {
  * Creates an instance of [Csv] with adjusted configuration defined by [action].
  */
 @ExperimentalSerializationApi
-fun Csv(action: CsvBuilder.() -> Unit): Csv =
+public fun Csv(action: CsvBuilder.() -> Unit): Csv =
     Csv.configure(action)
 
 /**
  * Creates a new instance of [Csv] based on the configuration of [this] and adjusted with [action].
  */
 @ExperimentalSerializationApi
-fun Csv.configure(action: CsvBuilder.() -> Unit): Csv =
+public fun Csv.configure(action: CsvBuilder.() -> Unit): Csv =
     Csv.Impl(
         config = CsvBuilder(config).run {
             action()

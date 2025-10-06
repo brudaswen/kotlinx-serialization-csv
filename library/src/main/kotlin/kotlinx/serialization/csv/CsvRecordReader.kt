@@ -12,11 +12,11 @@ import java.io.Reader
 /**
  * Record reader that allows reading CSV line-by-line.
  */
-interface CsvRecordReader<T : Any> : Iterator<T> {
+public interface CsvRecordReader<T : Any> : Iterator<T> {
     /**
      * Read next record
      */
-    fun read(): T? = if (hasNext()) next() else null
+    public fun read(): T? = if (hasNext()) next() else null
 }
 
 /**
@@ -26,7 +26,7 @@ interface CsvRecordReader<T : Any> : Iterator<T> {
  * @param input The CSV reader to parse. This function *does not close the reader*.
  */
 @ExperimentalSerializationApi
-fun <T : Any> Csv.recordReader(deserializer: KSerializer<T>, input: Reader): CsvRecordReader<T> {
+public fun <T : Any> Csv.recordReader(deserializer: KSerializer<T>, input: Reader): CsvRecordReader<T> {
     val decoder = RecordListCsvDecoder(
         csv = this,
         reader = CsvReader(FetchSource(input), config)

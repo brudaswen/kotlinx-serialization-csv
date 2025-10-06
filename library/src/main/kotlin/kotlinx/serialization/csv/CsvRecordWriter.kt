@@ -8,11 +8,11 @@ import kotlinx.serialization.csv.encode.RecordListCsvEncoder
 /**
  * Record writer that allows writing CSV line by line.
  */
-fun interface CsvRecordWriter<T : Any> {
+public fun interface CsvRecordWriter<T : Any> {
     /**
      * Write next record.
      */
-    fun write(record: T)
+    public fun write(record: T)
 }
 
 /**
@@ -22,7 +22,7 @@ fun interface CsvRecordWriter<T : Any> {
  * @param output The output where the CSV will be written.
  */
 @ExperimentalSerializationApi
-fun <T : Any> Csv.recordWriter(serializer: KSerializer<T>, output: Appendable): CsvRecordWriter<T> {
+public fun <T : Any> Csv.recordWriter(serializer: KSerializer<T>, output: Appendable): CsvRecordWriter<T> {
     val encoder = RecordListCsvEncoder(
         csv = this,
         writer = CsvWriter(output, config)
