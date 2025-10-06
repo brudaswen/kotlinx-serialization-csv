@@ -14,35 +14,35 @@ class CsvNullStringTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "",
-        NullRecord(null),
-        NullRecord.serializer()
+        expected = "",
+        original = NullRecord(null),
+        serializer = NullRecord.serializer(),
     )
 
     @Test
     fun testEmpty() = Csv {
         nullString = ""
     }.assertEncodeAndDecode(
-        "",
-        NullRecord(null),
-        NullRecord.serializer()
+        expected = "",
+        original = NullRecord(null),
+        serializer = NullRecord.serializer(),
     )
 
     @Test
     fun testNull() = Csv {
         nullString = "null"
     }.assertEncodeAndDecode(
-        "null",
-        NullRecord(null),
-        NullRecord.serializer()
+        expected = "null",
+        original = NullRecord(null),
+        serializer = NullRecord.serializer(),
     )
 
     @Test
     fun testNA() = Csv {
         nullString = "N/A"
     }.assertEncodeAndDecode(
-        "N/A",
-        NullRecord(null),
-        NullRecord.serializer()
+        expected = "N/A",
+        original = NullRecord(null),
+        serializer = NullRecord.serializer(),
     )
 }

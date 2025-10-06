@@ -16,37 +16,37 @@ class CsvObjectTest {
 
     @Test
     fun testObject() = Csv.assertEncodeAndDecode(
-        "kotlinx.serialization.csv.records.ObjectRecord",
-        ObjectRecord,
-        ObjectRecord.serializer()
+        expected = "kotlinx.serialization.csv.records.ObjectRecord",
+        original = ObjectRecord,
+        serializer = ObjectRecord.serializer(),
     )
 
     @Test
     fun testNullableObject() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        ObjectRecord.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = ObjectRecord.serializer().nullable,
     )
 
     @Test
     fun testObjectList() = Csv {
         ignoreEmptyLines = false
     }.assertEncodeAndDecode(
-        "kotlinx.serialization.csv.records.ObjectRecord\n\nkotlinx.serialization.csv.records.ObjectRecord",
-        listOf(
+        expected = "kotlinx.serialization.csv.records.ObjectRecord\n\nkotlinx.serialization.csv.records.ObjectRecord",
+        original = listOf(
             ObjectRecord,
             null,
-            ObjectRecord
+            ObjectRecord,
         ),
-        ListSerializer(ObjectRecord.serializer().nullable)
+        serializer = ListSerializer(ObjectRecord.serializer().nullable),
     )
 
     @Test
     fun testInvalidObject() {
         assertFailsWith<IllegalArgumentException> {
             Csv.decodeFromString(
-                ObjectRecord.serializer(),
-                "kotlinx.serialization.csv.records.InvalidName"
+                deserializer = ObjectRecord.serializer(),
+                string = "kotlinx.serialization.csv.records.InvalidName",
             )
         }
     }

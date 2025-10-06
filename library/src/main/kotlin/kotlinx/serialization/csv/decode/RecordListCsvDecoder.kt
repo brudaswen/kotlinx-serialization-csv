@@ -32,7 +32,7 @@ internal class RecordListCsvDecoder(
         when (descriptor.kind) {
             StructureKind.LIST,
             StructureKind.MAP,
-                -> CollectionRecordCsvDecoder(csv, reader, this)
+            -> CollectionRecordCsvDecoder(csv, reader, this)
 
             else -> super.beginStructure(descriptor)
         }

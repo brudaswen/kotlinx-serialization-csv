@@ -24,18 +24,16 @@ internal class RootCsvEncoder(
         output: Appendable,
     ) : this(
         csv = csv,
-        writer = CsvWriter(output, csv.config)
+        writer = CsvWriter(output, csv.config),
     )
 
     override fun beginCollection(
         descriptor: SerialDescriptor,
         collectionSize: Int,
-    ): CompositeEncoder =
-        if (descriptor.kind == StructureKind.LIST) {
-            RecordListCsvEncoder(csv, writer)
-        } else {
-            super.beginCollection(descriptor, collectionSize)
-        }
+    ): CompositeEncoder = when (descriptor.kind) {
+        StructureKind.LIST -> RecordListCsvEncoder(csv, writer)
+        else -> super.beginCollection(descriptor, collectionSize)
+    }
 
     override fun beginStructure(
         descriptor: SerialDescriptor,

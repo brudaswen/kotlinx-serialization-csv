@@ -16,87 +16,87 @@ class CsvNullablePrimitivesTest {
 
     @Test
     fun testByte() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Byte.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Byte.serializer().nullable,
     )
 
     @Test
     fun testShort() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Short.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Short.serializer().nullable,
     )
 
     @Test
     fun testInt() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Int.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Int.serializer().nullable,
     )
 
     @Test
     fun testLong() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Long.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Long.serializer().nullable,
     )
 
     @Test
     fun testFloat() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Float.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Float.serializer().nullable,
     )
 
     @Test
     fun testDouble() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Double.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Double.serializer().nullable,
     )
 
     @Test
     fun testBooleanTrue() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Boolean.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Boolean.serializer().nullable,
     )
 
     @Test
     fun testBooleanFalse() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Boolean.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Boolean.serializer().nullable,
     )
 
     @Test
     fun testChar() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Char.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Char.serializer().nullable,
     )
 
     @Test
     fun testString() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        String.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = String.serializer().nullable,
     )
 
     @Test
     fun testUnit() = Csv.assertEncodeAndDecode(
-        "",
-        null,
-        Unit.serializer().nullable
+        expected = "",
+        original = null,
+        serializer = Unit.serializer().nullable,
     )
 
     @Test
     fun testIntList() = Csv {
         ignoreEmptyLines = false
     }.assertEncodeAndDecode(
-        "-150\n\n42",
-        listOf(-150, null, 42),
-        ListSerializer(Int.serializer().nullable)
+        expected = "-150\n\n42",
+        original = listOf(-150, null, 42),
+        serializer = ListSerializer(Int.serializer().nullable),
     )
 }

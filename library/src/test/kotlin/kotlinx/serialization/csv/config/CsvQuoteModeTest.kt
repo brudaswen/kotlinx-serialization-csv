@@ -2,8 +2,21 @@ package kotlinx.serialization.csv.config
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.config.QuoteMode.*
-import kotlinx.serialization.csv.records.*
+import kotlinx.serialization.csv.config.QuoteMode.ALL
+import kotlinx.serialization.csv.config.QuoteMode.ALL_NON_NULL
+import kotlinx.serialization.csv.config.QuoteMode.ALL_NON_NUMERIC
+import kotlinx.serialization.csv.config.QuoteMode.MINIMAL
+import kotlinx.serialization.csv.config.QuoteMode.NONE
+import kotlinx.serialization.csv.records.BooleanRecord
+import kotlinx.serialization.csv.records.ByteRecord
+import kotlinx.serialization.csv.records.DoubleRecord
+import kotlinx.serialization.csv.records.FloatRecord
+import kotlinx.serialization.csv.records.IntRecord
+import kotlinx.serialization.csv.records.LongRecord
+import kotlinx.serialization.csv.records.NullRecord
+import kotlinx.serialization.csv.records.ShortRecord
+import kotlinx.serialization.csv.records.StringRecord
+import kotlinx.serialization.csv.records.UnitRecord
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
@@ -450,15 +463,14 @@ class CsvQuoteModeTest {
     fun test_All_WithUnit_RequiringQuotes() =
         testUnitRequiringQuotes(ALL, "\"kotlin.Unit\"")
 
-
     private fun testString(mode: QuoteMode, value: String, expected: String) =
         Csv {
             quoteMode = mode
             escapeChar = if (quoteMode == NONE) '\\' else null
         }.assertEncodeAndDecode(
-            expected,
-            StringRecord(value),
-            StringRecord.serializer()
+            expected = expected,
+            original = StringRecord(value),
+            serializer = StringRecord.serializer(),
         )
 
     private fun testByte(mode: QuoteMode, value: Byte, expected: String) =
@@ -468,9 +480,9 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            ByteRecord(value),
-            ByteRecord.serializer()
+            expected = expected,
+            original = ByteRecord(value),
+            serializer = ByteRecord.serializer(),
         )
 
     private fun testShort(mode: QuoteMode, value: Short, expected: String) =
@@ -480,9 +492,9 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            ShortRecord(value),
-            ShortRecord.serializer()
+            expected = expected,
+            original = ShortRecord(value),
+            serializer = ShortRecord.serializer(),
         )
 
     private fun testInt(mode: QuoteMode, value: Int, expected: String) =
@@ -492,9 +504,9 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            IntRecord(value),
-            IntRecord.serializer()
+            expected = expected,
+            original = IntRecord(value),
+            serializer = IntRecord.serializer(),
         )
 
     private fun testLong(mode: QuoteMode, value: Long, expected: String) =
@@ -504,9 +516,9 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            LongRecord(value),
-            LongRecord.serializer()
+            expected = expected,
+            original = LongRecord(value),
+            serializer = LongRecord.serializer(),
         )
 
     private fun testFloat(mode: QuoteMode, value: Float, expected: String) =
@@ -516,9 +528,9 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            FloatRecord(value),
-            FloatRecord.serializer()
+            expected = expected,
+            original = FloatRecord(value),
+            serializer = FloatRecord.serializer(),
         )
 
     private fun testDouble(mode: QuoteMode, value: Double, expected: String) =
@@ -528,15 +540,15 @@ class CsvQuoteModeTest {
             delimiter = '1'
             recordSeparator = "2"
         }.assertEncodeAndDecode(
-            expected,
-            DoubleRecord(value),
-            DoubleRecord.serializer()
+            expected = expected,
+            original = DoubleRecord(value),
+            serializer = DoubleRecord.serializer(),
         )
 
     private fun testBoolean(
         mode: QuoteMode,
         value: Boolean,
-        expected: String
+        expected: String,
     ) =
         Csv {
             quoteMode = mode
@@ -544,9 +556,9 @@ class CsvQuoteModeTest {
             delimiter = 'f'
             recordSeparator = "a"
         }.assertEncodeAndDecode(
-            expected,
-            BooleanRecord(value),
-            BooleanRecord.serializer()
+            expected = expected,
+            original = BooleanRecord(value),
+            serializer = BooleanRecord.serializer(),
         )
 
     private fun testNull(mode: QuoteMode, expected: String) =
@@ -555,9 +567,9 @@ class CsvQuoteModeTest {
             escapeChar = if (quoteMode == NONE) '\\' else null
             nullString = "null"
         }.assertEncodeAndDecode(
-            expected,
-            NullRecord(null),
-            NullRecord.serializer()
+            expected = expected,
+            original = NullRecord(null),
+            serializer = NullRecord.serializer(),
         )
 
     private fun testNullRequiringQuotes(mode: QuoteMode, expected: String) =
@@ -568,9 +580,9 @@ class CsvQuoteModeTest {
             delimiter = 'u'
             recordSeparator = "l"
         }.assertEncodeAndDecode(
-            expected,
-            NullRecord(null),
-            NullRecord.serializer()
+            expected = expected,
+            original = NullRecord(null),
+            serializer = NullRecord.serializer(),
         )
 
     private fun testUnit(mode: QuoteMode, expected: String) =
@@ -578,9 +590,9 @@ class CsvQuoteModeTest {
             quoteMode = mode
             escapeChar = if (quoteMode == NONE) '\\' else null
         }.assertEncodeAndDecode(
-            expected,
-            UnitRecord(Unit),
-            UnitRecord.serializer()
+            expected = expected,
+            original = UnitRecord(Unit),
+            serializer = UnitRecord.serializer(),
         )
 
     private fun testUnitRequiringQuotes(mode: QuoteMode, expected: String) =
@@ -590,8 +602,8 @@ class CsvQuoteModeTest {
             delimiter = 'U'
             recordSeparator = "i"
         }.assertEncodeAndDecode(
-            expected,
-            UnitRecord(Unit),
-            UnitRecord.serializer()
+            expected = expected,
+            original = UnitRecord(Unit),
+            serializer = UnitRecord.serializer(),
         )
 }

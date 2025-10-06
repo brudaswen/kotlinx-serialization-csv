@@ -14,27 +14,27 @@ class CsvHasTrailingDelimiterTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "1",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "1",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testWithoutTrailingDelimiter() = Csv {
         hasTrailingDelimiter = false
     }.assertEncodeAndDecode(
-        "1",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "1",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "1,",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "1,",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
@@ -42,35 +42,35 @@ class CsvHasTrailingDelimiterTest {
         hasTrailingDelimiter = true
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "a,\n1,",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "a,\n1,",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
     fun testListWithoutTrailingDelimiter() = Csv {
         hasTrailingDelimiter = false
     }.assertEncodeAndDecode(
-        "1\n2\n3",
-        listOf(
+        expected = "1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testListWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "1,\n2,\n3,",
-        listOf(
+        expected = "1,\n2,\n3,",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
@@ -78,51 +78,51 @@ class CsvHasTrailingDelimiterTest {
         hasTrailingDelimiter = true
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "a,\n1,\n2,\n3,",
-        listOf(
+        expected = "a,\n1,\n2,\n3,",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testPrimitiveWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "1,",
-        1,
-        Int.serializer()
+        expected = "1,",
+        original = 1,
+        serializer = Int.serializer(),
     )
 
     @Test
     fun testPrimitiveListWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "-150,\n150,\n42,",
-        listOf(-150, 150, 42),
-        ListSerializer(Int.serializer())
+        expected = "-150,\n150,\n42,",
+        original = listOf(-150, 150, 42),
+        serializer = ListSerializer(Int.serializer()),
     )
 
     @Test
     fun testEnumWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "FIRST,",
-        Enum.FIRST,
-        Enum.serializer()
+        expected = "FIRST,",
+        original = Enum.FIRST,
+        serializer = Enum.serializer(),
     )
 
     @Test
     fun testEnumListWithTrailingDelimiter() = Csv {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
-        "FIRST,\nFIRST,",
-        listOf(
+        expected = "FIRST,\nFIRST,",
+        original = listOf(
             Enum.FIRST,
-            Enum.FIRST
+            Enum.FIRST,
         ),
-        ListSerializer(Enum.serializer())
+        serializer = ListSerializer(Enum.serializer()),
     )
 }

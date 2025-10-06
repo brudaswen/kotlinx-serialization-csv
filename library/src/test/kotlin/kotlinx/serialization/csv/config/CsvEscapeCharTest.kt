@@ -19,9 +19,9 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '\\'
     }.assertEncodeAndDecode(
-        "a\\\"b",
-        StringRecord("a\"b"),
-        StringRecord.serializer()
+        expected = "a\\\"b",
+        original = StringRecord("a\"b"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
@@ -29,9 +29,9 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '!'
     }.assertEncodeAndDecode(
-        "a!\"b",
-        StringRecord("a\"b"),
-        StringRecord.serializer()
+        expected = "a!\"b",
+        original = StringRecord("a\"b"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
@@ -39,9 +39,9 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '\\'
     }.assertEncodeAndDecode(
-        """test\,ing""",
-        StringRecord("test,ing"),
-        StringRecord.serializer()
+        expected = """test\,ing""",
+        original = StringRecord("test,ing"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
@@ -49,18 +49,18 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '\\'
     }.assertEncodeAndDecode(
-        """test\\ing""",
-        StringRecord("""test\ing"""),
-        StringRecord.serializer()
+        expected = """test\\ing""",
+        original = StringRecord("""test\ing"""),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
     fun testParseEscapedEscapeChar() = Csv {
         escapeChar = '\\'
     }.assertDecode(
-        """test\\ing""",
-        StringRecord("""test\ing"""),
-        StringRecord.serializer()
+        input = """test\\ing""",
+        expected = StringRecord("""test\ing"""),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
@@ -68,18 +68,18 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '\\'
     }.assertEncodeAndDecode(
-        """test\ning""",
-        StringRecord("test\ning"),
-        StringRecord.serializer()
+        expected = """test\ning""",
+        original = StringRecord("test\ning"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
     fun testParseEscapedNewLine() = Csv {
         escapeChar = '\\'
     }.assertDecode(
-        """test\ning""",
-        StringRecord("test\ning"),
-        StringRecord.serializer()
+        input = """test\ning""",
+        expected = StringRecord("test\ning"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
@@ -88,17 +88,17 @@ class CsvEscapeCharTest {
         quoteMode = NONE
         escapeChar = '\\'
     }.assertEncodeAndDecode(
-        """test\ting""",
-        StringRecord("test\ting"),
-        StringRecord.serializer()
+        expected = """test\ting""",
+        original = StringRecord("test\ting"),
+        serializer = StringRecord.serializer(),
     )
 
     @Test
     fun testParseEscapedTab() = Csv {
         escapeChar = '\\'
     }.assertDecode(
-        """test\ting""",
-        StringRecord("test\ting"),
-        StringRecord.serializer()
+        input = """test\ting""",
+        expected = StringRecord("test\ting"),
+        serializer = StringRecord.serializer(),
     )
 }

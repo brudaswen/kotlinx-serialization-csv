@@ -4,6 +4,7 @@ import kotlin.time.toJavaDuration
 plugins {
     kotlin("jvm") version libs.versions.kotlin apply false
     kotlin("plugin.serialization") version libs.versions.kotlin apply false
+    alias(libs.plugins.ktlint)
     alias(libs.plugins.nexus.publish)
     alias(libs.plugins.researchgate.release)
 }

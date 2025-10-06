@@ -15,51 +15,51 @@ class CsvRecordSeparatorTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "1\n2\n3",
-        listOf(
+        expected = "1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testWindows() = Csv {
         recordSeparator = "\n"
     }.assertEncodeAndDecode(
-        "1\n2\n3",
-        listOf(
+        expected = "1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testUnix() = Csv {
         recordSeparator = "\n"
     }.assertEncodeAndDecode(
-        "1\n2\n3",
-        listOf(
+        expected = "1\n2\n3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 
     @Test
     fun testHash() = Csv {
         recordSeparator = "#"
     }.assertEncodeAndDecode(
-        "1#2#3",
-        listOf(
+        expected = "1#2#3",
+        original = listOf(
             IntRecord(1),
             IntRecord(2),
-            IntRecord(3)
+            IntRecord(3),
         ),
-        ListSerializer(IntRecord.serializer())
+        serializer = ListSerializer(IntRecord.serializer()),
     )
 }

@@ -56,7 +56,7 @@ enum class VehicleType {
     CAR,
 
     @SerialName("MOTORBIKE")
-    BIKE
+    BIKE,
 }
 
 @Serializable
@@ -118,5 +118,9 @@ data class Oil(
 
 @Serializable
 enum class Feature {
-    ELECTRIC, AUTOMATIC, HEATED_SEATS, NAVIGATION_SYSTEM, XENON
+    ELECTRIC,
+    AUTOMATIC,
+    HEATED_SEATS,
+    NAVIGATION_SYSTEM,
+    XENON,
 }

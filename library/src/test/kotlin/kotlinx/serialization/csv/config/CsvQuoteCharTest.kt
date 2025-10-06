@@ -16,9 +16,9 @@ class CsvQuoteCharTest {
 
     @Test
     fun testDefault() = Csv { quoteMode = ALL }.assertEncodeAndDecode(
-        "\"1\"",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "\"1\"",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
@@ -26,9 +26,9 @@ class CsvQuoteCharTest {
         quoteMode = ALL
         quoteChar = '"'
     }.assertEncodeAndDecode(
-        "\"1\"",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "\"1\"",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
@@ -36,9 +36,9 @@ class CsvQuoteCharTest {
         quoteMode = ALL
         quoteChar = '\''
     }.assertEncodeAndDecode(
-        "'1'",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "'1'",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
@@ -46,9 +46,9 @@ class CsvQuoteCharTest {
         quoteMode = ALL
         quoteChar = '!'
     }.assertEncodeAndDecode(
-        "!1!",
-        IntRecord(1),
-        IntRecord.serializer()
+        expected = "!1!",
+        original = IntRecord(1),
+        serializer = IntRecord.serializer(),
     )
 
     @Test
@@ -56,8 +56,8 @@ class CsvQuoteCharTest {
         quoteMode = ALL
         quoteChar = '\''
     }.assertEncodeAndDecode(
-        "'a''b'",
-        StringRecord("a'b"),
-        StringRecord.serializer()
+        expected = "'a''b'",
+        original = StringRecord("a'b"),
+        serializer = StringRecord.serializer(),
     )
 }

@@ -37,7 +37,9 @@ data class NullRecord(val a: String?)
 data class UnitRecord(val a: Unit)
 
 @Serializable
-enum class Enum { FIRST }
+enum class Enum {
+    FIRST,
+}
 
 @Serializable
 data class EnumRecord(val a: Enum)

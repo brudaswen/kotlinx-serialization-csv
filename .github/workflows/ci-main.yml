@@ -22,6 +22,9 @@ jobs:
     - name: Binary compatibility validation
       run: ./gradlew checkLegacyAbi
 
+    - name: Ktlint Check
+      run: ./gradlew ktlintCheck
+
     - name: Build with Gradle
       run: ./gradlew build
 

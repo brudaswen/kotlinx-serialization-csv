@@ -20,14 +20,14 @@ internal class CsvEncodingException(message: String) : CsvException(message)
 internal fun UnsupportedSerialDescriptorException(
     descriptor: SerialDescriptor,
 ) = CsvEncodingException(
-    message = "CSV does not support '${descriptor.kind}'."
+    message = "CSV does not support '${descriptor.kind}'.",
 )
 
 @OptIn(ExperimentalSerializationApi::class)
 internal fun HeadersNotSupportedForSerialDescriptorException(
     descriptor: SerialDescriptor,
 ) = CsvEncodingException(
-    message = "CSV headers are not supported for variable sized type '${descriptor.kind}'."
+    message = "CSV headers are not supported for variable sized type '${descriptor.kind}'.",
 )
 
 /**
@@ -39,7 +39,7 @@ internal fun CsvDecodingException(
     offset: Int?,
     message: String,
 ) = CsvDecodingException(
-    message = if (offset != null) "Unexpected CSV token at offset $offset: $message" else message
+    message = if (offset != null) "Unexpected CSV token at offset $offset: $message" else message,
 )
 
 internal fun UnknownColumnHeaderException(
@@ -50,5 +50,6 @@ internal fun UnknownColumnHeaderException(
     message = """
         |Encountered unknown column header '$header'.
         |Use 'ignoreUnknownColumns = true' in 'Csv {}' builder to ignore unknown columns.
-        |""".trimMargin()
+        |
+    """.trimMargin(),
 )

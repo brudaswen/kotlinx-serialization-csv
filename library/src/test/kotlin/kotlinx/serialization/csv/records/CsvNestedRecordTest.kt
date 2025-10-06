@@ -11,93 +11,105 @@ class CsvNestedRecordTest {
 
     @Test
     fun testNestedRecord() = Csv.assertEncodeAndDecode(
-        "0,Alice,0.0,1.0,100,info",
-        NestedRecord(
-            0,
-            "Alice",
-            Data(
-                Location(
-                    0.0,
-                    1.0
-                ), 100, "info"
-            )
+        expected = "0,Alice,0.0,1.0,100,info",
+        original = NestedRecord(
+            time = 0,
+            name = "Alice",
+            data = Data(
+                location = Location(
+                    lat = 0.0,
+                    lon = 1.0,
+                ),
+                speed = 100,
+                info = "info",
+            ),
         ),
-        NestedRecord.serializer()
+        serializer = NestedRecord.serializer(),
     )
 
     @Test
     fun testNestedRecordList() = Csv.assertEncodeAndDecode(
-        "0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
-        listOf(
+        expected = "0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
+        original = listOf(
             NestedRecord(
-                0,
-                "Alice",
-                Data(
-                    Location(
-                        0.0,
-                        1.0
-                    ), 100, "info"
-                )
+                time = 0,
+                name = "Alice",
+                data = Data(
+                    location = Location(
+                        lat = 0.0,
+                        lon = 1.0,
+                    ),
+                    speed = 100,
+                    info = "info",
+                ),
             ),
             NestedRecord(
-                1,
-                "Bob",
-                Data(
-                    Location(
-                        10.0,
-                        20.0
-                    ), 50, "info2"
-                )
-            )
+                time = 1,
+                name = "Bob",
+                data = Data(
+                    location = Location(
+                        lat = 10.0,
+                        lon = 20.0,
+                    ),
+                    speed = 50,
+                    info = "info2",
+                ),
+            ),
         ),
-        ListSerializer(NestedRecord.serializer())
+        serializer = ListSerializer(NestedRecord.serializer()),
     )
 
     @Test
     fun testNestedRecordWithHeader() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info",
-        NestedRecord(
-            0,
-            "Alice",
-            Data(
-                Location(
-                    0.0,
-                    1.0
-                ), 100, "info"
-            )
+        expected = "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info",
+        original = NestedRecord(
+            time = 0,
+            name = "Alice",
+            data = Data(
+                location = Location(
+                    lat = 0.0,
+                    lon = 1.0,
+                ),
+                speed = 100,
+                info = "info",
+            ),
         ),
-        NestedRecord.serializer()
+        serializer = NestedRecord.serializer(),
     )
 
     @Test
     fun testNestedRecordListWithHeader() = Csv {
         hasHeaderRecord = true
     }.assertEncodeAndDecode(
-        "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
-        listOf(
+        expected = "time,name,data.location.lat,data.location.lon,data.speed,data.info\n0,Alice,0.0,1.0,100,info\n1,Bob,10.0,20.0,50,info2",
+        original = listOf(
             NestedRecord(
-                0,
-                "Alice",
-                Data(
-                    Location(
-                        0.0,
-                        1.0
-                    ), 100, "info"
-                )
+                time = 0,
+                name = "Alice",
+                data = Data(
+                    location = Location(
+                        lat = 0.0,
+                        lon = 1.0,
+                    ),
+                    speed = 100,
+                    info = "info",
+                ),
             ),
             NestedRecord(
-                1,
-                "Bob",
-                Data(
-                    Location(
-                        10.0,
-                        20.0
-                    ), 50, "info2"
-                )
-            )
+                time = 1,
+                name = "Bob",
+                data = Data(
+                    location = Location(
+                        lat = 10.0,
+                        lon = 20.0,
+                    ),
+                    speed = 50,
+                    info = "info2",
+                ),
+            ),
         ),
-        ListSerializer(NestedRecord.serializer())
+        serializer = ListSerializer(NestedRecord.serializer()),
     )
 }

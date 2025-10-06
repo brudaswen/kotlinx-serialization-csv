@@ -6,13 +6,24 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.csv.Csv
 
 @Serializable
-data class Person(val nickname: String, val name: String?, val appearance: Appearance)
+data class Person(
+    val nickname: String,
+    val name: String?,
+    val appearance: Appearance,
+)
 
 @Serializable
-data class Appearance(val gender: Gender?, val age: Int?, val height: Double?)
+data class Appearance(
+    val gender: Gender?,
+    val age: Int?,
+    val height: Double?,
+)
 
 @Serializable
-enum class Gender { MALE, FEMALE }
+enum class Gender {
+    MALE,
+    FEMALE,
+}
 
 @OptIn(ExperimentalSerializationApi::class)
 fun main() {
@@ -20,7 +31,7 @@ fun main() {
 
     val records = listOf(
         Person("Neo", "Thomas A. Anderson", Appearance(Gender.MALE, 37, 1.86)),
-        Person("Trinity", null, Appearance(Gender.FEMALE, null, 1.74))
+        Person("Trinity", null, Appearance(Gender.FEMALE, null, 1.74)),
     )
     val serialized = csv.encodeToString(ListSerializer(Person.serializer()), records)
     println(serialized)

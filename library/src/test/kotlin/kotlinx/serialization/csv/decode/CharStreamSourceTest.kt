@@ -128,5 +128,5 @@ class CharStreamSourceTest {
 private fun CharStreamSource(
     string: String,
 ): CharStreamSource = CharStreamSource(
-    reader = StringReader(string)
+    reader = StringReader(string),
 )

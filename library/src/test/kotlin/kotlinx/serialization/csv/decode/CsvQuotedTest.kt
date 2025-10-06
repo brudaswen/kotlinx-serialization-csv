@@ -16,31 +16,31 @@ class CsvQuotedTest {
     @Test
     fun readQuotedDelimiter() {
         Csv.decodeFromString(
-            StringRecord.serializer(),
-            "\"test,ing\""
+            deserializer = StringRecord.serializer(),
+            string = "\"test,ing\"",
         ) shouldBe StringRecord(
-            "test,ing"
+            a = "test,ing",
         )
     }
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces() {
         Csv.decodeFromString(
-            StringRecord.serializer(),
-            " \"test,ing\" "
+            deserializer = StringRecord.serializer(),
+            string = " \"test,ing\" ",
         ) shouldBe StringRecord(
-            "test,ing"
+            a = "test,ing",
         )
     }
 
     @Test
     fun readQuotedDelimiterIgnoreSurroundingSpaces2() {
         Csv.decodeFromString(
-            IntStringRecord.serializer(),
-            " \"42\" , \"test , ing\" "
+            deserializer = IntStringRecord.serializer(),
+            string = " \"42\" , \"test , ing\" ",
         ) shouldBe IntStringRecord(
-            42,
-            "test , ing"
+            a = 42,
+            b = "test , ing",
         )
     }
 }

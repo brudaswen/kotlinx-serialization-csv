@@ -75,7 +75,6 @@ internal class SealedCsvDecoder(
         reader: CsvReader,
         parent: CsvDecoder,
     ) : CsvDecoder(csv, reader, parent) {
-        override fun decodeElementIndex(descriptor: SerialDescriptor): Int =
-            DECODE_DONE
+        override fun decodeElementIndex(descriptor: SerialDescriptor): Int = DECODE_DONE
     }
 }

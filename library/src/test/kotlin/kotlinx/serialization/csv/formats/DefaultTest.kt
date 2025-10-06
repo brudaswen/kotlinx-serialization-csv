@@ -13,33 +13,30 @@ class DefaultTest {
 
     @Test
     fun testCsv() = Csv.assertDecode(
-        "0.0,1.0\n2.0,3.0",
-        listOf(
-            Location(0.0, 1.0),
-            Location(2.0, 3.0),
+        input = "0.0,1.0\n2.0,3.0",
+        expected = listOf(
+            Location(lat = 0.0, lon = 1.0),
+            Location(lat = 2.0, lon = 3.0),
         ),
-        ListSerializer(Location.serializer())
+        serializer = ListSerializer(Location.serializer()),
     )
 
     @Test
     fun testCsvDefault() = Csv.Default.assertDecode(
-        "0.0,1.0\n2.0,3.0",
-        listOf(
-            Location(0.0, 1.0),
-            Location(2.0, 3.0),
+        input = "0.0,1.0\n2.0,3.0",
+        expected = listOf(
+            Location(lat = 0.0, lon = 1.0),
+            Location(lat = 2.0, lon = 3.0),
         ),
-        ListSerializer(Location.serializer())
+        serializer = ListSerializer(Location.serializer()),
     )
 
     @Test
     fun testCsvDefaultWithCustomConfig() = Csv.configure {
         hasHeaderRecord = true
     }.assertDecode(
-        "lat,lon\n0.0,1.0",
-        Location(
-            0.0,
-            1.0
-        ),
-        Location.serializer()
+        input = "lat,lon\n0.0,1.0",
+        expected = Location(lat = 0.0, lon = 1.0),
+        serializer = Location.serializer(),
     )
 }

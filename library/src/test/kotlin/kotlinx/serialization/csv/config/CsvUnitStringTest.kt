@@ -14,8 +14,8 @@ class CsvUnitStringTest {
 
     @Test
     fun testDefault() = Csv.assertEncodeAndDecode(
-        "kotlin.Unit",
-        UnitRecord(Unit),
-        UnitRecord.serializer()
+        expected = "kotlin.Unit",
+        original = UnitRecord(Unit),
+        serializer = UnitRecord.serializer(),
     )
 }
