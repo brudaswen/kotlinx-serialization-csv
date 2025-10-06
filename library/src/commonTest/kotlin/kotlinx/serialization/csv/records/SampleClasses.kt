@@ -38,12 +38,13 @@ data class NullRecord(val a: String?)
 data class UnitRecord(val a: Unit)
 
 @Serializable
-enum class Enum {
+@SerialName("EnumClass")
+enum class EnumClass {
     FIRST,
 }
 
 @Serializable
-data class EnumRecord(val a: Enum)
+data class EnumRecord(val a: EnumClass)
 
 @Serializable
 data class IntStringRecord(val a: Int, val b: String)
@@ -60,7 +61,7 @@ data class ComplexRecord(
     val h: String,
     val i: String?,
     val j: Unit,
-    val k: Enum,
+    val k: EnumClass,
 )
 
 @Serializable

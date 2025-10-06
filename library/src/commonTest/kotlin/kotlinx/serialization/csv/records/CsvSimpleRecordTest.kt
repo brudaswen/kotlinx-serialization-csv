@@ -93,7 +93,7 @@ class CsvSimpleRecordTest {
     @Test
     fun testEnum() = Csv.assertEncodeAndDecode(
         expected = "FIRST",
-        original = EnumRecord(Enum.FIRST),
+        original = EnumRecord(EnumClass.FIRST),
         serializer = EnumRecord.serializer(),
     )
 
@@ -111,7 +111,7 @@ class CsvSimpleRecordTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )

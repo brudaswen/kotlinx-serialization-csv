@@ -3,7 +3,7 @@ package kotlinx.serialization.csv.config
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.records.ComplexRecord
-import kotlinx.serialization.csv.records.Enum
+import kotlinx.serialization.csv.records.EnumClass
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
 
@@ -27,7 +27,7 @@ class CsvDelimiterTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )
@@ -48,7 +48,7 @@ class CsvDelimiterTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )
@@ -69,7 +69,7 @@ class CsvDelimiterTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )
@@ -90,7 +90,7 @@ class CsvDelimiterTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )
@@ -111,7 +111,7 @@ class CsvDelimiterTest {
             h = "testing",
             i = null,
             j = Unit,
-            k = Enum.FIRST,
+            k = EnumClass.FIRST,
         ),
         serializer = ComplexRecord.serializer(),
     )

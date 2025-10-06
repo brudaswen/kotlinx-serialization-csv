@@ -4,7 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.csv.Csv
-import kotlinx.serialization.csv.records.Enum
+import kotlinx.serialization.csv.records.EnumClass
 import kotlinx.serialization.csv.records.IntRecord
 import kotlinx.serialization.test.assertEncodeAndDecode
 import kotlin.test.Test
@@ -110,8 +110,8 @@ class CsvHasTrailingDelimiterTest {
         hasTrailingDelimiter = true
     }.assertEncodeAndDecode(
         expected = "FIRST,",
-        original = Enum.FIRST,
-        serializer = Enum.serializer(),
+        original = EnumClass.FIRST,
+        serializer = EnumClass.serializer(),
     )
 
     @Test
@@ -120,9 +120,9 @@ class CsvHasTrailingDelimiterTest {
     }.assertEncodeAndDecode(
         expected = "FIRST,\nFIRST,",
         original = listOf(
-            Enum.FIRST,
-            Enum.FIRST,
+            EnumClass.FIRST,
+            EnumClass.FIRST,
         ),
-        serializer = ListSerializer(Enum.serializer()),
+        serializer = ListSerializer(EnumClass.serializer()),
     )
 }
