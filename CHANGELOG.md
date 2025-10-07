@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Config `shortValueClassHeaderName` for short value class header name.
+- Kotlin Multiplatform support.
+
+### Changed
+
+- Some API changes for Kotlin Multiplatform support.
+
 ## [2.1.1] - 2025-10-01
 
 ### Changed
