@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2025-10-07
+
 ### Added
 
 - Config `shortValueClassHeaderName` for short value class header name.
@@ -32,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make `CsvConfig` public.
 - Support for streaming via Reader and Appendable (🏅 kudos to UnknownJoe796).
 - Handle Microsoft Excel's insistence on using a byte order marker (🏅 kudos to UnknownJoe796).
-- Asynchronous/Streaming support via `CsvRecordReader` and `CsvRecordWriter` (🏅 kudos to UnknownJoe796).
+- Asynchronous/Streaming support via `CsvRecordReader` and `CsvRecordWriter` (🏅 kudos to
+  UnknownJoe796).
 
 ### Removed
 
@@ -94,7 +97,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Compatibility with *Kotlin Serialization* `0.20.0`.
 - (De-)Serialization of sealed classes no longer reads/writes columns for objects.
-- String for `kotlin.Unit` can no longer be provided and the `Unit` object is handled as any other object.
+- String for `kotlin.Unit` can no longer be provided and the `Unit` object is handled as any other
+  object.
 
 ## [0.1.0] - 2020-02-21
 
