@@ -102,6 +102,20 @@ internal abstract class CsvDecoder(
         }
     }
 
+    protected fun readPrimitiveHeaders(name: String) {
+        if (config.hasHeaderRecord && headers == null) {
+            val header = reader.readColumn()
+            if (header != name && header != "Null") {
+                error("Invalid header '$header' expected '$name.")
+            }
+            this.headers = Headers().apply {
+                set(0, 0)
+            }
+
+            readTrailingDelimiter()
+        }
+    }
+
     private fun readHeaders(descriptor: SerialDescriptor, prefix: String): Headers {
         val headers = Headers()
         var position = 0

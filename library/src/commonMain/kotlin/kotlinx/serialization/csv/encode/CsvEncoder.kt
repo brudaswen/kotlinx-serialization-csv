@@ -45,8 +45,8 @@ internal abstract class CsvEncoder(
         StructureKind.CLASS,
         -> SimpleCsvEncoder(csv, writer, this)
 
-        StructureKind.OBJECT ->
-            ObjectCsvEncoder(csv, writer, this)
+        StructureKind.OBJECT,
+        -> ObjectCsvEncoder(csv, writer, this)
 
         PolymorphicKind.SEALED,
         -> SealedCsvEncoder(csv, writer, this, descriptor)
@@ -109,9 +109,19 @@ internal abstract class CsvEncoder(
     }
 
     protected fun printHeaderRecord(descriptor: SerialDescriptor) {
-        writer.beginRecord()
-        printHeader("", descriptor)
-        writer.endRecord()
+        if (config.hasHeaderRecord && writer.isFirstRecord) {
+            writer.beginRecord()
+            printHeader("", descriptor)
+            writer.endRecord()
+        }
+    }
+
+    protected fun printPrimitiveHeaderRecord(name: String) {
+        if (config.hasHeaderRecord && writer.isFirstRecord) {
+            writer.beginRecord()
+            writer.printColumn(name)
+            writer.endRecord()
+        }
     }
 
     private fun printHeader(prefix: String, descriptor: SerialDescriptor) {
@@ -135,6 +145,9 @@ internal abstract class CsvEncoder(
 
                 // TODO Check
                 childDesc.kind is SerialKind.ENUM ->
+                    writer.printColumn(name)
+
+                childDesc.isInline && config.shortValueClassHeaderName ->
                     writer.printColumn(name)
 
                 childDesc.kind is PolymorphicKind.SEALED -> {

@@ -2,6 +2,7 @@ package kotlinx.serialization.csv.records
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 @Serializable
 data class ByteRecord(val a: Byte)
@@ -37,12 +38,13 @@ data class NullRecord(val a: String?)
 data class UnitRecord(val a: Unit)
 
 @Serializable
-enum class Enum {
+@SerialName("EnumClass")
+enum class EnumClass {
     FIRST,
 }
 
 @Serializable
-data class EnumRecord(val a: Enum)
+data class EnumRecord(val a: EnumClass)
 
 @Serializable
 data class IntStringRecord(val a: Int, val b: String)
@@ -59,7 +61,7 @@ data class ComplexRecord(
     val h: String,
     val i: String?,
     val j: Unit,
-    val k: Enum,
+    val k: EnumClass,
 )
 
 @Serializable
@@ -74,6 +76,13 @@ data class NestedRecord(
     val name: String,
     val data: Data,
 )
+
+@JvmInline
+@Serializable
+value class Id(val value: Int)
+
+@Serializable
+data class IdRecord(val id: Id, val name: String)
 
 @Serializable
 data class Data(val location: Location, val speed: Int, val info: String)

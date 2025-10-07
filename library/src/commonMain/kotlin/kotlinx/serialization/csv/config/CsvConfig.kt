@@ -17,6 +17,7 @@ import kotlinx.serialization.modules.SerializersModule
  * @param headerSeparator Character that is used to separate hierarchical header names (default: `.`).
  * @param ignoreUnknownColumns Ignore unknown columns when `hasHeaderRecord` is enabled (default: `false`).
  * @param hasTrailingDelimiter If records end with a trailing [delimiter] (default: `false`).
+ * @param shortValueClassHeaderName Use short value class header name (default: `false`).
  */
 public data class CsvConfig(
     val delimiter: Char = ',',
@@ -30,6 +31,7 @@ public data class CsvConfig(
     val headerSeparator: Char = '.',
     val ignoreUnknownColumns: Boolean = false,
     val hasTrailingDelimiter: Boolean = false,
+    val shortValueClassHeaderName: Boolean = false,
     val serializersModule: SerializersModule = EmptySerializersModule(),
 ) {
 
