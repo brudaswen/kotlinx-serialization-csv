@@ -60,6 +60,7 @@ public final class kotlinx/serialization/csv/config/CsvBuilder {
 	public final fun getQuoteMode ()Lkotlinx/serialization/csv/config/QuoteMode;
 	public final fun getRecordSeparator ()Ljava/lang/String;
 	public final fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
+	public final fun getShortValueClassHeaderName ()Z
 	public final fun setDelimiter (C)V
 	public final fun setEscapeChar (Ljava/lang/Character;)V
 	public final fun setHasHeaderRecord (Z)V
@@ -72,17 +73,19 @@ public final class kotlinx/serialization/csv/config/CsvBuilder {
 	public final fun setQuoteMode (Lkotlinx/serialization/csv/config/QuoteMode;)V
 	public final fun setRecordSeparator (Ljava/lang/String;)V
 	public final fun setSerializersModule (Lkotlinx/serialization/modules/SerializersModule;)V
+	public final fun setShortValueClassHeaderName (Z)V
 }
 
 public final class kotlinx/serialization/csv/config/CsvConfig {
 	public static final field Companion Lkotlinx/serialization/csv/config/CsvConfig$Companion;
 	public fun <init> ()V
-	public fun <init> (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZLkotlinx/serialization/modules/SerializersModule;)V
-	public synthetic fun <init> (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZLkotlinx/serialization/modules/SerializersModule;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZZLkotlinx/serialization/modules/SerializersModule;)V
+	public synthetic fun <init> (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZZLkotlinx/serialization/modules/SerializersModule;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()C
 	public final fun component10 ()Z
 	public final fun component11 ()Z
-	public final fun component12 ()Lkotlinx/serialization/modules/SerializersModule;
+	public final fun component12 ()Z
+	public final fun component13 ()Lkotlinx/serialization/modules/SerializersModule;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()C
 	public final fun component4 ()Lkotlinx/serialization/csv/config/QuoteMode;
@@ -91,8 +94,8 @@ public final class kotlinx/serialization/csv/config/CsvConfig {
 	public final fun component7 ()Z
 	public final fun component8 ()Z
 	public final fun component9 ()C
-	public final fun copy (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZLkotlinx/serialization/modules/SerializersModule;)Lkotlinx/serialization/csv/config/CsvConfig;
-	public static synthetic fun copy$default (Lkotlinx/serialization/csv/config/CsvConfig;CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZLkotlinx/serialization/modules/SerializersModule;ILjava/lang/Object;)Lkotlinx/serialization/csv/config/CsvConfig;
+	public final fun copy (CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZZLkotlinx/serialization/modules/SerializersModule;)Lkotlinx/serialization/csv/config/CsvConfig;
+	public static synthetic fun copy$default (Lkotlinx/serialization/csv/config/CsvConfig;CLjava/lang/String;CLkotlinx/serialization/csv/config/QuoteMode;Ljava/lang/Character;Ljava/lang/String;ZZCZZZLkotlinx/serialization/modules/SerializersModule;ILjava/lang/Object;)Lkotlinx/serialization/csv/config/CsvConfig;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDelimiter ()C
 	public final fun getEscapeChar ()Ljava/lang/Character;
@@ -106,6 +109,7 @@ public final class kotlinx/serialization/csv/config/CsvConfig {
 	public final fun getQuoteMode ()Lkotlinx/serialization/csv/config/QuoteMode;
 	public final fun getRecordSeparator ()Ljava/lang/String;
 	public final fun getSerializersModule ()Lkotlinx/serialization/modules/SerializersModule;
+	public final fun getShortValueClassHeaderName ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
