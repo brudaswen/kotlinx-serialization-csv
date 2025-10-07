@@ -1,13 +1,11 @@
-import org.jetbrains.dokka.gradle.DokkaBasePlugin
-
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     alias(libs.plugins.dokka)
+    alias(libs.plugins.kover)
     alias(libs.plugins.ktlint)
     `maven-publish`
     signing
-    alias(libs.plugins.kover)
 }
 
 dependencies {
@@ -48,49 +46,51 @@ tasks.withType<GenerateModuleMetadata> {
     enabled = !isSnapshot()
 }
 
-val dokkaHtmlJar by tasks.registering(Jar::class) {
-    group = DokkaBasePlugin.TASK_GROUP
+val dokkaJavadocJar by tasks.registering(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
     description = "Assembles Kotlin docs with Dokka"
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(tasks.dokkaGeneratePublicationHtml)
 }
 
 publishing {
     publications {
-        create<MavenPublication>("library") {
-            artifactId = "kotlinx-serialization-csv"
+        withType<MavenPublication> {
+            artifactId = artifactId.replace(project.name, "kotlinx-serialization-csv")
+
+            if (artifactId.endsWith("-jvm")) {
+                artifact(dokkaJavadocJar)
+            }
 
             pom {
-                name.set("kotlinx-serialization-csv")
-                description.set("Library to easily use Kotlin Serialization to serialize to/from CSV.")
-                url.set("https://github.com/brudaswen/serialization-csv/")
+                name = "kotlinx-serialization-csv"
+                description = "Library to easily use Kotlin Serialization to serialize to/from CSV."
+                url = "https://github.com/brudaswen/serialization-csv/"
 
                 licenses {
                     license {
-                        name.set("Apache License, Version 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                        name = "Apache License, Version 2.0"
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
                     }
                 }
                 developers {
                     developer {
-                        id.set("brudaswen")
-                        name.set("Sven Obser")
-                        email.set("dev@brudaswen.de")
+                        id = "brudaswen"
+                        name = "Sven Obser"
+                        email = "dev@brudaswen.de"
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/brudaswen/kotlinx-serialization-csv.git")
-                    developerConnection.set("scm:git:ssh://git@github.com:brudaswen/kotlinx-serialization-csv.git")
-                    url.set("https://github.com/brudaswen/kotlinx-serialization-csv/")
+                    connection = "scm:git:git://github.com/brudaswen/kotlinx-serialization-csv.git"
+                    developerConnection =
+                        "scm:git:ssh://git@github.com:brudaswen/kotlinx-serialization-csv.git"
+                    url = "https://github.com/brudaswen/kotlinx-serialization-csv/"
                 }
                 issueManagement {
-                    system.set("GitHub Issues")
-                    url.set("https://github.com/brudaswen/kotlinx-serialization-csv/issues/")
+                    system = "GitHub Issues"
+                    url = "https://github.com/brudaswen/kotlinx-serialization-csv/issues/"
                 }
             }
-
-            from(components["kotlin"])
-            artifact(dokkaHtmlJar)
         }
     }
 }
@@ -102,7 +102,7 @@ signing {
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
 
-    sign(publishing.publications["library"])
+    sign(publishing.publications)
 }
 
 kover {
