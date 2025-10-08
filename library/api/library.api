@@ -32,12 +32,21 @@ public final class kotlinx/serialization/csv/CsvRecordReaderKt {
 	public static final fun recordReader (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/csv/source/CsvSource;)Lkotlinx/serialization/csv/CsvRecordReader;
 }
 
+public final class kotlinx/serialization/csv/CsvRecordReader_jvmKt {
+	public static final fun recordReader (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/io/InputStream;)Lkotlinx/serialization/csv/CsvRecordReader;
+	public static final fun recordReader (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/io/Reader;)Lkotlinx/serialization/csv/CsvRecordReader;
+}
+
 public abstract interface class kotlinx/serialization/csv/CsvRecordWriter {
 	public abstract fun write (Ljava/lang/Object;)V
 }
 
 public final class kotlinx/serialization/csv/CsvRecordWriterKt {
 	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/csv/sink/CsvSink;)Lkotlinx/serialization/csv/CsvRecordWriter;
+}
+
+public final class kotlinx/serialization/csv/CsvRecordWriter_jvmKt {
+	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/io/OutputStream;)Lkotlinx/serialization/csv/CsvRecordWriter;
 }
 
 public final class kotlinx/serialization/csv/Csv_jvmKt {
