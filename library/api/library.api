@@ -47,6 +47,7 @@ public final class kotlinx/serialization/csv/CsvRecordWriterKt {
 
 public final class kotlinx/serialization/csv/CsvRecordWriter_jvmKt {
 	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/io/OutputStream;)Lkotlinx/serialization/csv/CsvRecordWriter;
+	public static final fun recordWriter (Lkotlinx/serialization/csv/Csv;Lkotlinx/serialization/KSerializer;Ljava/lang/Appendable;)Lkotlinx/serialization/csv/CsvRecordWriter;
 }
 
 public final class kotlinx/serialization/csv/Csv_jvmKt {
