@@ -14,7 +14,7 @@ import kotlinx.serialization.csv.source.CsvSource
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
+internal inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
     expected: String,
     original: T,
     serializer: KSerializer<T>,
@@ -38,7 +38,7 @@ inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
     assertEquals(restored, restored2)
 }
 
-inline fun <reified T : Any> Csv.assertDecode(
+internal inline fun <reified T : Any> Csv.assertDecode(
     input: String,
     expected: T,
     serializer: KSerializer<T>,
@@ -53,7 +53,7 @@ inline fun <reified T : Any> Csv.assertDecode(
     assertEquals(expected, restored2)
 }
 
-inline fun <reified T : Any> Csv.assertDecodeFails(
+internal inline fun <reified T : Any> Csv.assertDecodeFails(
     input: String,
     serializer: KSerializer<T>,
 ) {
@@ -62,4 +62,4 @@ inline fun <reified T : Any> Csv.assertDecodeFails(
     }
 }
 
-infix fun <T> T.shouldBe(expected: T) = assertEquals(expected, this)
+internal infix fun <T> T.shouldBe(expected: T) = assertEquals(expected, this)
