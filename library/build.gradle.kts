@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -18,17 +21,21 @@ dependencies {
     commonTestImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
 
+@OptIn(
+    ExperimentalAbiValidation::class,
+    ExperimentalWasmDsl::class,
+)
 kotlin {
     jvm()
     iosArm64()
     iosSimulatorArm64()
     macosArm64()
+    wasmJs()
 
     jvmToolchain(8)
 
     explicitApi()
 
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
     abiValidation {
         enabled = true
     }
