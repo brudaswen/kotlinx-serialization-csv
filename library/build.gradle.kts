@@ -28,7 +28,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     macosArm64()
-    wasmJs()
+    wasmJs {
+        browser()
+        nodejs()
+    }
 
     jvmToolchain(8)
 
