@@ -1,3 +1,8 @@
+@file:OptIn(
+    org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class,
+    org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class,
+)
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -10,12 +15,12 @@ plugins {
 
 dependencies {
     commonMainApi(libs.kotlinx.serialization.core)
-    commonMainApi("org.jetbrains.kotlinx:kotlinx-io-core:0.8.0")
+    commonMainApi(libs.kotlinx.io.core)
 
     commonTestImplementation(kotlin("test"))
     commonTestImplementation(libs.kotlinx.coroutines.test)
-    commonTestImplementation("org.jetbrains.kotlinx:kotlinx-io-bytestring:0.8.0")
-    commonTestImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+    commonTestImplementation(libs.kotlinx.datetime)
+    commonTestImplementation(libs.kotlinx.io.bytestring)
 }
 
 kotlin {
@@ -23,12 +28,15 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     macosArm64()
+    wasmJs {
+        browser()
+        nodejs()
+    }
 
     jvmToolchain(8)
 
     explicitApi()
 
-    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
     abiValidation {
         enabled = true
     }

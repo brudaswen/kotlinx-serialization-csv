@@ -8,3 +8,4 @@ target
 local.properties
 .kotlin
 .DS_Store
+kotlin-js-store/
