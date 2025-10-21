@@ -1,5 +1,7 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
-import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+@file:OptIn(
+    org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class,
+    org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class,
+)
 
 plugins {
     kotlin("multiplatform")
@@ -21,10 +23,6 @@ dependencies {
     commonTestImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 }
 
-@OptIn(
-    ExperimentalAbiValidation::class,
-    ExperimentalWasmDsl::class,
-)
 kotlin {
     jvm()
     iosArm64()
