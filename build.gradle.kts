@@ -2,7 +2,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
 plugins {
-    kotlin("jvm") version libs.versions.kotlin apply false
+    kotlin("multiplatform") version libs.versions.kotlin apply false
     kotlin("plugin.serialization") version libs.versions.kotlin apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.nexus.publish)

@@ -25,9 +25,13 @@ dependencies {
 
 kotlin {
     jvm()
+    iosX64()
     iosArm64()
     iosSimulatorArm64()
+    linuxX64()
+    macosX64()
     macosArm64()
+    mingwX64()
     wasmJs {
         browser()
         nodejs()
