@@ -17,15 +17,6 @@ jobs:
         distribution: 'zulu'
         java-version: 17
 
-    - name: Update binary compatibility
-      if: ${{ github.event.label.name == 'update-legacy-abi' }}
-      run: | 
-        ./gradlew updateLegacyAbi
-        git config --global user.name 'GitHub Action Bot'
-        git config --global user.email 'brudaswen@users.noreply.github.com'
-        git commit -am "[CI] Update Legacy ABI"
-        git push
-
     - name: Binary compatibility validation
       run: ./gradlew checkLegacyAbi
 
