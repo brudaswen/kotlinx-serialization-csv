@@ -12,8 +12,6 @@ import kotlinx.serialization.csv.example.Tire.Side.LEFT
 import kotlinx.serialization.csv.example.Tire.Side.RIGHT
 import kotlinx.serialization.csv.recordReader
 import kotlinx.serialization.csv.recordWriter
-import kotlinx.serialization.csv.sink.CsvSink
-import kotlinx.serialization.csv.source.CsvSource
 import kotlinx.serialization.modules.SerializersModule
 import java.io.PipedReader
 import java.io.PipedWriter
@@ -67,8 +65,8 @@ class SteamingTest {
         val input = PipedReader()
         val output = PipedWriter(input)
 
-        val writer = csv.recordWriter(VehiclePartRecord.serializer(), CsvSink(output))
-        val reader = csv.recordReader(VehiclePartRecord.serializer(), CsvSource(input))
+        val writer = csv.recordWriter(VehiclePartRecord.serializer(), output)
+        val reader = csv.recordReader(VehiclePartRecord.serializer(), input)
 
         val readerTask = async(Dispatchers.IO) {
             reader.asSequence().toList()
@@ -108,7 +106,7 @@ class SteamingTest {
         val output = PipedWriter(input)
 
         val readerTask = async(Dispatchers.IO) {
-            val reader = csv.recordReader(Tire.serializer(), CsvSource(input))
+            val reader = csv.recordReader(Tire.serializer(), input)
             reader.asSequence().onEach {
                 println("Read $it")
             }.toList()
@@ -116,7 +114,7 @@ class SteamingTest {
 
         val writerTask = async(Dispatchers.IO) {
             output.buffered().use { output ->
-                val writer = csv.recordWriter(Tire.serializer(), CsvSink(output))
+                val writer = csv.recordWriter(Tire.serializer(), output)
                 testData.forEach {
                     println("Writing $it")
                     writer.write(it)
