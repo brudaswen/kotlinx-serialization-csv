@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.0] - 2025-11-10
+
+### Added
+
+- Added `iosX64`, `linuxX64`, `macosX64`, `mingwX64` target support.
+
 ## [3.1.0] - 2025-10-21
 
 ### Added
