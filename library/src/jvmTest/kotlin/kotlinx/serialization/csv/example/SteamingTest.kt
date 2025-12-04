@@ -5,6 +5,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.csv.example.Tire.Axis.FRONT
 import kotlinx.serialization.csv.example.Tire.Axis.REAR
@@ -13,6 +14,9 @@ import kotlinx.serialization.csv.example.Tire.Side.RIGHT
 import kotlinx.serialization.csv.recordReader
 import kotlinx.serialization.csv.recordWriter
 import kotlinx.serialization.modules.SerializersModule
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.PipedReader
 import java.io.PipedWriter
 import kotlin.io.buffered
@@ -20,6 +24,7 @@ import kotlin.io.println
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.use
 import kotlin.uuid.Uuid
 
@@ -128,5 +133,46 @@ class SteamingTest {
         val result = readerTask.await()
 
         assertEquals(testData, result)
+    }
+
+    @Test
+    fun testLargeFile() = runTest(timeout = 10.minutes) {
+        @Serializable
+        data class Entry(
+            val id: Int,
+            val value: String,
+        )
+
+        val csv = Csv {
+            hasHeaderRecord = true
+        }
+
+        val file = File("file.csv")
+
+        println("Writing...")
+        FileOutputStream(file).buffered().use { output ->
+            val writer = csv.recordWriter(Entry.serializer(), output)
+            repeat(10_000_000) {
+                val entry = Entry(it, "Value $it")
+                writer.write(entry)
+
+                if (entry.id % 100_000 == 0) {
+                    println("$entry written.")
+                }
+            }
+        }
+
+        println("Reading...")
+        FileInputStream(file).buffered().use { input ->
+            val reader = csv.recordReader(Entry.serializer(), input)
+
+            reader.asSequence().forEach { entry ->
+                if (entry.id % 100_000 == 0) {
+                    println("$entry read.")
+                }
+            }
+        }
+
+        file.delete()
     }
 }

@@ -190,7 +190,7 @@ internal class CsvReader(
      */
     fun unmark() {
         source.unmark()
-        marks.removeAt(marks.size - 1)
+        marks.removeLast()
     }
 
     /**
@@ -198,7 +198,7 @@ internal class CsvReader(
      */
     fun reset() {
         source.reset()
-        recordNo = marks.removeAt(marks.size - 1)
+        recordNo = marks.removeLast()
     }
 
     /**

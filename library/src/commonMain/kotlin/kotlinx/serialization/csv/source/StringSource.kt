@@ -35,11 +35,11 @@ internal class StringSource(
     }
 
     override fun unmark() {
-        marks.removeAt(marks.size - 1)
+        marks.removeLast()
     }
 
     override fun reset() {
-        position = marks.removeAt(marks.size - 1)
+        position = marks.removeLast()
     }
 
     override fun toString(): String =

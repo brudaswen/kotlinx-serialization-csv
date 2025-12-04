@@ -72,11 +72,13 @@ internal class CharStreamSource(
     }
 
     override fun unmark() {
-        marks.removeAt(marks.lastIndex)
+        marks.removeLast()
+
+        if (marks.isEmpty()) queue.clear()
     }
 
     override fun reset() {
-        offset = marks[marks.lastIndex]
-        marks.removeAt(marks.lastIndex)
+        offset = marks.last()
+        marks.removeLast()
     }
 }
