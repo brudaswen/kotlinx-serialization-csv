@@ -17,8 +17,8 @@ internal class RecordListCsvEncoder(
     override fun beginStructure(
         descriptor: SerialDescriptor,
     ): CompositeEncoder {
-        // For complex records: Begin a new record and end it in [endChildStructure]
         printHeaderRecord(descriptor)
+        // For complex records: Begin a new record and end it in [endChildStructure]
         writer.beginRecord()
         return super.beginStructure(descriptor)
     }
@@ -30,7 +30,7 @@ internal class RecordListCsvEncoder(
 
     override fun encodeCollectionSize(collectionSize: Int) {
         // Collection records do not write their size.
-        // Instead the size is implicitly determined by reading until end-of-line.
+        // Instead, the size is implicitly determined by reading until end-of-line.
     }
 
     override fun encodeColumn(value: String, isNumeric: Boolean, isNull: Boolean) {

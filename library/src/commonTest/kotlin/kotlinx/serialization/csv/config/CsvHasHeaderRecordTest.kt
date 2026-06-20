@@ -281,4 +281,13 @@ class CsvHasHeaderRecordTest {
         original = IdRecord(Id(42), "Alice"),
         serializer = IdRecord.serializer(),
     )
+
+    @Test
+    fun testEmptyList() = Csv {
+        hasHeaderRecord = true
+    }.assertEncodeAndDecode(
+        expected = "first,second",
+        original = emptyList(),
+        serializer = ListSerializer(SerialNameRecord.serializer()),
+    )
 }

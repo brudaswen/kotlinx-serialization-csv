@@ -14,7 +14,7 @@ import kotlinx.serialization.csv.source.CsvSource
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-internal inline fun <reified T : Any?> Csv.assertEncodeAndDecode(
+internal inline fun <reified T> Csv.assertEncodeAndDecode(
     expected: String,
     original: T,
     serializer: KSerializer<T>,

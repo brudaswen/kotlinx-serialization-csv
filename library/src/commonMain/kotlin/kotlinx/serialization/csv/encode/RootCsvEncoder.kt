@@ -4,6 +4,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
+import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 
@@ -24,7 +25,13 @@ internal class RootCsvEncoder(
         descriptor: SerialDescriptor,
         collectionSize: Int,
     ): CompositeEncoder = when (descriptor.kind) {
-        StructureKind.LIST -> RecordListCsvEncoder(csv, writer)
+        StructureKind.LIST ->
+            RecordListCsvEncoder(csv, writer).also {
+                descriptor.elementDescriptors.firstOrNull()?.let {
+                    printHeaderRecord(it)
+                }
+            }
+
         else -> super.beginCollection(descriptor, collectionSize)
     }
 
