@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.2.2] - 2026-06-23
+
+### Fixed
+
+- Print header record when serializing empty list of records.
+
 ## [3.2.1] - 2025-12-04
 
 ### Fixed

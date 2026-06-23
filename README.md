@@ -9,14 +9,14 @@
 Library to easily use *Kotlin Serialization* to serialize/parse CSV.
 
 All types of record classes are supported (primitives, classes, enums, nested classes, ...).
-However, CSV serialization works best if the column number if fixed. So, collections (lists, sets,
+However, CSV serialization works best if the column number is fixed. So, collections (lists, sets,
 maps) and open classes should be avoided.
 
 ## Gradle Dependencies
 
 ```kotlin
 // Kotlin Serialization CSV
-implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:3.2.1")
+implementation("de.brudaswen.kotlinx.serialization:kotlinx-serialization-csv:3.2.2")
 
 // Kotlin Serialization is added automatically, but can be added to force a specific version
 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.9.0")
